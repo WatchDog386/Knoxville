@@ -15,14 +15,11 @@ import About from "./routes/About";
 import Services from "./routes/Services";
 import Faqs from "./routes/faqs";
 import Contact from "./routes/Contact";
-import WifiPlans from "./routes/WifiPlans";
+// import WifiPlans from "./routes/WifiPlans";  // ← Removed
 import Technicians from "./routes/Technicians";
 import Articles from "./routes/Articles";
 import ArticleDetail from "./routes/ArticleDetail";
 import CoverageMap from "./routes/CoverageMap";
-
-// Components
-
 
 const TrackPageViews = () => {
   const location = useLocation();
@@ -42,20 +39,12 @@ function AppRoutes() {
   return (
     <Routes>
       <Route path="/" element={<MainLayout />}>
-        <Route
-          index
-          element={
-            <>
-            
-              <Home />
-            </>
-          }
-        />
+        <Route index element={<Home />} />
         <Route path="about" element={<About />} />
         <Route path="services" element={<Services />} />
         <Route path="faq" element={<Faqs />} />
         <Route path="contact" element={<Contact />} />
-        <Route path="wifiplans" element={<WifiPlans />} />
+        {/* Removed: <Route path="wifiplans" element={<WifiPlans />} /> */}
         <Route path="technicians" element={<Technicians />} />
         <Route path="technicians/:issue" element={<Technicians />} />
         <Route path="articles" element={<Articles />} />

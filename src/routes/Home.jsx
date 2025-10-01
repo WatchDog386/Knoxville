@@ -2,10 +2,10 @@ import React from "react";
 import { Helmet } from "react-helmet-async";
 
 import Hero from "../components/Hero";
-import About from "./About"; // Re-added About
+
 import Services from "./Services";
 import Faqs from "./faqs";
-import Contact from "./Contact";
+
 
 export default function Home() {
   return (
@@ -33,9 +33,9 @@ export default function Home() {
         <Hero />
       </section>
 
-      <section id="about">
-        <About />
-      </section>
+      
+        
+      
 
       <section id="services">
         <Services />
@@ -45,9 +45,9 @@ export default function Home() {
         <Faqs />
       </section>
 
-      <section id="contact">
-        <Contact />
-      </section>
+      
+        
+      
     </>
   );
 }

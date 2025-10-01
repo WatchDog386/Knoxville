@@ -9,26 +9,13 @@ import {
   FaWifi,
   FaGlobe,
 } from "react-icons/fa";
+import Navbar from "../components/Navbar"; // Use shared Navbar
+import { Helmet } from "react-helmet";
 
-// Navbar Component
-function Navbar() {
-  return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-white shadow-md">
-      <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
-        <Link to="/" className="text-2xl font-bold text-gray-900">
-          <span className="text-blue-600">KNOX</span>
-          <span className="text-black">VILLE</span>
-        </Link>
-        <nav className="space-x-6">
-          <Link to="/" className="text-gray-700 hover:text-blue-600">Home</Link>
-          <Link to="/about" className="text-gray-700 hover:text-blue-600">About</Link>
-          <Link to="/services" className="text-gray-700 hover:text-blue-600">Services</Link>
-          <Link to="/contact" className="text-gray-700 hover:text-blue-600">Contact</Link>
-        </nav>
-      </div>
-    </header>
-  );
-}
+// RISA Color Palette
+const RISA_BLUE = "#015B97";
+const RISA_LIGHT_BLUE = "#3288e6";
+const RISA_WHITE = "#ffffff";
 
 // Services Data
 const services = [
@@ -37,7 +24,7 @@ const services = [
     title: "Network Infrastructure",
     description:
       "Design, implementation and management of robust network solutions for businesses of all sizes.",
-    icon: <FaNetworkWired className="text-4xl text-blue-600" />,
+    icon: <FaNetworkWired className="text-4xl" />,
     features: [
       "Structured cabling solutions",
       "Wireless network deployment",
@@ -50,7 +37,7 @@ const services = [
     title: "Security Solutions",
     description:
       "Comprehensive cybersecurity measures to protect your digital assets and infrastructure.",
-    icon: <FaShieldAlt className="text-4xl text-black" />,
+    icon: <FaShieldAlt className="text-4xl" />,
     features: [
       "Firewall implementation",
       "Intrusion detection systems",
@@ -63,7 +50,7 @@ const services = [
     title: "Cloud Services",
     description:
       "Scalable cloud computing solutions to enhance your business operations and flexibility.",
-    icon: <FaCloud className="text-4xl text-blue-600" />,
+    icon: <FaCloud className="text-4xl" />,
     features: [
       "Cloud migration",
       "Hybrid cloud solutions",
@@ -76,7 +63,7 @@ const services = [
     title: "Data Center Solutions",
     description:
       "Enterprise-grade data center services with maximum uptime and reliability.",
-    icon: <FaServer className="text-4xl text-black" />,
+    icon: <FaServer className="text-4xl" />,
     features: [
       "Colocation services",
       "Disaster recovery",
@@ -89,7 +76,7 @@ const services = [
     title: "ISP Services",
     description:
       "High-speed internet connectivity solutions for businesses and residential areas.",
-    icon: <FaWifi className="text-4xl text-blue-600" />,
+    icon: <FaWifi className="text-4xl" />,
     features: [
       "Fiber optic connectivity",
       "Wireless broadband",
@@ -102,7 +89,7 @@ const services = [
     title: "IT Consulting",
     description:
       "Expert technology consulting to align your IT strategy with business goals.",
-    icon: <FaGlobe className="text-4xl text-black" />,
+    icon: <FaGlobe className="text-4xl" />,
     features: [
       "Technology roadmap",
       "IT infrastructure assessment",
@@ -112,27 +99,41 @@ const services = [
   },
 ];
 
-// Service Card
-function ServiceCard({ service }) {
+// Service Card — Redesigned to match RISA
+function ServiceCard({ service, index }) {
   return (
     <motion.div
-      className="bg-white rounded-xl overflow-hidden border border-gray-200 shadow hover:shadow-lg transition-all"
+      className="bg-white rounded-xl border border-gray-200 shadow-md hover:shadow-lg transition-shadow duration-300 h-full flex flex-col"
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
+      transition={{ duration: 0.6, delay: index * 0.1 }}
     >
-      <div className="flex justify-center items-center bg-gray-100 h-32">
-        {service.icon}
+      <div
+        className="flex justify-center items-center h-32"
+        style={{ backgroundColor: `${RISA_BLUE}08` }} // Very light blue tint
+      >
+        <div
+          className="p-4 rounded-full"
+          style={{ backgroundColor: RISA_BLUE }}
+        >
+          <span className="text-white">{service.icon}</span>
+        </div>
       </div>
-      <div className="p-6">
-        <h3 className="text-xl font-bold text-gray-900 mb-2">
+      <div className="p-6 flex flex-col flex-grow">
+        <h3
+          className="text-xl font-bold mb-3"
+          style={{ color: RISA_BLUE }}
+        >
           {service.title}
         </h3>
-        <p className="text-gray-600 mb-4 text-sm">{service.description}</p>
+        <p className="text-gray-700 mb-4 text-sm flex-grow">
+          {service.description}
+        </p>
         <ul className="space-y-2">
-          {service.features.map((feature, index) => (
-            <li key={index} className="flex items-start text-sm">
-              <span className="text-blue-600 mr-2">•</span>
+          {service.features.map((feature, i) => (
+            <li key={i} className="flex items-start text-sm">
+              <span className="text-blue-600 mr-2 mt-0.5">✓</span>
               <span className="text-gray-700">{feature}</span>
             </li>
           ))}
@@ -142,44 +143,69 @@ function ServiceCard({ service }) {
   );
 }
 
-// Hero Section
+// Hero Section — Matches Index.jsx
 function ServicesHero() {
   return (
-    <section className="pt-32 pb-20 bg-white text-center">
-      <div className="max-w-6xl mx-auto px-6">
-        <motion.h1
-          className="text-4xl md:text-6xl font-bold mb-6 text-gray-900"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-        >
-          <span className="text-blue-600">Our</span>{" "}
-          <span className="text-black">Services</span>
-        </motion.h1>
-        <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-          Comprehensive network infrastructure solutions tailored to your
-          business needs
-        </p>
+    <motion.section
+      className="relative py-16 md:py-20 bg-white"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.7 }}
+    >
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center max-w-3xl mx-auto">
+          <motion.h1
+            className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 leading-tight"
+            style={{ color: RISA_BLUE }}
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.6 }}
+          >
+            Our <span style={{ color: RISA_LIGHT_BLUE }}>Services</span>
+          </motion.h1>
+          <motion.p
+            className="text-lg md:text-xl mb-8 text-gray-700 leading-relaxed"
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+          >
+            Comprehensive network infrastructure solutions tailored to your business needs
+          </motion.p>
+        </div>
       </div>
-    </section>
+    </motion.section>
   );
 }
 
 // Services Section
 function AllServices() {
   return (
-    <section className="py-20 px-6 bg-white text-gray-900">
-      <div className="max-w-6xl mx-auto">
+    <section className="py-20 bg-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-3xl font-bold mb-4 text-blue-600">What We Offer</h2>
-          <p className="text-gray-600 max-w-2xl mx-auto">
-            We provide end-to-end network infrastructure solutions that drive
-            business growth and digital transformation.
-          </p>
+          <motion.h2
+            className="text-3xl font-bold mb-4"
+            style={{ color: RISA_BLUE }}
+            initial={{ y: 20, opacity: 0 }}
+            whileInView={{ y: 0, opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            What We Offer
+          </motion.h2>
+          <motion.p
+            className="text-gray-600 max-w-2xl mx-auto"
+            initial={{ y: 20, opacity: 0 }}
+            whileInView={{ y: 0, opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+          >
+            We provide end-to-end network infrastructure solutions that drive business growth and digital transformation.
+          </motion.p>
         </div>
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {services.map((service) => (
-            <ServiceCard key={service.id} service={service} />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {services.map((service, index) => (
+            <ServiceCard key={service.id} service={service} index={index} />
           ))}
         </div>
       </div>
@@ -187,10 +213,30 @@ function AllServices() {
   );
 }
 
-// Export Page
+// Main Page
 export default function ServicesPage() {
   return (
-    <div className="bg-white">
+    <div
+      className="min-h-screen bg-white text-gray-900"
+      style={{ 
+        fontFamily: '"Poppins", "Helvetica Neue", Arial, sans-serif',
+        fontSize: '14px'
+      }}
+    >
+      <Helmet>
+        <title>Services | Knoxville Internet</title>
+        <meta
+          name="description"
+          content="Explore Knoxville's professional services: ISP, network infrastructure, cloud solutions, security, data center, and IT consulting."
+        />
+      </Helmet>
+
+      <style>{`
+        html { font-size: 14px; }
+        h1, h2, h3, h4, h5, h6 { font-weight: 700; line-height: 1.2; }
+        p, li { line-height: 1.6; margin-top: 0; margin-bottom: 1rem; }
+      `}</style>
+
       <Navbar />
       <ServicesHero />
       <AllServices />
