@@ -1,3 +1,4 @@
+// src/components/Navbar.jsx
 import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { Menu, X, Phone } from "lucide-react";
@@ -10,7 +11,7 @@ const RISA_BLUE = "#015B97";
 const RISA_TEXT = "#565A5C";
 const RISA_LIGHT_BG = "#f8f9fa";
 
-// Font stacks - REMOVED handwritten font
+// Font stack
 const FONT_FAMILY = `'Proxima Nova', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif`;
 
 export default function Navbar() {
@@ -126,147 +127,111 @@ export default function Navbar() {
   };
 
   return (
-    <>
-      {/* Top Bar */}
-      <div className="hidden md:flex items-center justify-end px-6 py-2 bg-[#f8f9fa]" style={{ fontFamily: FONT_FAMILY }}>
-        <div className="flex items-center space-x-3">
-          <div className="relative" ref={contactRef}>
-            <button
-              className="px-4 py-1.5 border-2 border-[#015B97] text-[#015B97] rounded-full hover:bg-[#015B97] hover:text-white transition-colors text-sm font-medium"
-              onClick={() => setIsContactOpen(!isContactOpen)}
+    <nav
+      ref={navRef}
+      className={`fixed top-0 left-0 w-full z-[999] transition-all duration-300 ${
+        scrolled ? "bg-white shadow-sm" : "bg-white/95 backdrop-blur-sm"
+      }`}
+      style={{ fontFamily: FONT_FAMILY }}
+    >
+      <div className="max-w-7xl mx-auto px-4">
+        <div className="flex items-center justify-between h-16">
+          {/* Logo */}
+          <div className="flex items-center gap-2">
+            <span
+              className="whitespace-nowrap text-[#015B97] font-bold text-lg md:text-xl"
+              style={{ fontFamily: FONT_FAMILY }}
             >
-              Contact Us ▼
-            </button>
-            {isContactOpen && (
-              <div className="absolute right-0 mt-2 w-56 bg-white border border-gray-200 rounded-md shadow-lg z-50">
-                <a href="/contact" className="block px-4 py-2.5 text-sm text-[#565A5C] hover:bg-gray-50 hover:text-[#015B97]">Support</a>
-                <a href="/contact" className="block px-4 py-2.5 text-sm text-[#565A5C] hover:bg-gray-50 hover:text-[#015B97]">Sales / General</a>
-                <a href="/feedback" className="block px-4 py-2.5 text-sm text-[#565A5C] hover:bg-gray-50 hover:text-[#015B97]">Leave Feedback</a>
-              </div>
-            )}
+              Knoxville Technologies Home Fibre
+            </span>
           </div>
-          <a
-            href="tel:9499515815"
-            className="px-4 py-1.5 border-2 border-[#015B97] text-[#015B97] rounded-full hover:bg-[#015B97] hover:text-white transition-colors flex items-center gap-2 text-sm font-medium"
+
+          {/* Desktop Menu */}
+          <div className="hidden md:flex items-center gap-4">
+            {menuItems.map((item) => (
+              <NavItem key={item.id} item={item} />
+            ))}
+          </div>
+
+          {/* Mobile Menu Button */}
+          <button
+            className="md:hidden p-2 text-[#565A5C] hover:text-[#015B97]"
+            onClick={() => setIsOpen(!isOpen)}
+            aria-label={isOpen ? "Close menu" : "Open menu"}
           >
-            <Phone size={14} />
-            +254726818938
-          </a>
+            {isOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
         </div>
       </div>
 
-      {/* Main Navbar */}
-      <nav
-        ref={navRef}
-        className={`fixed top-0 md:top-[44px] left-0 w-full z-[999] transition-all duration-300 ${
-          scrolled ? "bg-white shadow-sm" : "bg-white/95 backdrop-blur-sm"
-        }`}
-        style={{ fontFamily: FONT_FAMILY }}
-      >
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="flex items-center justify-between h-16">
-            {/* Company Name - UPDATED: Standard professional font */}
-            <div className="flex items-center gap-2">
-              <div className="hidden md:block">
-                <span
-                  className="whitespace-nowrap"
-                  style={{
-                    color: RISA_BLUE,
-                    fontFamily: FONT_FAMILY, // Uses standard font instead of handwritten
-                    fontSize: '1.5rem',
-                    fontWeight: 700,
-                  }}
+      {/* Mobile Menu */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.25 }}
+            className="md:hidden overflow-hidden bg-white border-t"
+          >
+            <div className="px-4 py-6 space-y-5">
+              <div className="flex flex-col space-y-3 pt-2 pb-4 border-b border-gray-100">
+                <button
+                  className="px-4 py-2.5 border-2 border-[#015B97] text-[#015B97] rounded-full text-center font-medium"
+                  onClick={() => navigate("/contact")}
                 >
-                  Knoxville Technologies Home Fibre
-                </span>
+                  Contact Us
+                </button>
+                <a
+                  href="tel:+254726818938"
+                  className="px-4 py-2.5 border-2 border-[#015B97] text-[#015B97] rounded-full text-center font-medium flex items-center justify-center gap-2"
+                >
+                  <Phone size={16} />
+                  +254726818938
+                </a>
               </div>
-            </div>
 
-            <div className="hidden md:flex items-center gap-4">
               {menuItems.map((item) => (
-                <NavItem key={item.id} item={item} />
+                <div key={item.id}>
+                  {item.submenu ? (
+                    <div>
+                      <div className="font-medium text-[#565A5C] text-sm mb-2">{item.label}</div>
+                      <div className="pl-3 space-y-2">
+                        {item.submenu.map((sub) => (
+                          <NavLink
+                            key={sub.id}
+                            to={sub.route}
+                            className={({ isActive }) =>
+                              `block text-sm font-medium ${
+                                isActive ? "text-[#015B97]" : "text-[#565A5C]"
+                              }`
+                            }
+                            onClick={() => setIsOpen(false)}
+                          >
+                            {sub.label}
+                          </NavLink>
+                        ))}
+                      </div>
+                    </div>
+                  ) : (
+                    <NavLink
+                      to={item.route}
+                      className={({ isActive }) =>
+                        `block text-base font-medium ${
+                          isActive ? "text-[#015B97]" : "text-[#565A5C]"
+                        }`
+                      }
+                      onClick={() => setIsOpen(false)}
+                    >
+                      {item.label}
+                    </NavLink>
+                  )}
+                </div>
               ))}
             </div>
-
-            <button
-              className="md:hidden p-2 text-[#565A5C] hover:text-[#015B97]"
-              onClick={() => setIsOpen(!isOpen)}
-              aria-label={isOpen ? "Close menu" : "Open menu"}
-            >
-              {isOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
-          </div>
-        </div>
-
-        {/* Mobile Menu */}
-        <AnimatePresence>
-          {isOpen && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.25 }}
-              className="md:hidden overflow-hidden bg-white border-t"
-            >
-              <div className="px-4 py-6 space-y-5">
-                <div className="flex flex-col space-y-3 pt-2 pb-4 border-b border-gray-100">
-                  <button
-                    className="px-4 py-2.5 border-2 border-[#015B97] text-[#015B97] rounded-full text-center font-medium"
-                    onClick={() => navigate("/contact")}
-                  >
-                    Contact Us
-                  </button>
-                  <a
-                    href="tel:9499515815"
-                    className="px-4 py-2.5 border-2 border-[#015B97] text-[#015B97] rounded-full text-center font-medium flex items-center justify-center gap-2"
-                  >
-                    <Phone size={16} />
-                    +2547268188938
-                  </a>
-                </div>
-
-                {menuItems.map((item) => (
-                  <div key={item.id}>
-                    {item.submenu ? (
-                      <div>
-                        <div className="font-medium text-[#565A5C] text-sm mb-2">{item.label}</div>
-                        <div className="pl-3 space-y-2">
-                          {item.submenu.map((sub) => (
-                            <NavLink
-                              key={sub.id}
-                              to={sub.route}
-                              className={({ isActive }) =>
-                                `block text-sm font-medium ${
-                                  isActive ? "text-[#015B97]" : "text-[#565A5C]"
-                                }`
-                              }
-                              onClick={() => setIsOpen(false)}
-                            >
-                              {sub.label}
-                            </NavLink>
-                          ))}
-                        </div>
-                      </div>
-                    ) : (
-                      <NavLink
-                        to={item.route}
-                        className={({ isActive }) =>
-                          `block text-base font-medium ${
-                            isActive ? "text-[#015B97]" : "text-[#565A5C]"
-                          }`
-                        }
-                        onClick={() => setIsOpen(false)}
-                      >
-                        {item.label}
-                      </NavLink>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </nav>
-    </>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </nav>
   );
 }
