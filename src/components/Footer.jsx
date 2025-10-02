@@ -108,7 +108,7 @@ export default function Footer() {
                   +254 726 818 938
                 </a>
               </li>
-              <li>Location: Nairobi, Kenya</li>
+              <li>Location:LuckySummer Behind Naivas Supermarket</li>
             </ul>
           </div>
 

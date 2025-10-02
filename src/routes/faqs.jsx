@@ -7,7 +7,10 @@ import {
   HelpCircle,
   Phone,
   Mail,
-  MessageCircle
+  MessageCircle,
+  Search,
+  ChevronDown,
+  Home
 } from "lucide-react";
 import { FaWhatsapp } from "react-icons/fa";
 
@@ -15,6 +18,8 @@ import { FaWhatsapp } from "react-icons/fa";
 const RISA_BLUE = "#015B97";
 const RISA_LIGHT_BLUE = "#3288e6";
 const RISA_WHITE = "#ffffff";
+const RISA_TEXT = "#565A5C";
+const RISA_LIGHT_BG = "#f8f9fa";
 
 const faqsData = {
   "Account Management": {
@@ -281,9 +286,9 @@ export default function Faqs() {
   );
 
   return (
-    <div className="bg-white">
+    <div className="min-h-screen bg-gray-50">
       {/* FAQ Section */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 text-gray-900">
+      <section className="py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto">
           {/* Header */}
           <motion.div
@@ -292,166 +297,249 @@ export default function Faqs() {
             transition={{ duration: 0.6 }}
             className="text-center mb-12"
           >
-            <h2 className="text-3xl md:text-4xl font-bold" style={{ color: RISA_BLUE }}>
-              Knoxville Tech Ltd – Self-Care Portal
-            </h2>
-            <p className="text-gray-600 mt-3">
-              Manage your account, services, and get support 24/7
+            <div className="inline-flex items-center gap-2 text-sm text-gray-600 mb-4">
+              <Home className="w-4 h-4" />
+              <span>Support Center</span>
+            </div>
+            <h1 className="text-4xl md:text-5xl font-bold mb-4" style={{ color: RISA_BLUE }}>
+              Frequently Asked Questions
+            </h1>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Find quick answers to common questions about your Knoxville Internet service
             </p>
           </motion.div>
 
-          {/* Category Tabs */}
-          <div className="flex flex-wrap justify-center gap-3 mb-8">
-            {Object.entries(faqsData).map(([key, { icon }]) => (
-              <button
-                key={key}
-                onClick={() => {
-                  setActiveCategory(key);
-                  setOpenIndex(null);
-                  setSearch("");
-                }}
-                className={`flex items-center gap-2 px-4 py-2 rounded-md font-medium transition-all ${
-                  activeCategory === key
-                    ? "bg-blue-600 text-white shadow-sm"
-                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                }`}
-                style={{
-                  backgroundColor: activeCategory === key ? RISA_BLUE : '',
-                  color: activeCategory === key ? RISA_WHITE : '',
-                }}
-              >
-                {icon}
-                <span className="text-sm">{key}</span>
-              </button>
-            ))}
-          </div>
-
-          {/* Search Bar */}
-          <div className="max-w-xl mx-auto mb-10">
-            <input
-              type="text"
-              placeholder={`Search ${activeCategory} FAQs...`}
-              className="w-full px-4 py-2.5 rounded-lg border border-gray-300 bg-gray-50 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2"
-              style={{ borderColor: RISA_BLUE, boxShadow: `0 0 0 2px ${RISA_BLUE}20` }}
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-          </div>
-
-          {/* FAQ List */}
-          <div className="grid md:grid-cols-2 gap-6 mb-12">
-            <AnimatePresence mode="wait">
-              {filteredFaqs.map((faq, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.3 }}
-                  className="bg-white rounded-lg border border-gray-200 overflow-hidden shadow-sm hover:shadow-md transition-shadow"
-                >
-                  <button
-                    onClick={() => setOpenIndex(openIndex === i ? null : i)}
-                    className="w-full p-5 text-left flex justify-between items-center"
-                  >
-                    <h3 className="text-base font-semibold text-gray-900">{faq.question}</h3>
-                    <motion.span
-                      animate={{ rotate: openIndex === i ? 180 : 0 }}
-                      className="text-gray-500"
+          {/* Main Content Grid */}
+          <div className="grid lg:grid-cols-4 gap-8">
+            {/* Sidebar - Categories */}
+            <div className="lg:col-span-1">
+              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 sticky top-6">
+                <h3 className="font-semibold text-gray-900 mb-4">Categories</h3>
+                <div className="space-y-2">
+                  {Object.entries(faqsData).map(([key, { icon }]) => (
+                    <button
+                      key={key}
+                      onClick={() => {
+                        setActiveCategory(key);
+                        setOpenIndex(null);
+                        setSearch("");
+                      }}
+                      className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-all ${
+                        activeCategory === key
+                          ? "bg-blue-50 border border-blue-200"
+                          : "text-gray-700 hover:bg-gray-50"
+                      }`}
+                      style={{
+                        backgroundColor: activeCategory === key ? `${RISA_BLUE}10` : '',
+                        borderColor: activeCategory === key ? RISA_BLUE : '',
+                      }}
                     >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-5 w-5"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                    </motion.span>
-                  </button>
-                  <AnimatePresence>
-                    {openIndex === i && (
+                      {icon}
+                      <span className="font-medium text-sm">{key}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Main Content */}
+            <div className="lg:col-span-3">
+              {/* Search Bar */}
+              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                  <input
+                    type="text"
+                    placeholder={`Search in ${activeCategory}...`}
+                    className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 bg-gray-50 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:border-transparent transition-all"
+                    style={{ 
+                      borderColor: RISA_BLUE, 
+                      boxShadow: `0 0 0 3px ${RISA_BLUE}10`,
+                      focus: {
+                        borderColor: RISA_BLUE,
+                        boxShadow: `0 0 0 3px ${RISA_BLUE}20`
+                      }
+                    }}
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                  />
+                </div>
+              </div>
+
+              {/* FAQ List */}
+              <div className="space-y-4">
+                <AnimatePresence mode="wait">
+                  {filteredFaqs.length > 0 ? (
+                    filteredFaqs.map((faq, i) => (
                       <motion.div
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: "auto" }}
-                        exit={{ opacity: 0, height: 0 }}
-                        transition={{ duration: 0.4 }}
-                        className="px-5 pb-5 text-gray-700 text-sm"
+                        key={i}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        transition={{ duration: 0.3, delay: i * 0.1 }}
+                        className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-all"
                       >
-                        {faq.answer}
+                        <button
+                          onClick={() => setOpenIndex(openIndex === i ? null : i)}
+                          className="w-full p-6 text-left flex justify-between items-center hover:bg-gray-50 transition-colors"
+                        >
+                          <h3 className="text-lg font-semibold text-gray-900 pr-4">{faq.question}</h3>
+                          <motion.span
+                            animate={{ rotate: openIndex === i ? 180 : 0 }}
+                            className="text-gray-500 flex-shrink-0"
+                          >
+                            <ChevronDown className="w-5 h-5" />
+                          </motion.span>
+                        </button>
+                        <AnimatePresence>
+                          {openIndex === i && (
+                            <motion.div
+                              initial={{ opacity: 0, height: 0 }}
+                              animate={{ opacity: 1, height: "auto" }}
+                              exit={{ opacity: 0, height: 0 }}
+                              transition={{ duration: 0.3 }}
+                              className="px-6 pb-6 text-gray-700"
+                            >
+                              <div className="pt-2 border-t border-gray-100">
+                                {faq.answer}
+                              </div>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
                       </motion.div>
-                    )}
-                  </AnimatePresence>
-                </motion.div>
-              ))}
-            </AnimatePresence>
+                    ))
+                  ) : (
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      className="text-center py-12"
+                    >
+                      <div className="text-gray-400 mb-2">
+                        <Search className="w-12 h-12 mx-auto" />
+                      </div>
+                      <p className="text-gray-600">No results found for "{search}"</p>
+                      <p className="text-sm text-gray-500 mt-1">Try different keywords or browse the categories</p>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* CTA Section — NO GAP before footer */}
-      <section
-        className="py-12 px-4 sm:px-6 lg:px-8"
-        style={{ backgroundColor: RISA_BLUE }}
-      >
-        <div className="max-w-5xl mx-auto text-center">
-          <h3 className="text-2xl md:text-3xl font-bold text-white mb-4">
-            Still Need Help?
-          </h3>
-          <p className="text-blue-100 mb-8 max-w-2xl mx-auto">
-            Our support team is ready to assist you. Reach out via phone, email, or WhatsApp for fast, friendly service.
-          </p>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="flex flex-col items-center text-white">
-              <Phone className="h-8 w-8 mb-2" />
-              <p className="font-medium">Call Us</p>
-              <a
-                href="tel:+254726818938"
-                className="text-blue-200 hover:text-white underline"
-              >
-                +254 726 818 938
-              </a>
-            </div>
-            <div className="flex flex-col items-center text-white">
-              <Mail className="h-8 w-8 mb-2" />
-              <p className="font-medium">Email Us</p>
-              <a
-                href="mailto:support@knoxville.co.ke"
-                className="text-blue-200 hover:text-white underline"
-              >
-                support@knoxville.co.ke
-              </a>
-            </div>
-            <div className="flex flex-col items-center text-white">
-              <FaWhatsapp className="h-8 w-8 mb-2" />
-              <p className="font-medium">WhatsApp</p>
-              <a
-                href="https://wa.me/254726818938"
-                className="text-blue-200 hover:text-white underline"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Chat Now
-              </a>
-            </div>
-          </div>
-
-          <motion.button
-            whileHover={{ scale: 1.03 }}
-            whileTap={{ scale: 0.98 }}
-            onClick={() => document.getElementById('hero').scrollIntoView({ behavior: 'smooth' })}
-            className="mt-8 px-6 py-3 rounded-full font-bold text-blue-700 hover:bg-blue-100 transition"
-            style={{
-              backgroundColor: RISA_WHITE,
-            }}
+      {/* Redesigned CTA Section - Contained and Professional */}
+      <section className="py-16 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-4xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden"
           >
-            Go to Homepage
-          </motion.button>
+            {/* CTA Header */}
+            <div 
+              className="px-8 py-6 text-center"
+              style={{ backgroundColor: RISA_BLUE }}
+            >
+              <h3 className="text-2xl md:text-3xl font-bold text-white mb-2">
+                Still Need Help?
+              </h3>
+              <p className="text-blue-100 text-lg">
+                Our dedicated support team is here to assist you
+              </p>
+            </div>
+
+            {/* Contact Options */}
+            <div className="p-8">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                {/* Phone */}
+                <div className="text-center group">
+                  <div className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center transition-all group-hover:scale-110"
+                    style={{ backgroundColor: `${RISA_BLUE}10` }}
+                  >
+                    <Phone className="h-7 w-7" style={{ color: RISA_BLUE }} />
+                  </div>
+                  <h4 className="font-semibold text-gray-900 mb-2">Call Us</h4>
+                  <a
+                    href="tel:+254726818938"
+                    className="text-gray-600 hover:text-blue-600 transition-colors font-medium block"
+                  >
+                    +254 726 818 938
+                  </a>
+                  <p className="text-sm text-gray-500 mt-1">Mon-Sun, 24/7</p>
+                </div>
+
+                {/* Email */}
+                <div className="text-center group">
+                  <div className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center transition-all group-hover:scale-110"
+                    style={{ backgroundColor: `${RISA_BLUE}10` }}
+                  >
+                    <Mail className="h-7 w-7" style={{ color: RISA_BLUE }} />
+                  </div>
+                  <h4 className="font-semibold text-gray-900 mb-2">Email Us</h4>
+                  <a
+                    href="mailto:support@knoxville.co.ke"
+                    className="text-gray-600 hover:text-blue-600 transition-colors font-medium block"
+                  >
+                    support@knoxville.co.ke
+                  </a>
+                  <p className="text-sm text-gray-500 mt-1">Response within 2 hours</p>
+                </div>
+
+                {/* WhatsApp */}
+                <div className="text-center group">
+                  <div className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center transition-all group-hover:scale-110"
+                    style={{ backgroundColor: `${RISA_BLUE}10` }}
+                  >
+                    <FaWhatsapp className="h-7 w-7" style={{ color: RISA_BLUE }} />
+                  </div>
+                  <h4 className="font-semibold text-gray-900 mb-2">WhatsApp</h4>
+                  <a
+                    href="https://wa.me/254726818938"
+                    className="text-gray-600 hover:text-blue-600 transition-colors font-medium block"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Chat Now
+                  </a>
+                  <p className="text-sm text-gray-500 mt-1">Instant messaging</p>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => window.location.href = '/'}
+                  className="px-8 py-3 rounded-full font-semibold transition-all flex items-center justify-center gap-2"
+                  style={{
+                    backgroundColor: RISA_BLUE,
+                    color: RISA_WHITE,
+                  }}
+                >
+                  <Home className="w-4 h-4" />
+                  Back to Homepage
+                </motion.button>
+                
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                  className="px-8 py-3 rounded-full font-semibold border transition-all"
+                  style={{
+                    borderColor: RISA_BLUE,
+                    color: RISA_BLUE,
+                    backgroundColor: 'transparent'
+                  }}
+                >
+                  Back to Top
+                </motion.button>
+              </div>
+            </div>
+          </motion.div>
         </div>
       </section>
     </div>

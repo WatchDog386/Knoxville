@@ -10,21 +10,8 @@ const RISA_BLUE = "#015B97";
 const RISA_TEXT = "#565A5C";
 const RISA_LIGHT_BG = "#f8f9fa";
 
-// Font stacks
+// Font stacks - REMOVED handwritten font
 const FONT_FAMILY = `'Proxima Nova', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif`;
-const HANDWRITTEN_FONT = `'Dancing Script', cursive`; // ← Handwritten style
-
-// Dynamically inject Google Fonts if not already present
-const injectGoogleFont = () => {
-  if (document.getElementById('google-font-dancing-script')) return;
-  const link = document.createElement('link');
-  link.id = 'google-font-dancing-script';
-  link.rel = 'stylesheet';
-  link.href = 'https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap';
-  document.head.appendChild(link);
-};
-
-injectGoogleFont();
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -163,7 +150,7 @@ export default function Navbar() {
             className="px-4 py-1.5 border-2 border-[#015B97] text-[#015B97] rounded-full hover:bg-[#015B97] hover:text-white transition-colors flex items-center gap-2 text-sm font-medium"
           >
             <Phone size={14} />
-            949 951 5815
+            +254726818938
           </a>
         </div>
       </div>
@@ -178,15 +165,15 @@ export default function Navbar() {
       >
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex items-center justify-between h-16">
-            {/* Company Name Only — No Logo, Bigger Font */}
+            {/* Company Name - UPDATED: Standard professional font */}
             <div className="flex items-center gap-2">
               <div className="hidden md:block">
                 <span
                   className="whitespace-nowrap"
                   style={{
-                    color: RISA_BLUE, // ✅ Blue as requested
-                    fontFamily: HANDWRITTEN_FONT, // ✅ Handwritten style
-                    fontSize: '1.5rem', // ✅ Increased from 1.25rem → 1.5rem (24px)
+                    color: RISA_BLUE,
+                    fontFamily: FONT_FAMILY, // Uses standard font instead of handwritten
+                    fontSize: '1.5rem',
                     fontWeight: 700,
                   }}
                 >
@@ -234,7 +221,7 @@ export default function Navbar() {
                     className="px-4 py-2.5 border-2 border-[#015B97] text-[#015B97] rounded-full text-center font-medium flex items-center justify-center gap-2"
                   >
                     <Phone size={16} />
-                    949 951 5815
+                    +2547268188938
                   </a>
                 </div>
 

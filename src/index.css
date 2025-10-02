@@ -1,180 +1,399 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap");
+@import url("https://use.typekit.net/hus3mie.css");
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* === Base Theme === */
+/* === RISA Design System === */
+
+/* Base Theme with RISA Fonts */
 .font-sans {
-  font-family: "Inter", system-ui, sans-serif;
+  font-family: "proxima-nova", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
 body {
   @apply font-sans antialiased bg-white text-gray-900;
+  font-size: 14px;
+  line-height: 1.6;
 }
 
-.dark body {
-  @apply bg-gray-950 text-white;
+/* RISA Color Palette */
+:root {
+  --risa-blue: #015B97;
+  --risa-light-blue: #3288e6;
+  --risa-text: #565A5C;
+  --risa-white: #ffffff;
+  --risa-light-bg: #f8f9fa;
+  --risa-border: #e9ecef;
 }
 
-/* === Noise Overlay (Optional) === */
-.bg-noise {
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-  opacity: 0.1;
-  pointer-events: none;
+/* === RISA Professional Animations === */
+
+/* Subtle Fade In Animation (RISA Style) */
+@keyframes risa-fade-in {
+  0% { 
+    opacity: 0; 
+    transform: translateY(20px); 
+  }
+  100% { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
 }
 
-/* === Animated Glow Background === */
-@keyframes glow-bg-shift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+.risa-fade-in {
+  animation: risa-fade-in 0.6s ease-out;
 }
 
-.glow-bg {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  background: radial-gradient(circle at center, #0ff3 20%, #fff 80%);
-  background-image: linear-gradient(270deg, #00f7ff44, #7e22ce44, #00f7ff44);
-  background-blend-mode: screen;
-  background-size: 400% 400%;
-  animation: glow-bg-shift 15s ease infinite;
-  pointer-events: none;
+/* Smooth Slide In */
+@keyframes risa-slide-in {
+  0% { 
+    opacity: 0; 
+    transform: translateX(-30px); 
+  }
+  100% { 
+    opacity: 1; 
+    transform: translateX(0); 
+  }
 }
 
-/* === Ping Animations for Icons === */
-@keyframes ping-slow {
-  0%, 100% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.2); opacity: 0.5; }
-}
-.animate-ping-slow {
-  animation: ping-slow 2s infinite;
+.risa-slide-in {
+  animation: risa-slide-in 0.5s ease-out;
 }
 
-/* === Border Glow Animation === */
-@keyframes border-glow-cycle {
-  0% { border-color: #00f7ff; box-shadow: 0 0 10px #00f7ff; }
-  50% { border-color: #f000ff; box-shadow: 0 0 15px #f000ff; }
-  100% { border-color: #00f7ff; box-shadow: 0 0 10px #00f7ff; }
-}
-
-.animated-border {
-  border-width: 2px;
-  border-style: solid;
-  animation: border-glow-cycle 3s ease-in-out infinite;
-  border-radius: 1rem;
-}
-
-/* === Animated Line Border Container === */
-@keyframes move-line {
-  0% { clip-path: polygon(0 0, 100% 0, 100% 0, 0 0); }
-  25% { clip-path: polygon(0 0, 100% 0, 100% 100%, 100% 0); }
-  50% { clip-path: polygon(100% 0, 100% 100%, 0 100%, 100% 100%); }
-  75% { clip-path: polygon(100% 100%, 0 100%, 0 0, 0 100%); }
-  100% { clip-path: polygon(0 100%, 0 0, 100% 0, 0 0); }
-}
-
-.animated-border-wrap {
-  position: relative;
-  padding: 2px;
-  border-radius: 1rem;
+/* Card Hover Effects (RISA Style) */
+.risa-card {
   overflow: hidden;
-  z-index: 10;
+  min-height: 300px;
+  box-shadow: 1.39px 1.39px 4.96px rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--risa-border);
+  border-radius: 8px;
+  transition: all 0.3s ease;
 }
 
-.animated-border-wrap::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(90deg, #00f7ff, #ff00ff, #00f7ff);
-  background-size: 300% 300%;
-  animation: move-line 4s linear infinite;
-  z-index: 1;
+.risa-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
 }
 
-.animated-border-content {
-  position: relative;
-  z-index: 2;
-  border-radius: inherit;
-  background-color: #ffffff;
+/* Button Animations (RISA Style) */
+@keyframes risa-button-hover {
+  0% { 
+    transform: translateY(0); 
+    box-shadow: 0 2px 8px rgba(1, 91, 151, 0.2);
+  }
+  100% { 
+    transform: translateY(-2px); 
+    box-shadow: 0 4px 15px rgba(1, 91, 151, 0.3);
+  }
 }
 
-/* === Hologram Overlay === */
-@keyframes hologram-pulse {
-  0% { opacity: 0.2; }
-  50% { opacity: 0.6; }
-  100% { opacity: 0.2; }
+.risa-button {
+  background-color: var(--risa-blue);
+  color: var(--risa-white);
+  border-radius: 50px;
+  padding: 1rem 2rem;
+  font-weight: bold;
+  transition: all 0.15s ease-in-out;
+  border: 2px solid var(--risa-blue);
 }
 
-.hologram-effect {
-  animation: hologram-pulse 3s infinite;
-  position: relative;
-  isolation: isolate;
+.risa-button:hover {
+  animation: risa-button-hover 0.3s ease-out forwards;
+  background-color: #014a7a;
+  border-color: #014a7a;
 }
 
-.hologram-effect::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(130deg, #00ffff33, #ff00ff33);
-  mix-blend-mode: screen;
-  pointer-events: none;
-  border-radius: inherit;
-  z-index: -1;
+.risa-button-outline {
+  background-color: transparent;
+  color: var(--risa-blue);
+  border: 2px solid var(--risa-blue);
+  border-radius: 50px;
+  padding: 1rem 2rem;
+  font-weight: bold;
+  transition: all 0.15s ease-in-out;
 }
 
-/* === Gradient Rotate (buttons or badges) === */
-@keyframes gradient-rotate {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+.risa-button-outline:hover {
+  background-color: var(--risa-blue);
+  color: var(--risa-white);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(1, 91, 151, 0.3);
 }
 
-.animate-gradient-rotate {
-  background-image: linear-gradient(45deg, #00f7ff, #7000ff, #00f7ff, #7000ff);
-  background-size: 300% 300%;
-  animation: gradient-rotate 6s ease infinite;
+/* === RISA Typography System === */
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: "proxima-nova", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--risa-blue);
 }
 
-/* === Marker Pulse === */
-@keyframes pulse {
-  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(66, 133, 244, 0.7); }
-  70% { transform: scale(1.1); box-shadow: 0 0 0 10px rgba(66, 133, 244, 0); }
-  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(66, 133, 244, 0); }
+h1 {
+  font-size: 2.5rem;
+  line-height: 1.1;
 }
 
-.custom-marker {
-  position: relative;
-  width: 30px;
-  height: 30px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+h2 {
+  font-size: 2rem;
+  line-height: 1.2;
 }
 
-.marker-pin {
+h3 {
+  font-size: 1.5rem;
+  line-height: 1.3;
+}
+
+p, li {
+  line-height: 1.6;
+  margin-top: 0;
+  margin-bottom: 1rem;
+  color: var(--risa-text);
+}
+
+/* === RISA Component Styles === */
+
+/* Navigation Styles */
+.risa-nav {
+  background-color: var(--risa-white);
+  border-bottom: 1px solid var(--risa-border);
+}
+
+.risa-nav-link {
+  color: var(--risa-text);
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.risa-nav-link:hover {
+  color: var(--risa-blue);
+}
+
+/* Card Styles */
+.risa-feature-card {
+  background: var(--risa-white);
+  border: 1px solid var(--risa-border);
+  border-radius: 8px;
+  padding: 2rem;
+  transition: all 0.3s ease;
+}
+
+.risa-feature-card:hover {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  transform: translateY(-5px);
+}
+
+/* Badge Styles */
+.risa-badge {
+  background-color: rgba(1, 91, 151, 0.1);
+  color: var(--risa-blue);
+  padding: 0.25rem 0.75rem;
+  border-radius: 50px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+/* Section Backgrounds */
+.risa-section-light {
+  background-color: var(--risa-light-bg);
+}
+
+.risa-section-blue {
+  background-color: var(--risa-blue);
+  color: var(--risa-white);
+}
+
+/* === RISA Form Styles === */
+.risa-input {
+  border: 1px solid var(--risa-border);
+  border-radius: 4px;
+  padding: 0.75rem;
+  font-size: 0.875rem;
+  transition: border-color 0.2s ease;
+}
+
+.risa-input:focus {
+  outline: none;
+  border-color: var(--risa-blue);
+  box-shadow: 0 0 0 3px rgba(1, 91, 151, 0.1);
+}
+
+/* === RISA Table Styles === */
+.risa-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.risa-table th,
+.risa-table td {
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid var(--risa-border);
+}
+
+.risa-table th {
+  background-color: var(--risa-light-bg);
+  color: var(--risa-blue);
+  font-weight: 600;
+}
+
+/* === RISA Loading Animation === */
+@keyframes risa-loading {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.risa-loading {
+  border: 2px solid var(--risa-light-bg);
+  border-top: 2px solid var(--risa-blue);
+  border-radius: 50%;
   width: 20px;
   height: 20px;
-  border-radius: 50% 50% 50% 0;
-  background: #4285F4;
-  transform: rotate(-45deg);
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  margin: -15px 0 0 -10px;
+  animation: risa-loading 1s linear infinite;
 }
 
-.marker-pin::after {
-  content: '';
-  width: 14px;
-  height: 14px;
-  margin: 3px 0 0 3px;
-  background: white;
-  position: absolute;
-  border-radius: 50%;
+/* === RISA Progress Bar === */
+.risa-progress {
+  background-color: var(--risa-light-bg);
+  border-radius: 50px;
+  overflow: hidden;
 }
 
-.location-pulse {
-  animation: pulse 1.5s infinite;
+.risa-progress-bar {
+  background-color: var(--risa-blue);
+  height: 4px;
+  border-radius: 50px;
+  transition: width 0.3s ease;
+}
+
+/* === RISA Alert Styles === */
+.risa-alert {
+  padding: 1rem;
+  border-radius: 4px;
+  border-left: 4px solid;
+  margin-bottom: 1rem;
+}
+
+.risa-alert-info {
+  background-color: rgba(1, 91, 151, 0.1);
+  border-left-color: var(--risa-blue);
+  color: var(--risa-blue);
+}
+
+.risa-alert-success {
+  background-color: rgba(34, 197, 94, 0.1);
+  border-left-color: #22c55e;
+  color: #166534;
+}
+
+/* === RISA Modal Styles === */
+.risa-modal-overlay {
+  background-color: rgba(0, 0, 0, 0.5);
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+}
+
+.risa-modal {
+  background-color: var(--risa-white);
+  border-radius: 12px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  max-width: 500px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+/* === RISA Responsive Design === */
+@media (max-width: 768px) {
+  h1 {
+    font-size: 2rem;
+  }
+  
+  h2 {
+    font-size: 1.75rem;
+  }
+  
+  h3 {
+    font-size: 1.25rem;
+  }
+  
+  .risa-button,
+  .risa-button-outline {
+    padding: 0.75rem 1.5rem;
+    width: 100%;
+    text-align: center;
+  }
+}
+
+/* === RISA Utility Classes === */
+.text-risa-blue { color: var(--risa-blue); }
+.text-risa-light-blue { color: var(--risa-light-blue); }
+.text-risa-text { color: var(--risa-text); }
+
+.bg-risa-blue { background-color: var(--risa-blue); }
+.bg-risa-light-bg { background-color: var(--risa-light-bg); }
+
+.border-risa-blue { border-color: var(--risa-blue); }
+.border-risa-border { border-color: var(--risa-border); }
+
+/* === RISA Grid System === */
+.risa-grid {
+  display: grid;
+  gap: 2rem;
+}
+
+.risa-grid-cols-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.risa-grid-cols-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.risa-grid-cols-4 {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+@media (max-width: 768px) {
+  .risa-grid-cols-2,
+  .risa-grid-cols-3,
+  .risa-grid-cols-4 {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* === RISA Image Styles === */
+.risa-image {
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+.risa-image-hover {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.risa-image-hover:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* === RISA Footer Styles === */
+.risa-footer {
+  background-color: var(--risa-light-bg);
+  border-top: 1px solid var(--risa-border);
+  padding: 3rem 0;
+}
+
+.risa-footer-link {
+  color: var(--risa-text);
+  transition: color 0.2s ease;
+}
+
+.risa-footer-link:hover {
+  color: var(--risa-blue);
 }
