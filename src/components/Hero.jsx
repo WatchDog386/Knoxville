@@ -100,7 +100,7 @@ const plans = [
   }
 ];
 
-// ✅ 5 Hotspot Plans (NO images needed)
+// ✅ 5 Hotspot Plans (NO images needed) - LINKS REMOVED
 const hotspotPlans = [
   {
     name: "2 Hours",
@@ -108,7 +108,7 @@ const hotspotPlans = [
     duration: "2hrs",
     devices: "1 Device",
     features: ["Fast browsing", "Social media access", "Email checking"],
-    link: "http://wifi.optimassys.co.ke/index.php?_route=main"
+    // link: "http://wifi.optimassys.co.ke/index.php?_route=main" - REMOVED
   },
   {
     name: "12 Hours",
@@ -116,7 +116,7 @@ const hotspotPlans = [
     duration: "12hrs",
     devices: "1 Device",
     features: ["Extended browsing", "Streaming music", "Social media"],
-    link: "http://wifi.optimassys.co.ke/index.php?_route=main"
+    // link: "http://wifi.optimassys.co.ke/index.php?_route=main" - REMOVED
   },
   {
     name: "1 Day",
@@ -124,7 +124,7 @@ const hotspotPlans = [
     duration: "1 day",
     devices: "1 Device",
     features: ["Full day access", "Standard streaming", "Online gaming"],
-    link: "http://wifi.optimassys.co.ke/index.php?_route=main"
+    // link: "http://wifi.optimassys.co.ke/index.php?_route=main" - REMOVED
   },
   {
     name: "Weekly",
@@ -132,7 +132,7 @@ const hotspotPlans = [
     duration: "week",
     devices: "2 Devices",
     features: ["7 days unlimited", "HD streaming", "Multiple devices"],
-    link: "http://wifi.optimassys.co.ke/index.php?_route=main"
+    // link: "http://wifi.optimassys.co.ke/index.php?_route=main" - REMOVED
   },
   {
     name: "Monthly Single",
@@ -140,7 +140,7 @@ const hotspotPlans = [
     duration: "month",
     devices: "1 Device",
     features: ["30 days access", "Priority bandwidth", "24/7 support"],
-    link: "http://wifi.optimassys.co.ke/index.php?_route=main"
+    // link: "http://wifi.optimassys.co.ke/index.php?_route=main" - REMOVED
   }
 ];
 
@@ -166,8 +166,16 @@ const Hero = () => {
     setShowForm(true);
   };
 
+  // ✅ HOTSPOT FUNCTIONALITY DISABLED - No redirection
   const handleHotspotSelect = (plan) => {
-    window.open(plan.link, '_blank');
+    // 🔴 DISABLED: window.open(plan.link, '_blank');
+    // Instead, open the contact form for hotspot plans too
+    setSelectedPlan(plan);
+    setFormData(prev => ({
+      ...prev,
+      connectionType: `Hotspot - ${plan.name}`
+    }));
+    setShowForm(true);
   };
 
   const handleInputChange = (e) => {
@@ -376,7 +384,7 @@ const Hero = () => {
         </div>
       </section>
 
-      {/* 🔥 Hotspot Packages — NO IMAGES */}
+      {/* 🔥 Hotspot Packages — NO IMAGES & DISABLED REDIRECTION */}
       <section id="hotspot-section" className="py-12 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-8">
@@ -442,7 +450,7 @@ const Hero = () => {
                       className="w-full font-bold py-1.5 rounded-full text-[11px] transition-all"
                       style={{ backgroundColor: 'rgba(0,0,0,0.2)', color: color.text }}
                     >
-                      Buy Now
+                      Contact for Purchase
                     </motion.button>
                   </div>
                 </motion.div>
