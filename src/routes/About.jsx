@@ -3,10 +3,17 @@ import Navbar from "../components/Navbar";
 import { motion } from "framer-motion";
 import { Helmet } from "react-helmet";
 
-// RISA Color Palette (from hero.jsx)
-const RISA_BLUE = "#015B97";
-const RISA_LIGHT_BLUE = "#3288e6";
-const RISA_WHITE = "#ffffff";
+// 🔥 Knoxville Brand Colors (from Hero.jsx)
+const BRAND_BLACK = "#121212";
+const BRAND_DARK = "#1e1e1e";
+const BRAND_RED = "#e53935";
+const BRAND_ORANGE = "#fb8c00";
+const BRAND_LIGHT = "#f5f5f5";
+const BRAND_WHITE = "#ffffff";
+const BRAND_BLUE = "#015B97"; // Primary Knoxville blue
+
+// Font stack (matches Hero.jsx)
+const FONT_FAMILY = `'Proxima Nova', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif`;
 
 const values = [
   { title: "Integrity", description: "We conduct our business with honesty, transparency, and ethical practices." },
@@ -19,10 +26,7 @@ export default function AboutPage() {
   return (
     <div
       className="min-h-screen bg-white text-gray-900"
-      style={{ 
-        fontFamily: '"Poppins", "Helvetica Neue", Arial, sans-serif',
-        fontSize: '14px'
-      }}
+      style={{ fontFamily: FONT_FAMILY }}
     >
       <Helmet>
         <title>About Knoxville | Fibre Internet Provider</title>
@@ -32,15 +36,9 @@ export default function AboutPage() {
         />
       </Helmet>
 
-      <style>{`
-        html { font-size: 14px; }
-        h1, h2, h3, h4, h5, h6 { font-weight: 700; line-height: 1.2; }
-        p, li { line-height: 1.6; margin-top: 0; margin-bottom: 1rem; }
-      `}</style>
-
       <Navbar />
 
-      {/* Hero Section — Matches hero.jsx exactly */}
+      {/* Hero Section — Matches Hero.jsx styling */}
       <motion.section
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -54,7 +52,7 @@ export default function AboutPage() {
               animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.6 }}
               className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 leading-tight"
-              style={{ color: RISA_BLUE }}
+              style={{ color: BRAND_BLUE }}
             >
               About Knoxville
             </motion.h1>
@@ -70,7 +68,7 @@ export default function AboutPage() {
         </div>
       </motion.section>
 
-      {/* Knoxville Info — White background */}
+      {/* Knoxville Info */}
       <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -82,7 +80,7 @@ export default function AboutPage() {
             >
               <h2
                 className="text-3xl font-bold mb-6"
-                style={{ color: RISA_BLUE }}
+                style={{ color: BRAND_BLUE }}
               >
                 What to Know About Knoxville
               </h2>
@@ -116,7 +114,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Mission & Vision — Now on pure white (no gray bg) */}
+      {/* Mission & Vision */}
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
@@ -125,7 +123,7 @@ export default function AboutPage() {
               whileInView={{ y: 0, opacity: 1 }}
               viewport={{ once: true }}
               className="text-3xl font-bold mb-4"
-              style={{ color: RISA_BLUE }}
+              style={{ color: BRAND_BLUE }}
             >
               Our Purpose
             </motion.h2>
@@ -140,11 +138,11 @@ export default function AboutPage() {
               whileInView={{ y: 0, opacity: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5 }}
-              className="bg-white p-8 rounded-xl shadow-md border border-gray-200 hover:shadow-lg transition-shadow"
+              className="bg-white p-8 rounded-lg border border-gray-200 hover:shadow-md transition-shadow"
             >
               <h3
                 className="text-2xl font-bold mb-5"
-                style={{ color: RISA_BLUE }}
+                style={{ color: BRAND_BLUE }}
               >
                 Our Mission
               </h3>
@@ -166,11 +164,11 @@ export default function AboutPage() {
               whileInView={{ y: 0, opacity: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.1 }}
-              className="bg-white p-8 rounded-xl shadow-md border border-gray-200 hover:shadow-lg transition-shadow"
+              className="bg-white p-8 rounded-lg border border-gray-200 hover:shadow-md transition-shadow"
             >
               <h3
                 className="text-2xl font-bold mb-5"
-                style={{ color: RISA_LIGHT_BLUE }}
+                style={{ color: BRAND_ORANGE }}
               >
                 Our Vision
               </h3>
@@ -180,7 +178,7 @@ export default function AboutPage() {
               <ul className="space-y-2">
                 {["Bridge the digital divide", "Enable next-generation technologies", "Create lasting economic impact"].map((item, i) => (
                   <li key={i} className="flex items-start">
-                    <span className="text-blue-400 mr-2 mt-0.5">✓</span>
+                    <span className="text-orange-500 mr-2 mt-0.5">✓</span>
                     <span>{item}</span>
                   </li>
                 ))}
@@ -190,7 +188,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Core Values — White background */}
+      {/* Core Values */}
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
@@ -199,7 +197,7 @@ export default function AboutPage() {
               whileInView={{ y: 0, opacity: 1 }}
               viewport={{ once: true }}
               className="text-3xl font-bold mb-4"
-              style={{ color: RISA_BLUE }}
+              style={{ color: BRAND_BLUE }}
             >
               Our Core Values
             </motion.h2>
@@ -216,15 +214,15 @@ export default function AboutPage() {
                 whileInView={{ y: 0, opacity: 1 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="bg-white p-6 rounded-xl text-center border border-gray-200 hover:shadow-md transition-shadow"
+                className="bg-white p-6 rounded-lg text-center border border-gray-200 hover:shadow-md transition-shadow"
               >
                 <div
-                  className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4"
-                  style={{ backgroundColor: RISA_BLUE }}
+                  className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4"
+                  style={{ backgroundColor: BRAND_BLUE }}
                 >
-                  <span className="text-white font-bold text-lg">{index + 1}</span>
+                  <span className="text-white font-bold text-sm">{index + 1}</span>
                 </div>
-                <h3 className="text-xl font-bold mb-3" style={{ color: RISA_BLUE }}>
+                <h3 className="text-lg font-bold mb-2" style={{ color: BRAND_BLUE }}>
                   {value.title}
                 </h3>
                 <p className="text-gray-700 text-sm">{value.description}</p>
@@ -234,10 +232,10 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Bio Section — Dark Blue (only colored section, like hero.jsx badge) */}
+      {/* Bio Section — Dark Blue Background */}
       <section
         className="py-20"
-        style={{ backgroundColor: RISA_BLUE }}
+        style={{ backgroundColor: BRAND_BLUE }}
       >
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.h2
@@ -245,7 +243,7 @@ export default function AboutPage() {
             whileInView={{ y: 0, opacity: 1 }}
             viewport={{ once: true }}
             className="text-3xl md:text-4xl font-bold mb-8"
-            style={{ color: RISA_WHITE }}
+            style={{ color: BRAND_WHITE }}
           >
             Knoxville Bio
           </motion.h2>
@@ -261,7 +259,7 @@ export default function AboutPage() {
               viewport={{ once: true }}
               transition={{ delay: i * 0.1 }}
               className="text-lg mb-5 leading-relaxed"
-              style={{ color: RISA_WHITE }}
+              style={{ color: BRAND_WHITE }}
             >
               {para}
             </motion.p>

@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from "framer-motion";
 
 // RISA Brand Colors
 const RISA_BLUE = "#015B97";
+const RISA_RED = "#DC2626"; // Changed from blue to red
 const RISA_TEXT = "#565A5C";
 const RISA_LIGHT_BG = "#f8f9fa";
 
@@ -136,10 +137,10 @@ export default function Navbar() {
     >
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex items-center justify-between h-16">
-          {/* Logo */}
+          {/* Logo - Changed from blue to red */}
           <div className="flex items-center gap-2">
             <span
-              className="whitespace-nowrap text-[#015B97] font-bold text-lg md:text-xl"
+              className="whitespace-nowrap text-[#DC2626] font-bold text-lg md:text-xl"
               style={{ fontFamily: FONT_FAMILY }}
             >
               Knoxville Technologies Home Fibre
