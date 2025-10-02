@@ -3,13 +3,17 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { FaWhatsapp } from "react-icons/fa";
 import { Helmet } from "react-helmet";
-import { Wifi, Clock, HardHat, CheckCircle, Zap, X } from "lucide-react";
+import { Wifi, Clock, HardHat, CheckCircle, Zap, X, Star, Shield, TrendingUp } from "lucide-react";
 
-// RISA Brand Colors
-const RISA_BLUE = "#015B97";
-const RISA_LIGHT_BLUE = "#3288e6";
-const RISA_TEXT = "#565A5C";
-const RISA_WHITE = "#ffffff";
+// New Professional Color Palette: Black, Red, Orange
+const PRIMARY_BLACK = "#000000";
+const PRIMARY_RED = "#DC2626"; // A professional red
+const PRIMARY_ORANGE = "#EA580C"; // A professional orange
+const SECONDARY_ORANGE = "#FDBA74"; // Lighter orange for accents
+const LIGHT_BG = "#F8FAFC";
+const WHITE = "#FFFFFF";
+const TEXT_DARK = "#1F2937";
+const TEXT_LIGHT = "#6B7280";
 
 // Handwritten font style
 const HANDWRITTEN_FONT = `'Dancing Script', cursive`;
@@ -21,7 +25,8 @@ const plans = [
     speed: "6Mbps",
     image: "/basicp.jpg",
     features: ["Great for browsing", "24/7 Support", "Free Installation"],
-    type: "home"
+    type: "home",
+    popular: false
   },
   {
     name: "Essential Plan",
@@ -29,7 +34,8 @@ const plans = [
     speed: "10Mbps",
     image: "/essentialp.jpg",
     features: ["Streaming & Social Media", "24/7 Support", "Free Installation"],
-    type: "home"
+    type: "home",
+    popular: false
   },
   {
     name: "Family Plan",
@@ -37,7 +43,8 @@ const plans = [
     speed: "15Mbps",
     image: "/familyp.jpg",
     features: ["Work from Home", "Streaming", "24/7 Support", "Free Installation"],
-    type: "home"
+    type: "home",
+    popular: true
   },
   {
     name: "Smart Home Plan",
@@ -45,7 +52,8 @@ const plans = [
     speed: "20Mbps",
     image: "/streaming.jpg",
     features: ["Multiple Devices", "Low Latency", "24/7 Support", "Free Installation"],
-    type: "home"
+    type: "home",
+    popular: false
   },
   {
     name: "Pro Streamer Plan",
@@ -53,7 +61,8 @@ const plans = [
     speed: "25Mbps",
     image: "/pros.jpg",
     features: ["Heavy Streaming", "Gaming Ready", "24/7 Support", "Free Installation"],
-    type: "home"
+    type: "home",
+    popular: false
   },
   {
     name: "Ultra Plan",
@@ -61,7 +70,8 @@ const plans = [
     speed: "30Mbps",
     image: "/back.webp",
     features: ["High-Speed Everything", "Gaming & 4K", "24/7 Support", "Free Installation"],
-    type: "home"
+    type: "home",
+    popular: false
   },
   {
     name: "Business Basic",
@@ -69,7 +79,8 @@ const plans = [
     speed: "50Mbps",
     image: "/image.webp",
     features: ["5 IP phones", "3 Static IPs", "Priority support", "99.5% uptime"],
-    type: "business"
+    type: "business",
+    popular: false
   },
   {
     name: "Business Plus",
@@ -77,7 +88,8 @@ const plans = [
     speed: "100Mbps",
     image: "/internet1.webp",
     features: ["10 IP phones", "5 Static IPs", "Dedicated line", "99.9% uptime"],
-    type: "business"
+    type: "business",
+    popular: true
   },
   {
     name: "Enterprise",
@@ -85,7 +97,8 @@ const plans = [
     speed: "500Mbps+",
     image: "/enterprise2.jpg",
     features: ["Unlimited IP phones", "10+ Static IPs", "SLA guarantee", "24/7 monitoring"],
-    type: "enterprise"
+    type: "enterprise",
+    popular: false
   }
 ];
 
@@ -179,15 +192,13 @@ const Hero = () => {
       <section
         className="relative w-full overflow-hidden py-20 md:py-28 lg:py-32 px-4 sm:px-6 lg:px-8"
         style={{
-          backgroundImage: `url('https://itel.com/wp-content/uploads/2015/09/iStock_000012499607_XXXLarge-1024x576.jpg')`,
+          backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.7), rgba(220, 38, 38, 0.3)), url('https://itel.com/wp-content/uploads/2015/09/iStock_000012499607_XXXLarge-1024x576.jpg')`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
           minHeight: '60vh'
         }}
       >
-        <div className="absolute inset-0 bg-black bg-opacity-40"></div>
-
         <div className="relative z-10 max-w-7xl mx-auto h-full flex items-center">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-center w-full">
             <motion.div
@@ -197,20 +208,23 @@ const Hero = () => {
               className="text-white"
             >
               <div
-                className="inline-block mb-4 px-3 py-1 text-xs font-medium rounded-full"
-                style={{ backgroundColor: RISA_BLUE, color: RISA_WHITE }}
+                className="inline-block mb-4 px-4 py-2 text-xs font-bold rounded-full border-2"
+                style={{ 
+                  backgroundColor: 'transparent', 
+                  color: WHITE,
+                  borderColor: PRIMARY_ORANGE
+                }}
               >
-                Professional Connectivity
+                ⚡ Professional Connectivity
               </div>
 
               <h1
                 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 leading-tight"
                 style={{ fontFamily: '"adobe-garamond-pro", "Poppins", sans-serif' }}
               >
-                Unlimited Internet For Your Home
+                Unlimited <span style={{ color: PRIMARY_ORANGE }}>Internet</span> For Your Home
               </h1>
 
-              {/* ✅ FIXED: Text now visible with white color */}
               <p className="text-base md:text-lg mb-6 text-white max-w-lg" style={{ opacity: 0.95 }}>
                 Enjoy unlimited internet for your home with fast, reliable fibre connectivity—perfect for streaming, gaming, and working from home.
               </p>
@@ -220,19 +234,17 @@ const Hero = () => {
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => document.getElementById('plans-section').scrollIntoView({ behavior: 'smooth' })}
-                  className="font-medium py-3 sm:py-2 px-6 sm:px-5 rounded-full text-sm transition-all w-full sm:w-auto text-center"
+                  className="font-bold py-3 sm:py-3 px-8 sm:px-8 rounded-lg text-sm transition-all w-full sm:w-auto text-center shadow-lg"
                   style={{
-                    backgroundColor: RISA_WHITE,
-                    color: RISA_BLUE,
-                    borderRadius: '50px'
+                    backgroundColor: PRIMARY_RED,
+                    color: WHITE,
+                    borderRadius: '8px'
                   }}
                   onMouseEnter={(e) => {
-                    e.target.style.backgroundColor = RISA_BLUE;
-                    e.target.style.color = RISA_WHITE;
+                    e.target.style.backgroundColor = PRIMARY_ORANGE;
                   }}
                   onMouseLeave={(e) => {
-                    e.target.style.backgroundColor = RISA_WHITE;
-                    e.target.style.color = RISA_BLUE;
+                    e.target.style.backgroundColor = PRIMARY_RED;
                   }}
                 >
                   View Plans
@@ -242,20 +254,20 @@ const Hero = () => {
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => navigate("/coverage")}
-                  className="font-medium py-3 sm:py-2 px-6 sm:px-5 rounded-full text-sm transition-all w-full sm:w-auto text-center"
+                  className="font-bold py-3 sm:py-3 px-8 sm:px-8 rounded-lg text-sm transition-all w-full sm:w-auto text-center border-2 shadow-lg"
                   style={{
                     backgroundColor: 'transparent',
-                    color: RISA_WHITE,
-                    border: `2px solid ${RISA_WHITE}`,
-                    borderRadius: '50px'
+                    color: WHITE,
+                    borderColor: WHITE,
+                    borderRadius: '8px'
                   }}
                   onMouseEnter={(e) => {
-                    e.target.style.backgroundColor = RISA_BLUE;
-                    e.target.style.borderColor = RISA_BLUE;
+                    e.target.style.backgroundColor = WHITE;
+                    e.target.style.color = PRIMARY_BLACK;
                   }}
                   onMouseLeave={(e) => {
                     e.target.style.backgroundColor = 'transparent';
-                    e.target.style.borderColor = RISA_WHITE;
+                    e.target.style.color = WHITE;
                   }}
                 >
                   View Coverage
@@ -266,7 +278,40 @@ const Hero = () => {
         </div>
       </section>
 
-      {/* Plans Section — RISA Professional */}
+      {/* Stats Section */}
+      <section className="py-12 bg-gray-900">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            {[
+              { number: "10,000+", label: "Happy Customers", icon: <TrendingUp className="w-6 h-6" /> },
+              { number: "99.9%", label: "Uptime Guarantee", icon: <Shield className="w-6 h-6" /> },
+              { number: "24/7", label: "Support", icon: <Clock className="w-6 h-6" /> },
+              { number: "0", label: "Hidden Fees", icon: <CheckCircle className="w-6 h-6" /> }
+            ].map((stat, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                className="text-center text-white"
+              >
+                <div className="flex justify-center mb-3">
+                  <div className="p-3 rounded-full" style={{ backgroundColor: PRIMARY_RED }}>
+                    <span style={{ color: WHITE }}>{stat.icon}</span>
+                  </div>
+                </div>
+                <div className="text-2xl md:text-3xl font-bold mb-1" style={{ color: PRIMARY_ORANGE }}>
+                  {stat.number}
+                </div>
+                <div className="text-sm text-gray-300">{stat.label}</div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Plans Section */}
       <section id="plans-section" className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-12">
@@ -276,13 +321,13 @@ const Hero = () => {
               viewport={{ once: true }}
               className="text-3xl md:text-4xl font-bold mb-3"
               style={{ 
-                color: RISA_BLUE,
-                fontFamily: HANDWRITTEN_FONT, // ✅ Handwritten style added
+                color: PRIMARY_BLACK,
+                fontFamily: HANDWRITTEN_FONT,
                 fontSize: '2.5rem',
                 fontWeight: 700
               }}
             >
-              Internet <span style={{ color: RISA_LIGHT_BLUE }}>Plans</span>
+              Internet <span style={{ color: PRIMARY_RED }}>Plans</span>
             </motion.h2>
             <motion.p
               initial={{ y: 20, opacity: 0 }}
@@ -290,14 +335,14 @@ const Hero = () => {
               viewport={{ once: true }}
               transition={{ delay: 0.1 }}
               className="text-lg"
-              style={{ color: RISA_TEXT }}
+              style={{ color: TEXT_DARK }}
             >
               Fast, reliable, and unlimited fibre connectivity for home and business
             </motion.p>
           </div>
 
           <div className="flex justify-center mb-10">
-            <div className="inline-flex rounded-lg bg-gray-100 p-1">
+            <div className="inline-flex rounded-lg bg-gray-100 p-1 border-2" style={{ borderColor: PRIMARY_ORANGE }}>
               {[
                 { id: "home", label: "Home Plans" },
                 { id: "business", label: "Business Plans" },
@@ -306,15 +351,14 @@ const Hero = () => {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`px-5 py-2 rounded-md text-sm font-medium transition-colors ${
+                  className={`px-5 py-2 rounded-md text-sm font-bold transition-colors ${
                     activeTab === tab.id
-                      ? "bg-white text-blue-600 shadow-sm"
+                      ? "text-white shadow-sm"
                       : "text-gray-700 hover:text-gray-900"
                   }`}
                   style={{
-                    backgroundColor: activeTab === tab.id ? RISA_WHITE : '',
-                    color: activeTab === tab.id ? RISA_BLUE : RISA_TEXT,
-                    border: activeTab === tab.id ? `1px solid ${RISA_BLUE}` : 'none'
+                    backgroundColor: activeTab === tab.id ? PRIMARY_RED : '',
+                    color: activeTab === tab.id ? WHITE : TEXT_DARK,
                   }}
                 >
                   {tab.label}
@@ -323,7 +367,7 @@ const Hero = () => {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredPlans.map((plan, index) => (
               <motion.div
                 key={index}
@@ -331,22 +375,34 @@ const Hero = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: index * 0.05 }}
-                className="bg-white rounded-lg border border-gray-200 overflow-hidden hover:shadow-md transition-shadow flex flex-col"
+                className={`bg-white rounded-xl border-2 overflow-hidden hover:shadow-2xl transition-all duration-300 flex flex-col relative ${
+                  plan.popular ? 'ring-2 ring-orange-400 transform scale-105' : 'border-gray-200'
+                }`}
+                style={{
+                  borderColor: plan.popular ? PRIMARY_ORANGE : '#E5E7EB'
+                }}
               >
-                <div className="h-40 overflow-hidden">
+                {plan.popular && (
+                  <div className="absolute top-0 right-0 bg-gradient-to-r from-orange-500 to-red-600 text-white px-4 py-1 text-xs font-bold rounded-bl-lg">
+                    <Star className="w-3 h-3 inline mr-1" />
+                    MOST POPULAR
+                  </div>
+                )}
+                
+                <div className="h-40 overflow-hidden relative">
                   <img
                     src={plan.image}
                     alt={plan.name}
                     className="w-full h-full object-cover"
                   />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
                 </div>
-                <div className="p-5 flex flex-col flex-grow">
-                  <div className="flex justify-between items-start mb-2">
-                    {/* ✅ Handwritten style for plan names */}
+                <div className="p-6 flex flex-col flex-grow">
+                  <div className="flex justify-between items-start mb-3">
                     <h3 
                       className="text-lg font-bold" 
                       style={{ 
-                        color: RISA_BLUE,
+                        color: PRIMARY_BLACK,
                         fontFamily: HANDWRITTEN_FONT,
                         fontSize: '1.4rem'
                       }}
@@ -354,40 +410,43 @@ const Hero = () => {
                       {plan.name}
                     </h3>
                     <span
-                      className="text-xs px-2 py-1 rounded-full font-medium"
-                      style={{ backgroundColor: `${RISA_BLUE}10`, color: RISA_BLUE }}
+                      className="text-xs px-3 py-1 rounded-full font-bold border"
+                      style={{ 
+                        backgroundColor: `${PRIMARY_RED}10`, 
+                        color: PRIMARY_RED,
+                        borderColor: PRIMARY_RED
+                      }}
                     >
                       {plan.speed}
                     </span>
                   </div>
-                  {/* ✅ Handwritten style for prices */}
                   <p 
-                    className="text-xl font-bold mb-3" 
+                    className="text-2xl font-bold mb-4" 
                     style={{ 
-                      color: RISA_BLUE,
+                      color: PRIMARY_RED,
                       fontFamily: HANDWRITTEN_FONT,
-                      fontSize: '1.6rem'
+                      fontSize: '1.8rem'
                     }}
                   >
                     {plan.price}
+                    <span className="text-sm font-normal text-gray-600">/month</span>
                   </p>
-                  <ul className="space-y-2 mb-5 flex-grow">
+                  <ul className="space-y-3 mb-6 flex-grow">
                     {plan.features.map((feature, i) => (
-                      <li key={i} className="flex items-start text-sm" style={{ color: RISA_TEXT }}>
-                        <CheckCircle className="w-4 h-4 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
+                      <li key={i} className="flex items-start text-sm" style={{ color: TEXT_DARK }}>
+                        <CheckCircle className="w-4 h-4 mr-2 mt-0.5 flex-shrink-0" style={{ color: PRIMARY_ORANGE }} />
                         {feature}
                       </li>
                     ))}
                   </ul>
                   <motion.button
-                    whileHover={{ y: -2 }}
+                    whileHover={{ y: -2, scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     onClick={() => handlePlanSelect(plan)}
-                    className="w-full font-medium py-2.5 rounded-full text-sm transition-all"
+                    className="w-full font-bold py-3 rounded-lg text-sm transition-all shadow-lg"
                     style={{
-                      backgroundColor: RISA_BLUE,
-                      color: RISA_WHITE,
-                      borderRadius: '50px'
+                      backgroundColor: plan.popular ? PRIMARY_ORANGE : PRIMARY_RED,
+                      color: WHITE,
                     }}
                   >
                     Get Connected
@@ -400,36 +459,85 @@ const Hero = () => {
       </section>
 
       {/* Features */}
-      <section className="py-12 bg-white">
+      <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          {/* ✅ Handwritten style for section title */}
+          <motion.h3
+            initial={{ y: 20, opacity: 0 }}
+            whileInView={{ y: 0, opacity: 1 }}
+            viewport={{ once: true }}
+            className="text-2xl md:text-3xl font-bold mb-12"
+            style={{ color: PRIMARY_BLACK }}
+          >
+            Why Choose <span style={{ color: PRIMARY_RED }}>Knoxville</span>?
+          </motion.h3>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+            {[
+              { 
+                icon: <Shield className="w-8 h-8" />, 
+                title: "Reliable Connection", 
+                description: "99.9% uptime guarantee with redundant systems"
+              },
+              { 
+                icon: <Zap className="w-8 h-8" />, 
+                title: "Lightning Fast", 
+                description: "Fibre-optic technology for ultra-fast speeds"
+              },
+              { 
+                icon: <Clock className="w-8 h-8" />, 
+                title: "24/7 Support", 
+                description: "Round-the-clock technical support team"
+              }
+            ].map((feature, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: i * 0.1 }}
+                className="bg-white p-6 rounded-xl shadow-lg border-2 border-transparent hover:border-orange-200 transition-all"
+              >
+                <div className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center" style={{ backgroundColor: `${PRIMARY_RED}10` }}>
+                  <span style={{ color: PRIMARY_RED }}>{feature.icon}</span>
+                </div>
+                <h4 className="font-bold text-lg mb-2" style={{ color: PRIMARY_BLACK }}>{feature.title}</h4>
+                <p className="text-sm" style={{ color: TEXT_LIGHT }}>{feature.description}</p>
+              </motion.div>
+            ))}
+          </div>
+
           <p 
-            className="text-base mb-6" 
+            className="text-base mb-8 font-bold" 
             style={{ 
-              color: RISA_TEXT,
-              fontFamily: HANDWRITTEN_FONT,
-              fontSize: '1.3rem',
-              fontWeight: 600
+              color: PRIMARY_BLACK,
+              fontSize: '1.1rem'
             }}
           >
-            All plans include:
+            ✅ All plans include:
           </p>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {[
-              { icon: <Clock className="w-4 h-4" />, label: "24/7 Support" },
-              { icon: <HardHat className="w-4 h-4" />, label: "Same-day Installation" },
-              { icon: <Zap className="w-4 h-4" />, label: "<5ms latency" },
-              { icon: <Wifi className="w-4 h-4" />, label: "Free Installation" }
+              { icon: <Clock className="w-5 h-5" />, label: "24/7 Support" },
+              { icon: <HardHat className="w-5 h-5" />, label: "Same-day Installation" },
+              { icon: <Zap className="w-5 h-5" />, label: "<5ms latency" },
+              { icon: <Wifi className="w-5 h-5" />, label: "Free Installation" }
             ].map((item, i) => (
-              <div key={i} className="flex flex-col items-center">
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.3, delay: i * 0.1 }}
+                className="flex flex-col items-center"
+              >
                 <div
-                  className="w-10 h-10 rounded-full flex items-center justify-center mb-2"
-                  style={{ backgroundColor: `${RISA_BLUE}10` }}
+                  className="w-12 h-12 rounded-full flex items-center justify-center mb-3 shadow-md"
+                  style={{ backgroundColor: PRIMARY_RED }}
                 >
-                  <span style={{ color: RISA_BLUE }}>{item.icon}</span>
+                  <span style={{ color: WHITE }}>{item.icon}</span>
                 </div>
-                <span className="text-sm" style={{ color: RISA_TEXT }}>{item.label}</span>
-              </div>
+                <span className="text-sm font-medium" style={{ color: TEXT_DARK }}>{item.label}</span>
+              </motion.div>
             ))}
           </div>
         </div>
@@ -437,23 +545,21 @@ const Hero = () => {
 
       {/* Business Features (if needed) */}
       {activeTab !== "home" && (
-        <section className="py-12 bg-white">
+        <section className="py-16 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            {/* ✅ Handwritten style for business title */}
             <motion.h3
-              className="text-xl font-bold text-center mb-8"
+              className="text-2xl md:text-3xl font-bold text-center mb-12"
               style={{ 
-                color: RISA_BLUE,
+                color: PRIMARY_BLACK,
                 fontFamily: HANDWRITTEN_FONT,
-                fontSize: '1.8rem'
               }}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
             >
-              Business Solutions Features
+              Business Solutions <span style={{ color: PRIMARY_RED }}>Features</span>
             </motion.h3>
-            <div className="grid md:grid-cols-3 gap-6">
+            <div className="grid md:grid-cols-3 gap-8">
               {[
                 { title: "SLA Guarantee", desc: "99.9% uptime with compensation" },
                 { title: "Dedicated Support", desc: "Priority technical support" },
@@ -465,20 +571,18 @@ const Hero = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.1 }}
-                  className="bg-gray-50 p-5 rounded-lg border border-gray-200"
+                  className="bg-gradient-to-br from-gray-50 to-white p-6 rounded-xl shadow-lg border-2 border-gray-100 hover:border-orange-200 transition-all"
                 >
-                  {/* ✅ Handwritten style for feature titles */}
                   <h4 
-                    className="font-bold mb-1" 
+                    className="font-bold text-lg mb-3" 
                     style={{ 
-                      color: RISA_BLUE,
+                      color: PRIMARY_BLACK,
                       fontFamily: HANDWRITTEN_FONT,
-                      fontSize: '1.2rem'
                     }}
                   >
                     {item.title}
                   </h4>
-                  <p className="text-sm" style={{ color: RISA_TEXT }}>{item.desc}</p>
+                  <p className="text-sm" style={{ color: TEXT_LIGHT }}>{item.desc}</p>
                 </motion.div>
               ))}
             </div>
@@ -493,27 +597,30 @@ const Hero = () => {
             <motion.div
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              className="bg-white rounded-xl shadow-xl max-w-md w-full p-6"
+              className="bg-white rounded-xl shadow-2xl max-w-md w-full p-6 border-2"
+              style={{ borderColor: PRIMARY_ORANGE }}
             >
               <div className="flex justify-between items-center mb-4">
-                {/* ✅ Handwritten style for modal title */}
                 <h3 
                   className="text-lg font-bold" 
                   style={{ 
-                    color: RISA_BLUE,
+                    color: PRIMARY_BLACK,
                     fontFamily: HANDWRITTEN_FONT,
                     fontSize: '1.4rem'
                   }}
                 >
                   Get {selectedPlan?.name}
                 </h3>
-                <button onClick={() => setShowForm(false)} className="text-gray-500 hover:text-gray-700">
+                <button 
+                  onClick={() => setShowForm(false)} 
+                  className="text-gray-500 hover:text-red-600 transition-colors"
+                >
                   <X className="w-5 h-5" />
                 </button>
               </div>
 
               <form onSubmit={handleSubmit}>
-                <div className="space-y-3">
+                <div className="space-y-4">
                   {[
                     { name: "name", label: "Full Name *", type: "text", required: true },
                     { name: "phone", label: "Phone Number *", type: "tel", required: true },
@@ -521,13 +628,13 @@ const Hero = () => {
                     { name: "location", label: "Location *", type: "text", required: true }
                   ].map((field) => (
                     <div key={field.name}>
-                      <label className="block text-sm font-medium mb-1" style={{ color: RISA_TEXT }}>{field.label}</label>
+                      <label className="block text-sm font-medium mb-1" style={{ color: TEXT_DARK }}>{field.label}</label>
                       <input
                         type={field.type}
                         name={field.name}
                         required={field.required}
-                        className="w-full px-3 py-2 bg-gray-50 border rounded-md focus:outline-none"
-                        style={{ borderColor: RISA_BLUE }}
+                        className="w-full px-3 py-2 bg-gray-50 border-2 rounded-lg focus:outline-none transition-colors"
+                        style={{ borderColor: TEXT_LIGHT, focus: { borderColor: PRIMARY_ORANGE } }}
                         value={formData[field.name]}
                         onChange={handleInputChange}
                       />
@@ -535,22 +642,27 @@ const Hero = () => {
                   ))}
 
                   <div>
-                    <label className="block text-sm font-medium mb-1" style={{ color: RISA_TEXT }}>Connection Type</label>
+                    <label className="block text-sm font-medium mb-1" style={{ color: TEXT_DARK }}>Connection Type</label>
                     <input
                       type="text"
-                      className="w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-md"
+                      className="w-full px-3 py-2 bg-gray-100 border-2 border-gray-300 rounded-lg font-medium"
+                      style={{ color: PRIMARY_RED }}
                       value={formData.connectionType}
                       readOnly
                     />
                   </div>
                 </div>
 
-                <div className="mt-6 flex justify-end space-x-2">
+                <div className="mt-6 flex justify-end space-x-3">
                   <button
                     type="button"
                     onClick={() => setShowForm(false)}
-                    className="px-4 py-2 text-sm rounded-full"
-                    style={{ color: RISA_TEXT }}
+                    className="px-4 py-2 text-sm rounded-lg border-2 font-medium transition-colors"
+                    style={{ 
+                      borderColor: TEXT_LIGHT, 
+                      color: TEXT_DARK,
+                      hover: { borderColor: PRIMARY_RED, color: PRIMARY_RED }
+                    }}
                   >
                     Cancel
                   </button>
@@ -558,8 +670,8 @@ const Hero = () => {
                     type="submit"
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    className="px-4 py-2 text-white rounded-full text-sm font-medium"
-                    style={{ backgroundColor: RISA_BLUE }}
+                    className="px-4 py-2 text-white rounded-lg text-sm font-bold shadow-lg"
+                    style={{ backgroundColor: PRIMARY_RED }}
                   >
                     Send via WhatsApp
                   </motion.button>
@@ -575,10 +687,11 @@ const Hero = () => {
         href="https://wa.me/254726818938"
         target="_blank"
         rel="noopener noreferrer"
-        className="fixed bottom-6 right-6 z-50 w-12 h-12 rounded-full bg-green-500 flex items-center justify-center shadow-md hover:shadow-lg transition-shadow"
+        className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full flex items-center justify-center shadow-2xl hover:scale-110 transition-transform"
+        style={{ backgroundColor: PRIMARY_RED }}
         aria-label="Chat on WhatsApp"
       >
-        <FaWhatsapp className="text-white text-xl" />
+        <FaWhatsapp className="text-white text-2xl" />
       </a>
     </div>
   );
