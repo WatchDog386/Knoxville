@@ -2,7 +2,7 @@ import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
 
-// https://vite.dev/config/
+// https://vitejs.dev/config/
 export default defineConfig(({ command, mode }) => {
   // Load env file based on `mode` in the current working directory.
   const env = loadEnv(mode, process.cwd(), '');
@@ -19,7 +19,7 @@ export default defineConfig(({ command, mode }) => {
       emptyOutDir: true,
       sourcemap: false, // Set to true for debugging production builds
       minify: 'esbuild', // Options: 'esbuild' (fastest), 'terser', or false
-      target: 'baseline-widely-available', // Modern browsers
+      target: 'esnext', // ✅ modern browsers; change to 'es2018' if you want wider support
       
       // Advanced Rollup options
       rollupOptions: {
@@ -55,7 +55,6 @@ export default defineConfig(({ command, mode }) => {
     
     // Global constant replacements
     define: {
-      // You can define global constants here
       __APP_VERSION__: JSON.stringify(env.npm_package_version)
     }
   };
