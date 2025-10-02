@@ -3,15 +3,23 @@ import { useParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   Phone, Mail, MapPin, Star, CheckCircle, Zap, 
-  Shield, Cpu, Wifi, Calendar, ChevronDown, ChevronUp
+  Shield, Cpu, Wifi, Calendar, ChevronDown, ChevronUp, X
 } from "lucide-react";
 import { useInView } from "react-intersection-observer";
 
-// Technician Data
+// RISA Brand Colors
+const RISA_BLUE = "#015B97";
+const RISA_TEXT = "#565A5C";
+const RISA_LIGHT_BG = "#f8f9fa";
+
+// Font stack (Proxima Nova via Adobe Fonts)
+const FONT_FAMILY = `'Proxima Nova', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif`;
+
+// Technician Data (unchanged)
 const technicians = [
   {
     id: "tech-1",
-    name: "Abraham ",
+    name: "Abraham",
     role: "Chief Hardware Engineer",
     phone: "+254726818938",
     email: "ooroabraham@gmail.com",
@@ -30,7 +38,7 @@ const technicians = [
   },
   {
     id: "tech-2",
-    name: "Colins ",
+    name: "Colins",
     role: "Network Architect",
     phone: "+254768085708",
     email: "collinsominde98@gmail.com",
@@ -49,7 +57,7 @@ const technicians = [
   },
   {
     id: "tech-3",
-    name: "Bret Gift ",
+    name: "Bret Gift",
     role: "Software Solutions Expert",
     phone: "+254713116766",
     email: "ggiftotieno@gmail.com",
@@ -68,7 +76,7 @@ const technicians = [
   },
   {
     id: "tech-4",
-    name: "Lameck ",
+    name: "Lameck",
     role: "Security Specialist",
     phone: "+254758018533",
     email: "lameckooro@gmail.com",
@@ -88,10 +96,10 @@ const technicians = [
 ];
 
 const specialties = [
-  { icon: <Cpu className="w-6 h-6" />, name: "Hardware", color: "text-blue-400" },
-  { icon: <Wifi className="w-6 h-6" />, name: "Networking", color: "text-purple-400" },
-  { icon: <Zap className="w-6 h-6" />, name: "Software", color: "text-green-400" },
-  { icon: <Shield className="w-6 h-6" />, name: "Security", color: "text-yellow-400" }
+  { icon: <Cpu className="w-6 h-6" />, name: "Hardware", color: RISA_BLUE },
+  { icon: <Wifi className="w-6 h-6" />, name: "Networking", color: "#6B46C1" },
+  { icon: <Zap className="w-6 h-6" />, name: "Software", color: "#047857" },
+  { icon: <Shield className="w-6 h-6" />, name: "Security", color: "#B45309" }
 ];
 
 const stats = [
@@ -146,60 +154,51 @@ const faqs = [
 
 const TechnicianCard = ({ tech, onClick }) => {
   const [ref, inView] = useInView({ threshold: 0.1, triggerOnce: true });
-  const [isHovered, setIsHovered] = useState(false);
 
   return (
     <motion.div
       ref={ref}
       initial={{ opacity: 0, y: 80 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.8, ease: [0.16, 0.77, 0.47, 0.97] }}
-      className="relative bg-white rounded-3xl p-1 shadow-lg overflow-hidden group cursor-pointer border border-gray-200 hover:border-blue-200 hover:shadow-xl transition-all"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      transition={{ duration: 0.8 }}
+      className="bg-white rounded-xl p-6 shadow-sm border border-gray-200 hover:shadow-md transition-shadow cursor-pointer"
       onClick={onClick}
     >
-      <div className="relative bg-white rounded-[calc(1.5rem-4px)] h-full overflow-hidden">
-        <div className="p-6 space-y-4">
-          <div>
-            <h3 className="text-2xl font-bold text-gray-900">{tech.name}</h3>
-            <p className="text-blue-600 font-medium">{tech.role}</p>
-          </div>
+      <div className="space-y-4">
+        <div>
+          <h3 className="text-xl font-bold" style={{ color: RISA_BLUE }}>{tech.name}</h3>
+          <p className="text-sm" style={{ color: RISA_TEXT }}>{tech.role}</p>
+        </div>
 
-          <div className="flex flex-wrap gap-2">
-            {tech.skills.slice(0, 3).map((skill, index) => (
-              <motion.span 
-                key={index}
-                className="text-xs bg-blue-50 px-3 py-1.5 rounded-full border border-blue-100 text-blue-800"
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.2 + index * 0.05 }}
-              >
-                {skill}
-              </motion.span>
-            ))}
-          </div>
-
-          <div className="flex justify-between items-center pt-2">
-            <div className="flex items-center gap-2 text-sm text-gray-600">
-              <MapPin className="w-4 h-4" />
-              <span>{tech.location}</span>
-            </div>
-            
-            <motion.a
-              href={`https://wa.me/${tech.phone.replace(/\D/g, '')}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-2 bg-green-600 rounded-full font-medium text-white"
-              whileHover={{ scale: 1.1, boxShadow: "0 0 15px rgba(37, 211, 102, 0.5)" }}
-              whileTap={{ scale: 0.95 }}
-              transition={{ type: "spring", stiffness: 400, damping: 20 }}
+        <div className="flex flex-wrap gap-2">
+          {tech.skills.slice(0, 3).map((skill, index) => (
+            <span 
+              key={index}
+              className="text-xs px-2 py-1 rounded-full"
+              style={{ backgroundColor: `${RISA_BLUE}10`, color: RISA_BLUE }}
             >
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.515 5.392 1.521 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
-              </svg>
-            </motion.a>
+              {skill}
+            </span>
+          ))}
+        </div>
+
+        <div className="flex justify-between items-center pt-2">
+          <div className="flex items-center gap-1 text-sm" style={{ color: RISA_TEXT }}>
+            <MapPin className="w-3.5 h-3.5" />
+            <span>{tech.location}</span>
           </div>
+          
+          <a
+            href={`https://wa.me/${tech.phone.replace(/\D/g, '')}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="p-2 bg-green-600 rounded-full"
+            style={{ backgroundColor: '#22c55e' }}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.515 5.392 1.521 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
+            </svg>
+          </a>
         </div>
       </div>
     </motion.div>
@@ -208,19 +207,6 @@ const TechnicianCard = ({ tech, onClick }) => {
 
 const TechnicianModal = ({ tech, onClose }) => {
   const [activeTab, setActiveTab] = useState('overview');
-  const [selectedDate, setSelectedDate] = useState(null);
-  const [selectedTime, setSelectedTime] = useState(null);
-  
-  const availableDates = [
-    { date: "2023-06-15", day: "Today" },
-    { date: "2023-06-16", day: "Tomorrow" },
-    { date: "2023-06-17", day: "Saturday" },
-    { date: "2023-06-19", day: "Monday" }
-  ];
-  
-  const availableTimes = [
-    "09:00 AM", "11:00 AM", "01:00 PM", "03:00 PM", "05:00 PM"
-  ];
 
   return (
     <AnimatePresence>
@@ -231,225 +217,138 @@ const TechnicianModal = ({ tech, onClose }) => {
         exit={{ opacity: 0 }}
       >
         <motion.div 
-          className="bg-white rounded-3xl max-w-6xl w-full max-h-[90vh] overflow-hidden relative border border-gray-200 shadow-2xl"
+          className="bg-white rounded-xl max-w-4xl w-full max-h-[90vh] overflow-hidden relative border"
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.9, opacity: 0 }}
-          transition={{ type: "spring", damping: 25 }}
         >
           <button 
             onClick={onClose}
-            className="absolute top-4 right-4 bg-gray-100 rounded-full p-2 hover:bg-gray-200 transition-all z-10"
-            whileHover={{ rotate: 90 }}
+            className="absolute top-4 right-4 p-2 rounded-full hover:bg-gray-100"
           >
-            <X className="w-6 h-6 text-gray-800" />
+            <X className="w-5 h-5" style={{ color: RISA_TEXT }} />
           </button>
           
           <div className="grid lg:grid-cols-3 h-full">
-            <div className="lg:col-span-1 bg-gray-50 relative p-6">
-              <div className="flex flex-col items-center">
-                <div className="w-32 h-32 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 text-4xl font-bold mb-4">
+            <div className="lg:col-span-1 bg-gray-50 p-6">
+              <div className="flex flex-col items-center text-center">
+                <div className="w-24 h-24 rounded-full flex items-center justify-center text-white text-2xl font-bold mb-4" style={{ backgroundColor: RISA_BLUE }}>
                   {tech.name.split(" ").map((n) => n[0]).join("")}
                 </div>
-                
-                <h2 className="text-3xl font-bold text-gray-900 text-center">{tech.name}</h2>
-                <p className="text-blue-600 text-xl text-center">{tech.role}</p>
-                
-                <div className="flex items-center justify-center mt-4">
-                  <div className="flex">
-                    {[...Array(5)].map((_, i) => (
-                      <Star 
-                        key={i} 
-                        className={`w-5 h-5 ${i < Math.floor(tech.rating) ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`}
-                      />
-                    ))}
-                  </div>
-                  <span className="ml-2 text-gray-600">{tech.rating} ({tech.reviews} reviews)</span>
+                <h2 className="text-xl font-bold" style={{ color: RISA_BLUE }}>{tech.name}</h2>
+                <p className="text-sm" style={{ color: RISA_TEXT }}>{tech.role}</p>
+                <div className="flex mt-2">
+                  {[...Array(5)].map((_, i) => (
+                    <Star 
+                      key={i} 
+                      className={`w-4 h-4 ${i < Math.floor(tech.rating) ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`}
+                    />
+                  ))}
                 </div>
+                <p className="text-sm mt-1" style={{ color: RISA_TEXT }}>{tech.rating} ({tech.reviews} reviews)</p>
               </div>
             </div>
             
-            <div className="lg:col-span-2 p-8 overflow-y-auto">
+            <div className="lg:col-span-2 p-6 overflow-y-auto">
               <div className="flex border-b border-gray-200 mb-6">
-                <button
-                  className={`px-4 py-2 font-medium ${activeTab === 'overview' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500 hover:text-gray-800'}`}
-                  onClick={() => setActiveTab('overview')}
-                >
-                  Overview
-                </button>
-                <button
-                  className={`px-4 py-2 font-medium ${activeTab === 'schedule' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500 hover:text-gray-800'}`}
-                  onClick={() => setActiveTab('schedule')}
-                >
-                  Schedule
-                </button>
-                <button
-                  className={`px-4 py-2 font-medium ${activeTab === 'reviews' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500 hover:text-gray-800'}`}
-                  onClick={() => setActiveTab('reviews')}
-                >
-                  Reviews
-                </button>
+                {['overview', 'reviews'].map((tab) => (
+                  <button
+                    key={tab}
+                    className={`px-4 py-2 font-medium text-sm capitalize ${
+                      activeTab === tab 
+                        ? `text-[${RISA_BLUE}] border-b-2 border-[${RISA_BLUE}]` 
+                        : 'text-gray-500 hover:text-gray-800'
+                    }`}
+                    onClick={() => setActiveTab(tab)}
+                  >
+                    {tab}
+                  </button>
+                ))}
               </div>
               
               {activeTab === 'overview' && (
-                <div className="space-y-8">
+                <div className="space-y-6">
                   <div>
-                    <h3 className="text-xl font-bold text-gray-900 mb-4">About {tech.name.split(' ')[0]}</h3>
-                    <p className="text-gray-700 leading-relaxed">{tech.bio}</p>
+                    <h3 className="text-lg font-bold" style={{ color: RISA_BLUE }}>About {tech.name.split(' ')[0]}</h3>
+                    <p className="text-sm mt-2" style={{ color: RISA_TEXT }}>{tech.bio}</p>
                   </div>
                   
                   <div>
-                    <h3 className="text-xl font-bold text-gray-900 mb-4">Expertise</h3>
-                    <div className="grid grid-cols-2 gap-4">
+                    <h3 className="text-lg font-bold" style={{ color: RISA_BLUE }}>Expertise</h3>
+                    <div className="mt-2 space-y-2">
                       {tech.skills.map((skill, index) => (
-                        <div key={index} className="flex items-start gap-3">
-                          <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                          <span className="text-gray-700">{skill}</span>
+                        <div key={index} className="flex items-start gap-2">
+                          <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                          <span className="text-sm" style={{ color: RISA_TEXT }}>{skill}</span>
                         </div>
                       ))}
                     </div>
                   </div>
                   
                   <div>
-                    <h3 className="text-xl font-bold text-gray-900 mb-4">Performance Stats</h3>
-                    <div className="grid grid-cols-3 gap-4">
+                    <h3 className="text-lg font-bold" style={{ color: RISA_BLUE }}>Performance</h3>
+                    <div className="grid grid-cols-3 gap-3 mt-2">
                       {tech.stats.map((stat, index) => (
-                        <div key={index} className="bg-gray-50 rounded-xl p-4 text-center border border-gray-200">
-                          <p className="text-2xl font-bold text-gray-900">{stat.value}</p>
-                          <p className="text-gray-500 text-sm">{stat.label}</p>
+                        <div key={index} className="bg-gray-50 rounded p-3 text-center">
+                          <p className="font-bold" style={{ color: RISA_BLUE }}>{stat.value}</p>
+                          <p className="text-xs" style={{ color: RISA_TEXT }}>{stat.label}</p>
                         </div>
                       ))}
                     </div>
                   </div>
                   
                   <div>
-                    <h3 className="text-xl font-bold text-gray-900 mb-4">Contact Information</h3>
-                    <div className="space-y-3">
-                      <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg border border-gray-200">
-                        <Phone className="w-5 h-5 text-blue-500" />
-                        <span className="text-gray-700">{tech.phone}</span>
+                    <h3 className="text-lg font-bold" style={{ color: RISA_BLUE }}>Contact</h3>
+                    <div className="space-y-2 mt-2">
+                      <div className="flex items-center gap-2 p-2 bg-gray-50 rounded">
+                        <Phone className="w-4 h-4" style={{ color: RISA_BLUE }} />
+                        <span className="text-sm" style={{ color: RISA_TEXT }}>{tech.phone}</span>
                       </div>
-                      <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg border border-gray-200">
-                        <Mail className="w-5 h-5 text-blue-500" />
-                        <span className="text-gray-700">{tech.email}</span>
-                      </div>
-                      <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg border border-gray-200">
-                        <MapPin className="w-5 h-5 text-blue-500" />
-                        <span className="text-gray-700">{tech.location}</span>
+                      <div className="flex items-center gap-2 p-2 bg-gray-50 rounded">
+                        <Mail className="w-4 h-4" style={{ color: RISA_BLUE }} />
+                        <span className="text-sm" style={{ color: RISA_TEXT }}>{tech.email}</span>
                       </div>
                     </div>
                   </div>
-                </div>
-              )}
-              
-              {activeTab === 'schedule' && (
-                <div className="space-y-8">
-                  <div>
-                    <h3 className="text-xl font-bold text-gray-900 mb-4">Select Appointment Date</h3>
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                      {availableDates.map((date) => (
-                        <button
-                          key={date.date}
-                          className={`p-3 rounded-lg border ${selectedDate === date.date ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-gray-300'} transition-colors`}
-                          onClick={() => setSelectedDate(date.date)}
-                        >
-                          <p className="text-gray-900 font-medium">{date.day}</p>
-                          <p className="text-gray-500 text-sm">{date.date.split('-')[2]}/{date.date.split('-')[1]}</p>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                  
-                  {selectedDate && (
-                    <div>
-                      <h3 className="text-xl font-bold text-gray-900 mb-4">Available Time Slots</h3>
-                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                        {availableTimes.map((time) => (
-                          <button
-                            key={time}
-                            className={`p-3 rounded-lg border ${selectedTime === time ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-gray-300'} transition-colors`}
-                            onClick={() => setSelectedTime(time)}
-                          >
-                            <p className="text-gray-900">{time}</p>
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                  
-                  {selectedDate && selectedTime && (
-                    <motion.button
-                      className="w-full py-3 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg font-medium text-white mt-6"
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                    >
-                      Confirm Appointment for {selectedDate} at {selectedTime}
-                    </motion.button>
-                  )}
                 </div>
               )}
               
               {activeTab === 'reviews' && (
-                <div className="space-y-6">
-                  <div className="bg-gray-50 rounded-xl p-6 border border-gray-200">
-                    <div className="flex items-center justify-between mb-4">
-                      <div>
-                        <p className="text-4xl font-bold text-gray-900">{tech.rating}</p>
-                        <div className="flex">
-                          {[...Array(5)].map((_, i) => (
-                            <Star 
-                              key={i} 
-                              className={`w-5 h-5 ${i < Math.floor(tech.rating) ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`}
-                            />
-                          ))}
-                        </div>
-                      </div>
-                      <div className="text-gray-600">
-                        <p>{tech.reviews} reviews</p>
-                        <p className="text-sm">98% positive</p>
+                <div className="space-y-4">
+                  <div className="bg-gray-50 rounded p-4">
+                    <div className="flex items-center gap-4">
+                      <p className="text-3xl font-bold" style={{ color: RISA_BLUE }}>{tech.rating}</p>
+                      <div className="flex">
+                        {[...Array(5)].map((_, i) => (
+                          <Star 
+                            key={i} 
+                            className={`w-4 h-4 ${i < Math.floor(tech.rating) ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`}
+                          />
+                        ))}
                       </div>
                     </div>
-                    
-                    <div className="space-y-3">
-                      {[5, 4, 3, 2, 1].map((star) => (
-                        <div key={star} className="flex items-center gap-3">
-                          <span className="text-gray-500 w-8">{star} star</span>
-                          <div className="flex-1 bg-gray-200 rounded-full h-2">
-                            <div 
-                              className="bg-yellow-400 h-2 rounded-full" 
-                              style={{ width: `${(star === 5 ? 80 : star === 4 ? 15 : star === 3 ? 3 : star === 2 ? 1 : 1)}%` }}
-                            />
-                          </div>
-                        </div>
-                      ))}
-                    </div>
+                    <p className="text-sm mt-2" style={{ color: RISA_TEXT }}>{tech.reviews} reviews</p>
                   </div>
                   
-                  <div className="space-y-6">
+                  <div className="space-y-4">
                     {[1, 2, 3].map((review) => (
-                      <div key={review} className="bg-gray-50 rounded-xl p-6 border border-gray-200">
-                        <div className="flex justify-between mb-3">
-                          <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-600">
-                              {review === 1 ? 'JD' : review === 2 ? 'SM' : 'TK'}
-                            </div>
-                            <div>
-                              <p className="font-medium text-gray-900">
-                                {review === 1 ? 'John D.' : review === 2 ? 'Sarah M.' : 'Thomas K.'}
-                              </p>
-                              <div className="flex">
-                                {[...Array(5)].map((_, i) => (
-                                  <Star 
-                                    key={i} 
-                                    className={`w-4 h-4 ${i < (review === 1 ? 5 : review === 2 ? 4 : 5) ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`}
-                                  />
-                                ))}
-                              </div>
+                      <div key={review} className="bg-gray-50 rounded p-4">
+                        <div className="flex justify-between mb-2">
+                          <div>
+                            <p className="font-medium" style={{ color: RISA_TEXT }}>
+                              {review === 1 ? 'John D.' : review === 2 ? 'Sarah M.' : 'Thomas K.'}
+                            </p>
+                            <div className="flex mt-1">
+                              {[...Array(5)].map((_, i) => (
+                                <Star 
+                                  key={i} 
+                                  className={`w-3 h-3 ${i < (review === 1 ? 5 : review === 2 ? 4 : 5) ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`}
+                                />
+                              ))}
                             </div>
                           </div>
-                          <span className="text-gray-500 text-sm">2 weeks ago</span>
                         </div>
-                        <p className="text-gray-700">
+                        <p className="text-sm" style={{ color: RISA_TEXT }}>
                           {review === 1 
                             ? `${tech.name} provided exceptional service. My device was repaired faster than expected and works perfectly now. Highly recommend!`
                             : review === 2
@@ -475,13 +374,13 @@ const StatCard = ({ value, label, index }) => {
   return (
     <motion.div
       ref={ref}
-      className="bg-white rounded-2xl p-6 border border-gray-200 shadow-lg"
+      className="bg-white rounded-lg p-5 border border-gray-200"
       initial={{ opacity: 0, y: 50 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ delay: index * 0.1, duration: 0.6 }}
+      transition={{ delay: index * 0.1 }}
     >
-      <p className="text-4xl font-bold text-gray-900 mb-2">{value}</p>
-      <p className="text-gray-600">{label}</p>
+      <p className="text-2xl font-bold" style={{ color: RISA_BLUE }}>{value}</p>
+      <p className="text-sm" style={{ color: RISA_TEXT }}>{label}</p>
     </motion.div>
   );
 };
@@ -492,23 +391,23 @@ const SpecialtyCard = ({ icon, name, color, index }) => {
   return (
     <motion.div
       ref={ref}
-      className="bg-white rounded-2xl p-6 border border-gray-200 hover:border-gray-300 transition-colors group"
+      className="bg-white rounded-lg p-5 border border-gray-200"
       initial={{ opacity: 0, y: 50 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ delay: index * 0.1, duration: 0.6 }}
+      transition={{ delay: index * 0.1 }}
     >
-      <div className={`w-12 h-12 rounded-lg ${color} bg-opacity-20 flex items-center justify-center mb-4 group-hover:bg-opacity-30 transition-all`}>
-        {icon}
+      <div className="w-10 h-10 rounded-full flex items-center justify-center mb-3" style={{ backgroundColor: `${color}20` }}>
+        <span style={{ color }}>{icon}</span>
       </div>
-      <h3 className="text-xl font-bold text-gray-900 mb-2">{name}</h3>
-      <p className="text-gray-600">
+      <h3 className="font-bold" style={{ color: RISA_BLUE }}>{name}</h3>
+      <p className="text-sm mt-1" style={{ color: RISA_TEXT }}>
         {name === "Hardware" 
-          ? "Component-level repairs and diagnostics"
+          ? "Component-level repairs"
           : name === "Networking"
-          ? "Infrastructure setup and optimization"
+          ? "Infrastructure setup"
           : name === "Software"
-          ? "System troubleshooting and optimization"
-          : "Protection against digital threats"}
+          ? "System troubleshooting"
+          : "Digital threat protection"}
       </p>
     </motion.div>
   );
@@ -520,23 +419,23 @@ const TestimonialCard = ({ testimonial, index }) => {
   return (
     <motion.div
       ref={ref}
-      className="bg-white rounded-2xl p-8 border border-gray-200 shadow-lg"
+      className="bg-white rounded-lg p-5 border border-gray-200"
       initial={{ opacity: 0, y: 50 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ delay: index * 0.2, duration: 0.7 }}
+      transition={{ delay: index * 0.2 }}
     >
-      <div className="flex mb-4">
+      <div className="flex mb-3">
         {[...Array(5)].map((_, i) => (
           <Star 
             key={i} 
-            className={`w-5 h-5 ${i < testimonial.rating ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`}
+            className={`w-4 h-4 ${i < testimonial.rating ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`}
           />
         ))}
       </div>
-      <p className="text-gray-700 italic mb-6">"{testimonial.content}"</p>
+      <p className="text-sm italic mb-3" style={{ color: RISA_TEXT }}>"{testimonial.content}"</p>
       <div>
-        <p className="font-bold text-gray-900">{testimonial.name}</p>
-        <p className="text-blue-600 text-sm">{testimonial.company}</p>
+        <p className="font-bold" style={{ color: RISA_BLUE }}>{testimonial.name}</p>
+        <p className="text-sm" style={{ color: RISA_TEXT }}>{testimonial.company}</p>
       </div>
     </motion.div>
   );
@@ -548,7 +447,7 @@ const FAQItem = ({ faq, index, isOpen, toggle }) => {
   return (
     <motion.div
       ref={ref}
-      className="border-b border-gray-200 py-6"
+      className="border-b border-gray-200 py-4"
       initial={{ opacity: 0, y: 20 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ delay: index * 0.1 }}
@@ -556,17 +455,19 @@ const FAQItem = ({ faq, index, isOpen, toggle }) => {
       <button
         className="flex justify-between items-center w-full text-left"
         onClick={toggle}
+        style={{ color: RISA_TEXT, fontFamily: FONT_FAMILY }}
       >
-        <h3 className="text-lg font-medium text-gray-900">{faq.question}</h3>
+        <h3 className="font-medium">{faq.question}</h3>
         {isOpen ? (
-          <ChevronUp className="w-5 h-5 text-blue-600" />
+          <ChevronUp className="w-4 h-4" style={{ color: RISA_BLUE }} />
         ) : (
-          <ChevronDown className="w-5 h-5 text-gray-500" />
+          <ChevronDown className="w-4 h-4" style={{ color: RISA_TEXT }} />
         )}
       </button>
       {isOpen && (
         <motion.div
-          className="mt-4 text-gray-600"
+          className="mt-3 text-sm"
+          style={{ color: RISA_TEXT }}
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: 'auto' }}
           exit={{ opacity: 0, height: 0 }}
@@ -598,173 +499,100 @@ const Technicians = () => {
   return (
     <div
       ref={techSectionRef}
-      className="min-h-screen bg-white text-gray-900 overflow-hidden"
+      className="min-h-screen bg-white"
+      style={{ fontFamily: FONT_FAMILY }}
     >
-      <div className="relative z-10">
-        {/* Hero Section */}
-        <div className="pt-32 pb-20 px-6 max-w-7xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-center mb-16"
-          >
-            <motion.h1
-              className="text-5xl md:text-6xl font-bold mb-6"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.2 }}
-            >
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
-                Elite Technical Experts
-              </span>
-            </motion.h1>
-            <motion.p
-              className="text-xl text-gray-600 max-w-3xl mx-auto"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.4 }}
-            >
-              Meet our certified professionals ready to solve your most complex technical challenges with precision and expertise.
-            </motion.p>
-          </motion.div>
+      <div className="pt-24 pb-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="text-center mb-12"
+        >
+          <h1 className="text-3xl md:text-4xl font-bold" style={{ color: RISA_BLUE }}>
+            Elite Technical Experts
+          </h1>
+          <p className="text-lg mt-4 max-w-2xl mx-auto" style={{ color: RISA_TEXT }}>
+            Meet our certified professionals ready to solve your most complex technical challenges with precision and expertise.
+          </p>
+        </motion.div>
 
-          {/* Stats Grid */}
-          <motion.div
-            className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-24"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ staggerChildren: 0.1 }}
-          >
-            {stats.map((stat, index) => (
-              <StatCard key={index} value={stat.value} label={stat.label} index={index} />
+        {/* Stats */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-16">
+          {stats.map((stat, index) => (
+            <StatCard key={index} value={stat.value} label={stat.label} index={index} />
+          ))}
+        </div>
+
+        {/* Specialties */}
+        <div className="mb-16">
+          <h2 className="text-2xl font-bold text-center mb-8" style={{ color: RISA_BLUE }}>
+            Our Specialties
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {specialties.map((specialty, index) => (
+              <SpecialtyCard 
+                key={index} 
+                icon={specialty.icon} 
+                name={specialty.name} 
+                color={specialty.color} 
+                index={index} 
+              />
             ))}
-          </motion.div>
+          </div>
+        </div>
 
-          {/* Specialties Section */}
-          <motion.div
-            className="mb-24"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-          >
-            <motion.h2
-              className="text-3xl md:text-4xl font-bold text-center mb-12"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-            >
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
-                Our Specialties
-              </span>
-            </motion.h2>
-            
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {specialties.map((specialty, index) => (
-                <SpecialtyCard 
-                  key={index} 
-                  icon={specialty.icon} 
-                  name={specialty.name} 
-                  color={specialty.color} 
-                  index={index} 
-                />
-              ))}
-            </div>
-          </motion.div>
+        {/* Technicians */}
+        <div className="mb-16">
+          <h2 className="text-2xl font-bold text-center mb-8" style={{ color: RISA_BLUE }}>
+            Meet the Team
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {technicians.map((tech) => (
+              <TechnicianCard 
+                key={tech.id} 
+                tech={tech} 
+                onClick={() => setSelectedTech(tech)}
+              />
+            ))}
+          </div>
+        </div>
 
-          {/* Technicians Section */}
-          <motion.div
-            className="mb-24"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-          >
-            <motion.h2
-              className="text-3xl md:text-4xl font-bold text-center mb-12"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-            >
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
-                Meet the Team
-              </span>
-            </motion.h2>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-              {technicians.map((tech) => (
-                <TechnicianCard 
-                  key={tech.id} 
-                  tech={tech} 
-                  onClick={() => setSelectedTech(tech)}
-                />
-              ))}
-            </div>
-          </motion.div>
+        {/* Testimonials */}
+        <div className="mb-16">
+          <h2 className="text-2xl font-bold text-center mb-8" style={{ color: RISA_BLUE }}>
+            Client Testimonials
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {testimonials.map((testimonial, index) => (
+              <TestimonialCard 
+                key={testimonial.id} 
+                testimonial={testimonial} 
+                index={index} 
+              />
+            ))}
+          </div>
+        </div>
 
-          {/* Testimonials Section */}
-          <motion.div
-            className="mb-24"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-          >
-            <motion.h2
-              className="text-3xl md:text-4xl font-bold text-center mb-12"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-            >
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
-                Client Testimonials
-              </span>
-            </motion.h2>
-            
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {testimonials.map((testimonial, index) => (
-                <TestimonialCard 
-                  key={testimonial.id} 
-                  testimonial={testimonial} 
-                  index={index} 
-                />
-              ))}
-            </div>
-          </motion.div>
-
-          {/* FAQ Section */}
-          <motion.div
-            className="mb-24 max-w-4xl mx-auto"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-          >
-            <motion.h2
-              className="text-3xl md:text-4xl font-bold text-center mb-12"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-            >
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
-                Frequently Asked Questions
-              </span>
-            </motion.h2>
-            
-            <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-200">
-              {faqs.map((faq, index) => (
-                <FAQItem 
-                  key={index} 
-                  faq={faq} 
-                  index={index}
-                  isOpen={openIndex === index}
-                  toggle={() => toggleFAQ(index)}
-                />
-              ))}
-            </div>
-          </motion.div>
+        {/* FAQ */}
+        <div className="mb-16 max-w-3xl mx-auto">
+          <h2 className="text-2xl font-bold text-center mb-8" style={{ color: RISA_BLUE }}>
+            Frequently Asked Questions
+          </h2>
+          <div className="bg-white rounded-lg border border-gray-200 p-6">
+            {faqs.map((faq, index) => (
+              <FAQItem 
+                key={index} 
+                faq={faq} 
+                index={index}
+                isOpen={openIndex === index}
+                toggle={() => toggleFAQ(index)}
+              />
+            ))}
+          </div>
         </div>
       </div>
 
-      {/* Modal */}
       <AnimatePresence>
         {selectedTech && (
           <TechnicianModal 

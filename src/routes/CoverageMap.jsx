@@ -4,6 +4,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Wifi } from 'lucide-react';
 import MapControls from '../components/MapControls';
 import { CoverageEligibilityPanel } from '../components/CoverageEligibilityPanel';
+// Navbar import REMOVED
+
+// RISA Color Palette
+const RISA_BLUE = "#015B97";
+const RISA_WHITE = "#ffffff";
 
 const CoverageMap = () => {
   const navigate = useNavigate();
@@ -27,7 +32,6 @@ const CoverageMap = () => {
   const [locationError, setLocationError] = useState(null);
   const [isLocating, setIsLocating] = useState(false);
 
-  // Coverage areas with coordinates
   const coveredAreas = [
     { name: "Baba Dogo", lat: -1.235, lng: 36.891 },
     { name: "Kasabun", lat: -1.242, lng: 36.876 },
@@ -45,19 +49,15 @@ const CoverageMap = () => {
     [-1.15, 37.05],
   ];
 
-  // Add WiFi markers to the map
   const addWifiMarkers = (map) => {
     const L = window.L;
-    
-    // Clear existing markers
     wifiMarkers.current.forEach(marker => map.removeLayer(marker));
     wifiMarkers.current = [];
 
-    // Add new markers
     coveredAreas.forEach(area => {
       const wifiIcon = L.divIcon({
         className: 'wifi-marker',
-        html: `<div class="wifi-icon-container"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="#3b82f6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.55a11 11 0 0 1 14.08 0"></path><path d="M1.42 9a16 16 0 0 1 21.16 0"></path><path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path><line x1="12" y1="20" x2="12.01" y2="20"></line></svg></div>`,
+        html: `<div class="wifi-icon-container"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="${RISA_BLUE}" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.55a11 11 0 0 1 14.08 0"></path><path d="M1.42 9a16 16 0 0 1 21.16 0"></path><path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path><line x1="12" y1="20" x2="12.01" y2="20"></line></svg></div>`,
         iconSize: [30, 30],
         iconAnchor: [15, 15]
       });
@@ -92,13 +92,12 @@ const CoverageMap = () => {
 
         setUserLocation(userCoords);
         setLocationError(null);
-        
         mapInstance.current.setView([userCoords.lat, userCoords.lng], 18);
         
         accuracyCircleRef.current = window.L.circle([userCoords.lat, userCoords.lng], {
           radius: userCoords.accuracy,
-          color: '#4285F4',
-          fillColor: '#4285F4',
+          color: RISA_BLUE,
+          fillColor: RISA_BLUE,
           fillOpacity: 0.2,
           weight: 1
         }).addTo(mapInstance.current);
@@ -149,9 +148,8 @@ const CoverageMap = () => {
     const pulseCircle = L.circle(latlng, {
       radius: 10,
       stroke: false,
-      fillColor: '#4285F4',
+      fillColor: RISA_BLUE,
       fillOpacity: 0.7,
-      className: 'location-pulse',
     }).addTo(mapInstance.current);
 
     let radius = 10;
@@ -168,7 +166,6 @@ const CoverageMap = () => {
         opacity += 0.02;
         if (radius <= 10) growing = true;
       }
-
       pulseCircle.setRadius(radius);
       pulseCircle.setStyle({ fillOpacity: opacity });
     }, 50);
@@ -192,7 +189,6 @@ const CoverageMap = () => {
           addr.city
         ].filter(Boolean).join(', ');
       }
-      
       return displayName;
     } catch (error) {
       console.error('Error fetching address:', error);
@@ -261,10 +257,10 @@ const CoverageMap = () => {
     loadLeaflet();
 
     return () => {
-      mapInstance.current?.remove();
-      kmlLayer.current?.remove();
+      if (mapInstance.current) mapInstance.current.remove();
+      if (kmlLayer.current) kmlLayer.current.remove();
       clearTimeout(locationTimeoutRef.current);
-      clearInterval(pulseIntervalRef.current);
+      if (pulseIntervalRef.current) clearInterval(pulseIntervalRef.current);
     };
   }, []);
 
@@ -285,7 +281,6 @@ const CoverageMap = () => {
     const baseLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; OpenStreetMap contributors',
     });
-
     baseLayer.addTo(map);
 
     L.control.scale({ position: 'bottomleft' }).addTo(map);
@@ -295,11 +290,10 @@ const CoverageMap = () => {
     }
 
     L.rectangle(NAIROBI_BOUNDS, {
-      color: '#0ff',
+      color: RISA_BLUE,
       weight: 3,
       fill: false,
       dashArray: '10 5',
-      className: 'leaflet-animated-border',
     }).addTo(map);
 
     kmlLayer.current = window.omnivore.kml('/coverage.kml')
@@ -312,7 +306,6 @@ const CoverageMap = () => {
       })
       .addTo(map);
 
-    // Add WiFi markers
     addWifiMarkers(map);
 
     L.control.zoom({ position: 'topright' }).addTo(map);
@@ -327,31 +320,34 @@ const CoverageMap = () => {
       className="relative min-h-screen w-full bg-white text-gray-900 overflow-hidden"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      transition={{ duration: 0.8, ease: 'easeInOut' }}
+      transition={{ duration: 0.8 }}
     >
-      {/* Header Section */}
+      {/* ✅ Navbar REMOVED */}
+
+      {/* Header Section — Clean, RISA-styled */}
       <header className="bg-white shadow-sm py-4 px-6 z-20 relative">
-        <div className="container mx-auto flex justify-between items-center">
+        <div className="max-w-7xl mx-auto flex justify-between items-center">
           <button
             onClick={() => navigate('/')}
-            className="text-blue-600 hover:text-blue-800 font-medium flex items-center"
+            className="text-gray-700 hover:text-gray-900 font-medium flex items-center"
+            style={{ color: RISA_BLUE }}
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
               <path fillRule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd" />
             </svg>
             Back to Home
           </button>
-          <h1 className="text-2xl font-bold text-gray-800">Our Coverage Area</h1>
+          <h1 className="text-2xl font-bold" style={{ color: RISA_BLUE }}>
+            Our Coverage Area
+          </h1>
           <div className="w-8"></div>
         </div>
       </header>
 
       {/* Main Content */}
-      <div className="flex flex-col lg:flex-row h-[calc(100vh-72px)]">
-        {/* Map Section */}
+      <div className="flex flex-col lg:flex-row h-[calc(100vh-120px)]">
         <div className="w-full lg:w-2/3 h-full relative">
           <main ref={mapRef} className="absolute inset-0 z-10" />
-          
           {mapReady && (
             <MapControls
               map={mapInstance.current}
@@ -367,54 +363,56 @@ const CoverageMap = () => {
           )}
         </div>
 
-        {/* Sidebar Section */}
         <div className="w-full lg:w-1/3 bg-white border-l border-gray-200 overflow-y-auto p-6">
           <div className="mb-8">
-            <h2 className="text-xl font-bold mb-4 text-gray-800">Coverage in Knoxville</h2>
+            <h2 className="text-xl font-bold mb-3" style={{ color: RISA_BLUE }}>
+              Coverage in Nairobi
+            </h2>
             <p className="text-gray-600 mb-4">
-              We're constantly expanding our network. Check if your area is covered or view our current coverage areas below.
+              We're constantly expanding our network. Check if your area is covered.
             </p>
             
             <div className="bg-blue-50 border border-blue-100 rounded-lg p-4 mb-6">
               <h3 className="font-semibold text-blue-800 mb-2">Check Your Address</h3>
               <button 
                 onClick={centerOnUserLocation}
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded transition-colors"
+                className="w-full font-bold py-2.5 px-4 rounded-full transition-all"
+                style={{
+                  backgroundColor: RISA_BLUE,
+                  color: RISA_WHITE
+                }}
               >
                 {isLocating ? 'Locating...' : 'Check Eligibility'}
               </button>
             </div>
           </div>
 
-          <div>
-            <h3 className="font-bold text-lg mb-3 text-gray-800">Areas We Cover</h3>
+          <div className="mb-8">
+            <h3 className="font-bold text-lg mb-3" style={{ color: RISA_BLUE }}>Areas We Cover</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
               {coveredAreas.map((area, index) => (
                 <div key={index} className="flex items-center bg-gray-50 rounded p-3">
-                  <Wifi className="w-5 h-5 text-blue-500 mr-2" />
+                  <Wifi className="w-5 h-5 mr-2" style={{ color: RISA_BLUE }} />
                   <span className="text-gray-700">{area.name}</span>
                 </div>
               ))}
             </div>
           </div>
 
-          <div className="mt-8">
-            <h3 className="font-bold text-lg mb-3 text-gray-800">Legend</h3>
+          <div>
+            <h3 className="font-bold text-lg mb-3" style={{ color: RISA_BLUE }}>Legend</h3>
             <div className="flex items-center gap-2 mb-2">
-              <div className="w-5 h-5 flex items-center justify-center">
-                <Wifi className="w-5 h-5 text-blue-500" />
-              </div>
+              <Wifi className="w-5 h-5" style={{ color: RISA_BLUE }} />
               <span className="text-gray-700">Covered Area</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-5 h-5 rounded-full bg-blue-500"></div>
+              <div className="w-5 h-5 rounded-full" style={{ backgroundColor: RISA_BLUE }}></div>
               <span className="text-gray-700">Your Location</span>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Eligibility Panel */}
       <AnimatePresence>
         {showEligibilityPanel && (
           <CoverageEligibilityPanel
@@ -427,7 +425,6 @@ const CoverageMap = () => {
         )}
       </AnimatePresence>
 
-      {/* Add custom styles for WiFi markers */}
       <style jsx global>{`
         .wifi-marker {
           background: transparent;
@@ -443,10 +440,7 @@ const CoverageMap = () => {
           justify-content: center;
           box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
-        .wifi-marker svg {
-          width: 20px;
-          height: 20px;
-        }
+        body { font-family: 'adobe-garamond-pro', 'Poppins', sans-serif; }
       `}</style>
     </motion.div>
   );

@@ -2,8 +2,6 @@ import React from "react";
 import { Helmet } from "react-helmet-async";
 
 import Hero from "../components/Hero";
-
-import Services from "./Services";
 import Faqs from "./faqs";
 
 
@@ -37,9 +35,9 @@ export default function Home() {
         
       
 
-      <section id="services">
-        <Services />
-      </section>
+      
+        
+    
 
       <section id="faq">
         <Faqs />

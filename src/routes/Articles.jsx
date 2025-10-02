@@ -6,8 +6,18 @@ import { useDebounce } from "use-debounce";
 import { useLanguage } from "../contexts/LanguageContext";
 import { articles } from "../data/articles";
 
+// RISA Brand Colors
+const RISA_BLUE = "#015B97";
+const RISA_TEXT = "#565A5C";
+const RISA_LIGHT_BG = "#f8f9fa";
+
+// Font stack
+const FONT_FAMILY = `'Proxima Nova', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif`;
+
 const LoadingSkeleton = () => (
-  <div className="text-center text-gray-500 py-10">Loading articles...</div>
+  <div className="text-center text-gray-500 py-10" style={{ color: RISA_TEXT }}>
+    Loading articles...
+  </div>
 );
 
 const ErrorFallback = ({ message }) => (
@@ -21,19 +31,25 @@ const ArticleCard = React.memo(({ article }) => (
     animate={{ opacity: 1, y: 0, scale: 1 }}
     exit={{ opacity: 0, scale: 0.9 }}
     transition={{ duration: 0.3 }}
-    className="group overflow-hidden rounded-2xl bg-white border border-gray-200 hover:shadow-lg transition-all"
+    className="group overflow-hidden rounded-lg bg-white border border-gray-200 hover:shadow-md transition-shadow"
+    style={{ fontFamily: FONT_FAMILY }}
   >
-    <Link to={`/articles/${article.slug}`}>
+    <Link to={`/articles/${article.slug}`} style={{ textDecoration: 'none' }}>
       <img
         src={article.image}
         alt={article.title}
-        className="w-full h-48 object-cover rounded-t-2xl"
+        className="w-full h-48 object-cover rounded-t-lg"
       />
       <div className="p-4">
-        <h3 className="text-lg font-semibold text-gray-900 group-hover:text-cyan-600">
+        <h3
+          className="text-lg font-medium group-hover:text-[#015B97] transition-colors"
+          style={{ color: RISA_TEXT }}
+        >
           {article.title}
         </h3>
-        <p className="text-sm text-gray-600">{article.excerpt}</p>
+        <p className="text-sm mt-2" style={{ color: RISA_TEXT }}>
+          {article.excerpt}
+        </p>
       </div>
     </Link>
   </motion.article>
@@ -43,20 +59,28 @@ const FeaturedArticle = ({ article }) => {
   if (!article) return null;
   return (
     <motion.article
-      className="overflow-hidden rounded-3xl mb-16 bg-white border border-gray-200 hover:shadow-2xl transition-all"
+      className="overflow-hidden rounded-lg mb-12 bg-white border border-gray-200 hover:shadow-lg transition-shadow"
       initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
+      style={{ fontFamily: FONT_FAMILY }}
     >
-      <Link to={`/articles/${article.slug}`}>
+      <Link to={`/articles/${article.slug}`} style={{ textDecoration: 'none' }}>
         <img
           src={article.image}
           alt={article.title}
-          className="w-full h-72 object-cover rounded-t-3xl"
+          className="w-full h-64 object-cover rounded-t-lg"
         />
         <div className="p-6">
-          <h2 className="text-3xl font-bold text-gray-900 mb-2">{article.title}</h2>
-          <p className="text-gray-600">{article.excerpt}</p>
+          <h2
+            className="text-2xl font-bold mb-3"
+            style={{ color: RISA_BLUE }}
+          >
+            {article.title}
+          </h2>
+          <p className="text-base" style={{ color: RISA_TEXT }}>
+            {article.excerpt}
+          </p>
         </div>
       </Link>
     </motion.article>
@@ -96,22 +120,28 @@ export default function Articles() {
   );
 
   return (
-    <section className="relative min-h-screen py-24 px-4 md:px-10 overflow-hidden bg-white text-gray-800">
+    <section
+      className="relative min-h-screen py-16 px-4 md:px-6 lg:px-8 bg-white"
+      style={{ fontFamily: FONT_FAMILY }}
+    >
       <div className="max-w-6xl mx-auto">
-        <h1 className="text-5xl font-bold text-center text-cyan-600 mb-12">
+        <h1
+          className="text-3xl md:text-4xl font-bold text-center mb-10"
+          style={{ color: RISA_BLUE }}
+        >
           {t("titles.knowledgeHub") || "Knowledge Hub"}
         </h1>
 
         {/* Category Filters */}
-        <div className="flex flex-wrap justify-center gap-3 mb-10">
+        <div className="flex flex-wrap justify-center gap-2 mb-8">
           {categories.map((cat) => (
             <button
               key={cat.id}
               onClick={() => setSelectedCategory(cat.id)}
-              className={`px-4 py-2 rounded-full text-sm transition border ${
+              className={`px-4 py-2 text-sm font-medium rounded-full transition-colors ${
                 selectedCategory === cat.id
-                  ? "bg-cyan-500 text-white"
-                  : "border-gray-300 text-gray-700 hover:bg-cyan-100"
+                  ? "bg-[#015B97] text-white"
+                  : "bg-white text-[#565A5C] border border-gray-300 hover:bg-gray-50"
               }`}
             >
               {cat.label}
@@ -126,7 +156,13 @@ export default function Articles() {
             placeholder={t("placeholders.searchArticles") || "Search articles..."}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full px-4 py-3 rounded-md bg-gray-100 text-gray-800 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+            className="w-full px-4 py-2.5 rounded-full border border-gray-300 focus:outline-none focus:ring-1"
+            style={{
+              fontFamily: FONT_FAMILY,
+              color: RISA_TEXT,
+              borderColor: RISA_BLUE,
+              boxShadow: '0 0 0 3px rgba(1, 91, 151, 0.1)',
+            }}
           />
         </div>
 
@@ -136,13 +172,13 @@ export default function Articles() {
         {/* Article Grid */}
         <AnimatePresence mode="wait">
           {filteredArticles.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredArticles.map((article) => (
                 <ArticleCard key={article.slug} article={article} />
               ))}
             </div>
           ) : (
-            <p className="text-center text-gray-500">
+            <p className="text-center text-sm" style={{ color: RISA_TEXT }}>
               {t("messages.noArticlesFound") || "No articles found."}
             </p>
           )}

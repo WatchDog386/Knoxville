@@ -1,5 +1,4 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   FaNetworkWired,
@@ -9,7 +8,6 @@ import {
   FaWifi,
   FaGlobe,
 } from "react-icons/fa";
-import Navbar from "../components/Navbar"; // Use shared Navbar
 import { Helmet } from "react-helmet";
 
 // RISA Color Palette
@@ -237,7 +235,6 @@ export default function ServicesPage() {
         p, li { line-height: 1.6; margin-top: 0; margin-bottom: 1rem; }
       `}</style>
 
-      <Navbar />
       <ServicesHero />
       <AllServices />
     </div>
