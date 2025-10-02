@@ -104,7 +104,7 @@ const plans = [
 const hotspotPlans = [
   {
     name: "2 Hours",
-    price: "15",
+    price: "20",
     duration: "2hrs",
     devices: "1 Device",
     features: ["Fast browsing", "Social media access", "Email checking"],
@@ -120,7 +120,7 @@ const hotspotPlans = [
   },
   {
     name: "1 Day",
-    price: "40",
+    price: "50",
     duration: "1 day",
     devices: "1 Device",
     features: ["Full day access", "Standard streaming", "Online gaming"],
