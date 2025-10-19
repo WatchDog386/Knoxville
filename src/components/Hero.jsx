@@ -100,31 +100,35 @@ const plans = [
   }
 ];
 
-// ✅ 5 Hotspot Plans (NO images needed) - LINKS REMOVED
+// ✅ Updated Hotspot Plans based on wifisys.knoxvillesys.co.ke
 const hotspotPlans = [
+  {
+    name: "1 Hour",
+    price: "10",
+    duration: "1hr",
+    devices: "1 Device",
+    features: ["Fast browsing", "Social media access", "Email checking"],
+  },
   {
     name: "2 Hours",
     price: "20",
     duration: "2hrs",
     devices: "1 Device",
-    features: ["Fast browsing", "Social media access", "Email checking"],
-    // link: "http://wifi.optimassys.co.ke/index.php?_route=main" - REMOVED
+    features: ["Extended browsing", "Streaming music", "Social media"],
   },
   {
     name: "12 Hours",
     price: "30",
     duration: "12hrs",
     devices: "1 Device",
-    features: ["Extended browsing", "Streaming music", "Social media"],
-    // link: "http://wifi.optimassys.co.ke/index.php?_route=main" - REMOVED
+    features: ["Full day access", "Standard streaming", "Online gaming"],
   },
   {
     name: "1 Day",
-    price: "50",
+    price: "40",
     duration: "1 day",
     devices: "1 Device",
     features: ["Full day access", "Standard streaming", "Online gaming"],
-    // link: "http://wifi.optimassys.co.ke/index.php?_route=main" - REMOVED
   },
   {
     name: "Weekly",
@@ -132,15 +136,20 @@ const hotspotPlans = [
     duration: "week",
     devices: "2 Devices",
     features: ["7 days unlimited", "HD streaming", "Multiple devices"],
-    // link: "http://wifi.optimassys.co.ke/index.php?_route=main" - REMOVED
   },
   {
-    name: "Monthly Single",
-    price: "610",
+    name: "Monthly Solo",
+    price: "800",
     duration: "month",
     devices: "1 Device",
     features: ["30 days access", "Priority bandwidth", "24/7 support"],
-    // link: "http://wifi.optimassys.co.ke/index.php?_route=main" - REMOVED
+  },
+  {
+    name: "Monthly X2",
+    price: "1200",
+    duration: "month",
+    devices: "2 Devices",
+    features: ["30 days access", "Priority bandwidth", "24/7 support"],
   }
 ];
 
@@ -166,16 +175,9 @@ const Hero = () => {
     setShowForm(true);
   };
 
-  // ✅ HOTSPOT FUNCTIONALITY DISABLED - No redirection
-  const handleHotspotSelect = (plan) => {
-    // 🔴 DISABLED: window.open(plan.link, '_blank');
-    // Instead, open the contact form for hotspot plans too
-    setSelectedPlan(plan);
-    setFormData(prev => ({
-      ...prev,
-      connectionType: `Hotspot - ${plan.name}`
-    }));
-    setShowForm(true);
+  // ✅ HOTSPOT BUTTONS: Redirect directly to Knoxville hotspot portal
+  const handleHotspotSelect = () => {
+    window.open("https://wifisys.knoxvillesys.co.ke", "_blank");
   };
 
   const handleInputChange = (e) => {
@@ -232,7 +234,7 @@ const Hero = () => {
         <link rel="stylesheet" href="https://use.typekit.net/hus3mie.css" />
       </Helmet>
 
-      {/* Hero Section — Extended height */}
+      {/* Hero Section */}
       <section
         className="relative w-full overflow-hidden py-20 md:py-28 lg:py-32 px-4 sm:px-6 lg:px-8"
         style={{
@@ -240,7 +242,7 @@ const Hero = () => {
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
-          minHeight: '70vh' // 👈 Extended from 60vh → 70vh
+          minHeight: '70vh'
         }}
       >
         <div className="absolute inset-0 bg-black bg-opacity-60"></div>
@@ -340,7 +342,8 @@ const Hero = () => {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {/* Reduced card sizes with better responsive grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
             {filteredPlans.map((plan, index) => (
               <motion.div
                 key={index}
@@ -350,29 +353,31 @@ const Hero = () => {
                 transition={{ duration: 0.5, delay: index * 0.05 }}
                 className="bg-white rounded-lg border border-gray-200 overflow-hidden hover:shadow-md transition-shadow flex flex-col"
               >
-                <div className="h-40 overflow-hidden">
+                {/* Reduced image height */}
+                <div className="h-32 overflow-hidden">
                   <img src={plan.image} alt={plan.name} className="w-full h-full object-cover" />
                 </div>
-                <div className="p-5 flex flex-col flex-grow">
+                {/* Reduced padding */}
+                <div className="p-4 flex flex-col flex-grow">
                   <div className="flex justify-between items-start mb-2">
-                    <h3 className="text-lg font-bold" style={{ color: BRAND_BLACK }}>{plan.name}</h3>
+                    <h3 className="text-base font-bold" style={{ color: BRAND_BLACK }}>{plan.name}</h3>
                     <span className="text-xs px-2 py-1 rounded-full font-medium" style={{ backgroundColor: `${BRAND_ORANGE}20`, color: BRAND_ORANGE }}>{plan.speed}</span>
                   </div>
-                  <p className="text-xl font-bold mb-3" style={{ color: BRAND_BLUE }}>{plan.price}</p>
-                  <ul className="space-y-2 mb-5 flex-grow">
+                  <p className="text-lg font-bold mb-2" style={{ color: BRAND_BLUE }}>{plan.price}</p>
+                  {/* Smaller feature list */}
+                  <ul className="space-y-1.5 mb-4 flex-grow">
                     {plan.features.map((feature, i) => (
-                      <li key={i} className="flex items-start text-sm" style={{ color: BRAND_BLACK }}>
-                        <CheckCircle className="w-4 h-4 text-orange-500 mr-2 mt-0.5 flex-shrink-0" />
+                      <li key={i} className="flex items-start text-xs" style={{ color: BRAND_BLACK }}>
+                        <CheckCircle className="w-3 h-3 text-orange-500 mr-2 mt-0.5 flex-shrink-0" />
                         {feature}
                       </li>
                     ))}
                   </ul>
-                  {/* 👇 BUTTON COLOR CHANGED TO BLUE */}
                   <motion.button
                     whileHover={{ y: -2 }}
                     whileTap={{ scale: 0.98 }}
                     onClick={() => handlePlanSelect(plan)}
-                    className="w-full font-bold py-2.5 rounded-full text-sm transition-all"
+                    className="w-full font-bold py-2 rounded-full text-xs transition-all"
                     style={{ backgroundColor: BRAND_BLUE, color: BRAND_WHITE, borderRadius: '50px' }}
                   >
                     Get Connected
@@ -384,7 +389,7 @@ const Hero = () => {
         </div>
       </section>
 
-      {/* 🔥 Hotspot Packages — NO IMAGES & DISABLED REDIRECTION */}
+      {/* 🔥 Hotspot Packages — Direct Redirect to Knoxville Portal */}
       <section id="hotspot-section" className="py-12 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-8">
@@ -409,9 +414,12 @@ const Hero = () => {
             </motion.p>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 max-w-6xl mx-auto">
+          {/* ✅ Responsive Grid with Compact Cards - Centered last two items */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-3 max-w-6xl mx-auto">
             {hotspotPlans.map((plan, index) => {
               const color = HOTSPOT_COLORS[index % HOTSPOT_COLORS.length];
+              // Apply special classes for the last two items to center them
+              const isLastTwo = index >= hotspotPlans.length - 2;
               return (
                 <motion.div
                   key={index}
@@ -419,38 +427,46 @@ const Hero = () => {
                   whileInView={{ opacity: 1, scale: 1 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.4, delay: index * 0.05 }}
-                  className="bg-white rounded-lg border border-gray-200 overflow-hidden hover:shadow-md transition-shadow flex flex-col"
-                  style={{ height: '100%' }}
+                  className={`bg-white rounded-lg border border-gray-200 overflow-hidden hover:shadow-md transition-shadow flex flex-col ${
+                    isLastTwo 
+                      ? 'col-span-2 sm:col-span-1 md:col-span-1 lg:col-span-1 sm:col-start-2 md:col-start-auto lg:col-start-auto' 
+                      : ''
+                  }`}
+                  style={{ 
+                    height: '100%', 
+                    maxWidth: '140px',
+                    margin: isLastTwo ? '0 auto' : '0'
+                  }}
                 >
-                  {/* ❌ NO IMAGE — removed */}
-                  <div className="p-3 flex flex-col flex-grow" style={{ background: color.bg }}>
+                  <div className="p-2 flex flex-col flex-grow" style={{ background: color.bg }}>
                     <div className="flex justify-between items-start mb-1">
-                      <h3 className="text-sm font-bold" style={{ color: color.text }}>
+                      <h3 className="text-xs font-bold" style={{ color: color.text }}>
                         {plan.name}
                       </h3>
-                      <span className="text-[10px] px-1.5 py-0.5 rounded font-medium" style={{ backgroundColor: 'rgba(0,0,0,0.2)', color: color.text }}>
+                      <span className="text-[8px] px-1 py-0.5 rounded font-medium" style={{ backgroundColor: 'rgba(0,0,0,0.2)', color: color.text }}>
                         {plan.duration}
                       </span>
                     </div>
-                    <p className="text-base font-bold mb-1" style={{ color: color.text }}>
+                    <p className="text-sm font-bold mb-1" style={{ color: color.text }}>
                       Ksh {plan.price}
                     </p>
-                    <ul className="space-y-1 mb-2 flex-grow">
+                    <ul className="space-y-0.5 mb-1 flex-grow">
                       {plan.features.map((feature, i) => (
-                        <li key={i} className="flex items-start text-[11px]" style={{ color: color.text }}>
-                          <Smartphone className="w-2.5 h-2.5 mr-1 mt-0.5 flex-shrink-0" />
+                        <li key={i} className="flex items-start text-[9px]" style={{ color: color.text }}>
+                          <Smartphone className="w-2 h-2 mr-1 mt-0.5 flex-shrink-0" />
                           {feature}
                         </li>
                       ))}
                     </ul>
+                    {/* ✅ Compact Button */}
                     <motion.button
                       whileHover={{ y: -1 }}
                       whileTap={{ scale: 0.98 }}
-                      onClick={() => handleHotspotSelect(plan)}
-                      className="w-full font-bold py-1.5 rounded-full text-[11px] transition-all"
+                      onClick={handleHotspotSelect}
+                      className="w-full font-bold py-1 rounded-full text-[9px] transition-all"
                       style={{ backgroundColor: 'rgba(0,0,0,0.2)', color: color.text }}
                     >
-                      Contact for Purchase
+                      Subscribe Now
                     </motion.button>
                   </div>
                 </motion.div>
@@ -520,7 +536,7 @@ const Hero = () => {
         </section>
       )}
 
-      {/* Modal */}
+      {/* Modal — Only for main plans (not hotspot) */}
       <AnimatePresence>
         {showForm && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
