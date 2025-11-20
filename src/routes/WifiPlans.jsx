@@ -1,87 +1,105 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { Wifi, Clock, HardHat, CheckCircle, Zap } from "lucide-react";
-import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
+import { Wifi, Clock, HardHat, Check, Zap, ChevronRight, Shield, Building2 } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import Navbar from "../components/Navbar";
 import { Helmet } from "react-helmet";
 
-// RISA Color Palette
-const RISA_BLUE = "#015B97";
-const RISA_LIGHT_BLUE = "#3288e6";
-const RISA_WHITE = "#ffffff";
+// Premium Corporate Palette
+const THEME = {
+  primary: "#1A365D",       // Deep Corporate Navy
+  secondary: "#2D3748",     // Charcoal Gray
+  background: "#F7FAFC",    // Very Light Gray
+  cardBg: "#FFFFFF",        // Pure White
+  border: "#E2E8F0",        // Light Gray Border
+  accent: "#2B6CB0",        // Professional Blue
+  muted: "#718096",         // Medium Gray
+  success: "#276749",       // Deep Green
+  gold: "#D69E2E",          // Accent Gold
+  gradient: "linear-gradient(135deg, #1A365D 0%, #2D3748 50%, #4A5568 100%)"
+};
 
 const plans = [
   {
-    name: "Basic Plan",
+    name: "Essential Fiber",
     price: "Ksh 1,500",
     speed: "6Mbps",
     image: "/basicp.jpg",
-    features: ["Great for browsing", "24/7 Support", "Free Installation"],
-    type: "home"
+    features: ["Basic Browsing & Email", "24/7 Customer Support", "Standard Installation", "Unlimited Data Usage"],
+    type: "home",
+    isPopular: false
   },
   {
-    name: "Essential Plan",
+    name: "Streamer Plan",
     price: "Ksh 1,999",
     speed: "10Mbps",
     image: "/essentialp.jpg",
-    features: ["Streaming & Social Media", "24/7 Support", "Free Installation"],
-    type: "home"
+    features: ["HD Video Streaming", "Social Media Optimized", "Quick Installation", "Stable Connectivity"],
+    type: "home",
+    isPopular: false
   },
   {
-    name: "Family Plan",
+    name: "Family Premium",
     price: "Ksh 2,499",
     speed: "15Mbps",
     image: "/familyp.jpg",
-    features: ["Work from Home", "Streaming", "24/7 Support", "Free Installation"],
-    type: "home"
+    features: ["Multiple Device Support", "Work from Home Ready", "Priority Installation", "Family Entertainment"],
+    type: "home",
+    isPopular: true 
   },
   {
-    name: "Smart Home Plan",
+    name: "Smart Home Pro",
     price: "Ksh 2,999",
     speed: "20Mbps",
     image: "/streaming.jpg",
-    features: ["Multiple Devices", "Low Latency", "24/7 Support", "Free Installation"],
-    type: "home"
+    features: ["4K Ultra HD Streaming", "Smart Home Integration", "Low Latency Gaming", "Professional Setup"],
+    type: "home",
+    isPopular: false
   },
   {
-    name: "Pro Streamer Plan",
+    name: "Gaming Elite",
     price: "Ksh 3,999",
     speed: "25Mbps",
     image: "/pros.jpg",
-    features: ["Heavy Streaming", "Gaming Ready", "24/7 Support", "Free Installation"],
-    type: "home"
+    features: ["Competitive Gaming", "Live Streaming", "Priority Technical Support", "Advanced Router"],
+    type: "home",
+    isPopular: false
   },
   {
-    name: "Ultra Plan",
+    name: "Ultra Performance",
     price: "Ksh 4,999",
     speed: "30Mbps",
     image: "/back.webp",
-    features: ["High-Speed Everything", "Gaming & 4K", "24/7 Support", "Free Installation"],
-    type: "home"
+    features: ["8K Content Ready", "Large File Transfers", "Power User Optimized", "Premium Hardware"],
+    type: "home",
+    isPopular: false
   },
   {
-    name: "Business Basic",
+    name: "Business Starter",
     price: "Ksh 8,000",
     speed: "50Mbps",
     image: "/image.webp",
-    features: ["5 IP phones", "3 Static IPs", "Priority support", "99.5% uptime"],
-    type: "business"
+    features: ["5 IP Telephony Lines", "3 Static IP Addresses", "Priority Business Support", "99.5% Uptime SLA"],
+    type: "business",
+    isPopular: false
   },
   {
     name: "Business Plus",
     price: "Ksh 15,000",
     speed: "100Mbps",
     image: "/internet1.webp",
-    features: ["10 IP phones", "5 Static IPs", "Dedicated line", "99.9% uptime"],
-    type: "business"
+    features: ["10 IP Telephony Lines", "5 Static IP Addresses", "Dedicated Fiber Line", "99.9% Uptime Guarantee"],
+    type: "business",
+    isPopular: true
   },
   {
-    name: "Enterprise",
-    price: "Custom",
+    name: "Enterprise Solution",
+    price: "Custom Quote",
     speed: "500Mbps+",
     image: "/enterprise2.jpg",
-    features: ["Unlimited IP phones", "10+ Static IPs", "SLA guarantee", "24/7 monitoring"],
-    type: "enterprise"
+    features: ["Unlimited IP Telephony", "10+ Static IP Addresses", "Service Level Agreement", "24/7 Network Monitoring"],
+    type: "enterprise",
+    isPopular: false
   }
 ];
 
@@ -90,399 +108,314 @@ export default function WifiPlans() {
   const [activeTab, setActiveTab] = useState("home");
   const [showForm, setShowForm] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState(null);
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    location: '',
-    connectionType: ''
-  });
+  const [formData, setFormData] = useState({ name: '', email: '', phone: '', location: '', connectionType: '' });
 
   const handlePlanSelect = (plan) => {
     setSelectedPlan(plan);
-    setFormData(prev => ({
-      ...prev,
-      connectionType: plan.name
-    }));
+    setFormData(prev => ({ ...prev, connectionType: plan.name }));
     setShowForm(true);
   };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const whatsappNumber = "254726818938"; // Corrected from your social footer
-    const message = `New Connection Request:%0A%0A` +
-                   `*Name:* ${formData.name}%0A` +
-                   `*Phone:* ${formData.phone}%0A` +
-                   `*Email:* ${formData.email}%0A` +
-                   `*Location:* ${formData.location}%0A` +
-                   `*Connection Type:* ${formData.connectionType}%0A%0A` +
-                   `I would like to get connected!`;
+    const whatsappNumber = "254726818938";
+    const message = `New Connection Request:%0A%0A*Name:* ${formData.name}%0A*Phone:* ${formData.phone}%0A*Email:* ${formData.email}%0A*Location:* ${formData.location}%0A*Plan:* ${formData.connectionType}`;
     window.open(`https://wa.me/${whatsappNumber}?text=${message}`, '_blank');
-    setFormData({
-      name: '',
-      email: '',
-      phone: '',
-      location: '',
-      connectionType: ''
-    });
     setShowForm(false);
-    setSelectedPlan(null);
   };
 
   const filteredPlans = plans.filter(plan => plan.type === activeTab);
 
   return (
-    <div
-      className="min-h-screen bg-white text-gray-900"
-      style={{ 
-        fontFamily: '"Poppins", "Helvetica Neue", Arial, sans-serif',
-        fontSize: '14px'
-      }}
-    >
+    <div className="min-h-screen font-sans bg-gray-50" style={{ color: THEME.secondary }}>
       <Helmet>
-        <title>Internet Plans | Knoxville Fibre</title>
-        <meta
-          name="description"
-          content="Choose from our affordable home, business, and enterprise fibre internet plans. Fast, reliable, and unlimited connectivity."
-        />
+        <title>Enterprise Fiber Solutions | Premium Connectivity</title>
       </Helmet>
-
-      <style>{`
-        html { font-size: 14px; }
-        h1, h2, h3, h4, h5, h6 { font-weight: 700; line-height: 1.2; }
-        p, li { line-height: 1.6; margin-top: 0; margin-bottom: 1rem; }
-      `}</style>
 
       <Navbar />
 
-      {/* Hero Section */}
-      <motion.section
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.7 }}
-        className="relative py-16 md:py-20 bg-white"
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto">
-            <motion.h1
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ duration: 0.6 }}
-              className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 leading-tight"
-              style={{ color: RISA_BLUE }}
-            >
-              Internet <span style={{ color: RISA_LIGHT_BLUE }}>Plans</span>
-            </motion.h1>
-            <motion.p
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              className="text-lg md:text-xl mb-8 text-gray-700 leading-relaxed"
-            >
-              Fast, reliable, and unlimited fibre connectivity for home and business
-            </motion.p>
-          </div>
+      {/* Hero Section - Corporate Style */}
+      <div className="relative pt-28 pb-24 overflow-hidden bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
+        <div className="absolute inset-0">
+          <div className="absolute inset-0 bg-black/40"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-900/20 to-purple-900/20"></div>
+          <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1558494949-ef010cbdcc31?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2074&q=80')] bg-cover bg-center mix-blend-overlay"></div>
         </div>
-      </motion.section>
+        
+        <div className="relative max-w-7xl mx-auto px-4 text-center">
+          <motion.h1 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-5xl md:text-6xl font-light text-white mb-6 tracking-tight"
+          >
+            Enterprise-Grade
+            <span className="block font-normal mt-2">Fiber Connectivity</span>
+          </motion.h1>
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="text-gray-300 text-xl max-w-3xl mx-auto font-light leading-relaxed"
+          >
+            Premium fiber optic solutions designed for modern homes and growing businesses. 
+            Experience unparalleled reliability and speed.
+          </motion.p>
+        </div>
+      </div>
 
-      {/* Tab Navigation */}
-      <section className="py-6 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* Tabs - Corporate Design */}
+      <div className="sticky top-0 z-40 bg-white/95 backdrop-blur-lg border-b border-gray-200 py-6 shadow-sm">
+        <div className="max-w-7xl mx-auto px-4">
           <div className="flex justify-center">
-            <div className="inline-flex rounded-lg bg-gray-100 p-1">
+            <div className="inline-flex bg-gray-100 p-1 rounded-2xl border border-gray-200">
               {[
-                { id: "home", label: "Home Plans" },
-                { id: "business", label: "Business Plans" },
-                { id: "enterprise", label: "Enterprise" }
+                { id: "home", label: "Residential Plans", icon: <Building2 className="w-4 h-4 mr-2" /> },
+                { id: "business", label: "Business Solutions", icon: <Shield className="w-4 h-4 mr-2" /> },
+                { id: "enterprise", label: "Enterprise", icon: <Wifi className="w-4 h-4 mr-2" /> }
               ].map((tab) => (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-                    activeTab === tab.id
-                      ? "bg-white text-blue-600 shadow-sm"
-                      : "text-gray-700 hover:text-gray-900"
+                  className={`flex items-center px-8 py-3 rounded-xl text-sm font-medium transition-all duration-300 ${
+                    activeTab === tab.id 
+                      ? "bg-white text-gray-900 shadow-md border border-gray-200" 
+                      : "text-gray-600 hover:text-gray-800 hover:bg-white/60"
                   }`}
-                  style={{
-                    backgroundColor: activeTab === tab.id ? RISA_WHITE : '',
-                    color: activeTab === tab.id ? RISA_BLUE : '',
-                    border: activeTab === tab.id ? `1px solid ${RISA_BLUE}` : 'none'
-                  }}
                 >
+                  {tab.icon}
                   {tab.label}
                 </button>
               ))}
             </div>
           </div>
         </div>
-      </section>
+      </div>
 
-      {/* Plans Grid */}
-      <section className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {/* Main Content - Premium Cards */}
+      <section className="py-24 px-4 max-w-7xl mx-auto">
+        <motion.div 
+          layout 
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+        >
+          <AnimatePresence mode="popLayout">
             {filteredPlans.map((plan, index) => (
               <motion.div
-                key={index}
+                key={plan.name}
                 initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="bg-white rounded-xl border border-gray-200 shadow-md hover:shadow-lg transition-shadow h-full flex flex-col"
+                className={`
+                  flex flex-col h-full bg-white rounded-3xl overflow-hidden
+                  transition-all duration-500 hover:shadow-2xl hover:-translate-y-3
+                  border border-gray-200 group
+                  ${plan.isPopular ? 'ring-2 ring-gold/30 ring-offset-2 relative' : ''}
+                `}
               >
-                <div className="h-48 overflow-hidden">
-                  <img
-                    src={plan.image}
-                    alt={plan.name}
-                    className="w-full h-full object-cover"
+                {plan.isPopular && (
+                  <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1 bg-gradient-to-r from-yellow-500 to-yellow-600 text-white text-xs font-semibold px-6 py-2 rounded-full shadow-lg z-10">
+                    ⭐ RECOMMENDED
+                  </div>
+                )}
+                
+                {/* Card Header */}
+                <div className="p-8 border-b border-gray-100 bg-gradient-to-br from-gray-50 to-white">
+                  <div className="flex justify-between items-start mb-4">
+                    <h3 className="text-2xl font-semibold text-gray-900">{plan.name}</h3>
+                  </div>
+                  <div className="flex items-baseline mb-4">
+                    <span className="text-4xl font-bold text-gray-900">{plan.price}</span>
+                    {plan.price !== "Custom Quote" && (
+                      <span className="text-gray-500 text-lg ml-2">/month</span>
+                    )}
+                  </div>
+                  <div className="inline-flex items-center px-4 py-2.5 rounded-full bg-blue-50 border border-blue-100 text-blue-700 text-sm font-semibold">
+                    <Wifi className="w-4 h-4 mr-2" /> 
+                    <span className="font-bold">{plan.speed}</span> Download Speed
+                  </div>
+                </div>
+
+                {/* Image Section */}
+                <div className="h-56 overflow-hidden bg-gray-300 relative">
+                  <div className="absolute inset-0 bg-gradient-to-t from-gray-900/40 to-transparent"></div> 
+                  <img 
+                    src={plan.image} 
+                    alt={plan.name} 
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
                   />
                 </div>
-                <div className="p-6 flex flex-col flex-grow">
-                  <div className="flex justify-between items-start mb-3">
-                    <h3 className="text-xl font-bold" style={{ color: RISA_BLUE }}>
-                      {plan.name}
-                    </h3>
-                    <span
-                      className="text-xs px-2 py-1 rounded-full"
-                      style={{ backgroundColor: `${RISA_BLUE}15`, color: RISA_BLUE }}
-                    >
-                      {plan.speed}
-                    </span>
-                  </div>
-                  <p className="text-2xl font-bold mb-4" style={{ color: RISA_BLUE }}>
-                    {plan.price}
-                  </p>
-                  <ul className="space-y-2 mb-6 flex-grow">
+
+                {/* Features List */}
+                <div className="p-8 flex-grow flex flex-col">
+                  <ul className="space-y-4 mb-8 flex-grow">
                     {plan.features.map((feature, i) => (
-                      <li key={i} className="flex items-start text-sm">
-                        <CheckCircle className="w-4 h-4 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
-                        <span className="text-gray-700">{feature}</span>
+                      <li key={i} className="flex items-start text-[15px] text-gray-600">
+                        <Check className="w-5 h-5 text-green-600 mr-3 mt-0.5 flex-shrink-0" />
+                        <span className="leading-relaxed">{feature}</span>
                       </li>
                     ))}
                   </ul>
-                  <motion.button
-                    whileHover={{ scale: 1.03 }}
-                    whileTap={{ scale: 0.98 }}
+
+                  {/* CTA Button */}
+                  <button
                     onClick={() => handlePlanSelect(plan)}
-                    className="w-full font-semibold py-3 rounded-full shadow-md hover:shadow-lg transition-all"
-                    style={{
-                      backgroundColor: RISA_BLUE,
-                      color: RISA_WHITE,
-                      padding: '0.5rem 2rem',
-                      borderRadius: '50px',
-                      border: 'none'
-                    }}
+                    className="w-full py-4 rounded-xl font-semibold text-sm transition-all duration-300 flex items-center justify-center group relative overflow-hidden bg-gradient-to-r from-gray-900 to-gray-800 hover:from-gray-800 hover:to-gray-700 text-white shadow-lg hover:shadow-xl"
                   >
-                    Get Connected
-                  </motion.button>
+                    <span className="relative z-10 flex items-center">
+                      Request Connection
+                      <ChevronRight className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
+                    </span>
+                    <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  </button>
                 </div>
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        </motion.div>
+      </section>
+
+      {/* Corporate Features Section */}
+      <section className="py-24 bg-white border-t border-gray-200">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-light text-gray-900 mb-4">Why Choose Our Enterprise Solutions?</h2>
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+              Built with enterprise-grade technology and supported by industry experts
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+            {[
+              { 
+                icon: <Clock className="w-8 h-8" />, 
+                title: "Rapid Deployment", 
+                desc: "Professional installation within 24-48 hours with minimal disruption to your operations." 
+              },
+              { 
+                icon: <Zap className="w-8 h-8" />, 
+                title: "Enterprise Reliability", 
+                desc: "99.9% uptime guarantee with redundant systems and enterprise-grade infrastructure." 
+              },
+              { 
+                icon: <HardHat className="w-8 h-8" />, 
+                title: "Expert Engineering", 
+                desc: "Certified network engineers and 24/7 technical support for mission-critical operations." 
+              }
+            ].map((item, i) => (
+              <motion.div 
+                key={i} 
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.2 }}
+                viewport={{ once: true }}
+                className="text-center p-8 rounded-3xl hover:shadow-2xl transition-all duration-500 border border-gray-100 hover:border-gray-200"
+              >
+                <div className="w-20 h-20 mx-auto bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl flex items-center justify-center mb-6 text-blue-600 shadow-sm">
+                  {React.cloneElement(item.icon)}
+                </div>
+                <h4 className="font-semibold text-gray-900 mb-4 text-xl">{item.title}</h4>
+                <p className="text-gray-600 text-base leading-relaxed">{item.desc}</p>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Comparison Table */}
-      <section className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.h3
-            className="text-2xl font-bold text-center mb-8"
-            style={{ color: RISA_BLUE }}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
-            Compare Plans
-          </motion.h3>
-          <div className="overflow-auto rounded-lg border border-gray-200">
-            <table className="min-w-full text-sm bg-white">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-4 py-3 text-left font-bold" style={{ color: RISA_BLUE }}>Plan</th>
-                  <th className="px-4 py-3 text-left font-bold" style={{ color: RISA_BLUE }}>Speed</th>
-                  <th className="px-4 py-3 text-left font-bold" style={{ color: RISA_BLUE }}>Price</th>
-                  <th className="px-4 py-3 text-left font-bold" style={{ color: RISA_BLUE }}>Top Features</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredPlans.map((plan, index) => (
-                  <tr key={index} className="border-t border-gray-200 hover:bg-gray-50">
-                    <td className="px-4 py-3 font-medium">{plan.name}</td>
-                    <td className="px-4 py-3">{plan.speed}</td>
-                    <td className="px-4 py-3">{plan.price}</td>
-                    <td className="px-4 py-3">
-                      <ul className="list-disc list-inside text-gray-700 text-sm">
-                        {plan.features.slice(0, 2).map((f, i) => (
-                          <li key={i}>{f}</li>
-                        ))}
-                      </ul>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </section>
-
-      {/* Features */}
-      <section className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-lg mb-6">All our packages come with:</p>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {[
-              { icon: <Clock className="w-5 h-5" />, label: "24/7 Support" },
-              { icon: <HardHat className="w-5 h-5" />, label: "Same-day Installation" },
-              { icon: <Zap className="w-5 h-5" />, label: "<5ms gaming latency" },
-              { icon: <Wifi className="w-5 h-5" />, label: "Installation Fee: Ksh 2,000" }
-            ].map((item, i) => (
-              <div key={i} className="flex flex-col items-center">
-                <div
-                  className="w-12 h-12 rounded-full flex items-center justify-center mb-3"
-                  style={{ backgroundColor: `${RISA_BLUE}15` }}
-                >
-                  <span style={{ color: RISA_BLUE }}>{item.icon}</span>
-                </div>
-                <span className="text-gray-700 text-sm">{item.label}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Business Features */}
-      {activeTab !== "home" && (
-        <section className="py-16 bg-white">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <motion.h3
-              className="text-2xl font-bold text-center mb-10"
-              style={{ color: RISA_BLUE }}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
+      {/* Professional Modal Form */}
+      <AnimatePresence>
+        {showForm && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md">
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden border border-gray-200"
             >
-              Business Solutions Features
-            </motion.h3>
-            <div className="grid md:grid-cols-3 gap-8">
-              {[
-                { title: "SLA Guarantee", desc: "99.9% uptime with compensation for downtime" },
-                { title: "Dedicated Support", desc: "Priority technical support with direct line" },
-                { title: "IP Telephony", desc: "VoIP phone systems with multiple extensions" }
-              ].map((item, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.1 }}
-                  className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm"
-                >
-                  <div
-                    className="w-12 h-12 rounded-full flex items-center justify-center mb-4"
-                    style={{ backgroundColor: RISA_BLUE }}
-                  >
-                    <span className="text-white text-lg font-bold">{i + 1}</span>
-                  </div>
-                  <h4 className="text-xl font-bold mb-2" style={{ color: RISA_BLUE }}>
-                    {item.title}
-                  </h4>
-                  <p className="text-gray-700 text-sm">{item.desc}</p>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* Connection Form Modal */}
-      {showForm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <motion.div
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            className="bg-white rounded-xl shadow-xl max-w-md w-full p-6"
-          >
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-xl font-bold" style={{ color: RISA_BLUE }}>
-                Get {selectedPlan?.name}
-              </h3>
-              <button onClick={() => setShowForm(false)} className="text-gray-500">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
-
-            <form onSubmit={handleSubmit}>
-              <div className="space-y-4">
-                {[
-                  { name: "name", label: "Full Name *", type: "text", required: true },
-                  { name: "phone", label: "Phone Number *", type: "tel", required: true },
-                  { name: "email", label: "Email Address", type: "email", required: false },
-                  { name: "location", label: "Location *", type: "text", required: true }
-                ].map((field) => (
-                  <div key={field.name}>
-                    <label className="block text-sm font-medium mb-1">{field.label}</label>
-                    <input
-                      type={field.type}
-                      name={field.name}
-                      required={field.required}
-                      className="w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-md focus:outline-none focus:ring-2"
-                      style={{ borderColor: RISA_BLUE, boxShadow: `0 0 0 2px ${RISA_BLUE}20` }}
-                      value={formData[field.name]}
-                      onChange={handleInputChange}
-                    />
-                  </div>
-                ))}
-
+              <div className="bg-gradient-to-r from-gray-50 to-white px-8 py-6 border-b border-gray-200 flex justify-between items-center">
                 <div>
-                  <label className="block text-sm font-medium mb-1">Connection Type</label>
-                  <input
-                    type="text"
-                    className="w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-md cursor-not-allowed"
-                    value={formData.connectionType}
-                    readOnly
+                  <h3 className="font-semibold text-gray-900 text-lg">Request Professional Consultation</h3>
+                  <p className="text-sm text-gray-500 mt-1">Selected Plan: {selectedPlan?.name}</p>
+                </div>
+                <button 
+                  onClick={() => setShowForm(false)} 
+                  className="text-gray-400 hover:text-gray-600 transition-colors p-2 rounded-lg hover:bg-gray-100"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+              
+              <form onSubmit={handleSubmit} className="p-8 space-y-6">
+                <div>
+                  <label className="block text-xs font-semibold text-gray-500 uppercase mb-2 tracking-wide">Full Name</label>
+                  <input 
+                    type="text" 
+                    name="name" 
+                    required 
+                    value={formData.name} 
+                    onChange={handleInputChange} 
+                    className="w-full px-4 py-3.5 rounded-xl bg-gray-50 border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition-all text-gray-900 placeholder-gray-400"
+                    placeholder="Enter your full name"
                   />
                 </div>
-              </div>
+                
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-500 uppercase mb-2 tracking-wide">Phone</label>
+                    <input 
+                      type="tel" 
+                      name="phone" 
+                      required 
+                      value={formData.phone} 
+                      onChange={handleInputChange} 
+                      className="w-full px-4 py-3.5 rounded-xl bg-gray-50 border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition-all text-gray-900 placeholder-gray-400"
+                      placeholder="Phone number"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-500 uppercase mb-2 tracking-wide">Email</label>
+                    <input 
+                      type="email" 
+                      name="email" 
+                      value={formData.email} 
+                      onChange={handleInputChange} 
+                      className="w-full px-4 py-3.5 rounded-xl bg-gray-50 border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition-all text-gray-900 placeholder-gray-400"
+                      placeholder="Email address"
+                    />
+                  </div>
+                </div>
+                
+                <div>
+                  <label className="block text-xs font-semibold text-gray-500 uppercase mb-2 tracking-wide">Business/Location</label>
+                  <input 
+                    type="text" 
+                    name="location" 
+                    required 
+                    value={formData.location} 
+                    onChange={handleInputChange} 
+                    className="w-full px-4 py-3.5 rounded-xl bg-gray-50 border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition-all text-gray-900 placeholder-gray-400"
+                    placeholder="Company name or location"
+                  />
+                </div>
 
-              <div className="mt-6 flex justify-end space-x-3">
-                <button
-                  type="button"
-                  onClick={() => setShowForm(false)}
-                  className="px-4 py-2 border rounded-full text-gray-700 hover:bg-gray-100"
+                <button 
+                  type="submit" 
+                  className="w-full py-4 mt-4 rounded-xl bg-gradient-to-r from-gray-900 to-gray-800 hover:from-gray-800 hover:to-gray-700 text-white font-semibold shadow-lg transition-all duration-300 flex items-center justify-center gap-3 group"
                 >
-                  Cancel
+                  <span>Schedule Professional Consultation</span>
+                  <ChevronRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                 </button>
-                <motion.button
-                  type="submit"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="px-4 py-2 text-white rounded-full flex items-center"
-                  style={{
-                    backgroundColor: RISA_BLUE,
-                    padding: '0.5rem 2rem',
-                    borderRadius: '50px'
-                  }}
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-6.29-3.062c-.545 0-1-.448-1-1s.445-1 1-1c.552 0 1 .448 1 1s-.443 1-1 1m4 0c-.545 0-1-.448-1-1s.445-1 1-1c.552 0 1 .448 1 1s-.443 1-1 1m2.005 9.644c-.366-.01-1.422-.361-2.053-.616l-.086-.035c-.487-.199-1.153-.473-1.623-.762-.543-.333-.915-.669-1.279-1.141-.432-.561-.757-1.236-.964-1.821l-.013-.034c-.309-.84-.175-1.579.024-2.192l.013-.034c.099-.24.26-.624.26-.624s-.159-.397-.198-.606c-.04-.209-.05-.359-.099-.568-.05-.208-.248-.52-.446-.669-.198-.149-.471-.258-.97-.258-.322 0-.644.025-.966.074-.309.05-.619.124-.929.198-.396.099-1.108.347-1.564.644-.447.297-.828.694-1.04 1.141-.223.471-.347 1.033-.347 1.702 0 .669.124 1.379.471 2.118l.013.034c.396.941 1.104 2.06 1.806 2.809.744.793 1.678 1.416 2.488 1.821l.074.037c.669.322 1.847.793 2.379.941.396.112.828.174 1.213.174.57 0 1.074-.062 1.49-.211.446-.16.832-.471 1.104-.941.272-.471.347-1.033.248-1.604-.074-.458-.322-.907-.644-1.191a1.49 1.49 0 00-.793-.347c-.124-.025-.223-.033-.322-.033" />
-                  </svg>
-                  Send via WhatsApp
-                </motion.button>
-              </div>
-            </form>
-          </motion.div>
-        </div>
-      )}
+              </form>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

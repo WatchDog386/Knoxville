@@ -2,268 +2,286 @@ import React from "react";
 import Navbar from "../components/Navbar";
 import { motion } from "framer-motion";
 import { Helmet } from "react-helmet";
+import { 
+  Target, 
+  Lightbulb, 
+  Users, 
+  Shield, 
+  Zap, 
+  ChevronRight, 
+  CheckCircle2,
+  TrendingUp,
+  Globe
+} from "lucide-react";
 
-// 🔥 Knoxville Brand Colors (from Hero.jsx)
-const BRAND_BLACK = "#121212";
-const BRAND_DARK = "#1e1e1e";
-const BRAND_RED = "#e53935";
-const BRAND_ORANGE = "#fb8c00";
-const BRAND_LIGHT = "#f5f5f5";
-const BRAND_WHITE = "#ffffff";
-const BRAND_BLUE = "#015B97"; // Primary Knoxville blue
+// 🔥 Knoxville Brand Colors
+const BRAND = {
+  black: "#121212",
+  blue: "#015B97",      // Primary Blue
+  orange: "#fb8c00",    // Primary Orange
+  white: "#ffffff",
+  slate: "#f1f5f9"
+};
 
-// Font stack (matches Hero.jsx)
+// Font stack
 const FONT_FAMILY = `'Proxima Nova', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif`;
 
 const values = [
-  { title: "Integrity", description: "We conduct our business with honesty, transparency, and ethical practices." },
-  { title: "Innovation", description: "We embrace creativity to deliver cutting-edge solutions for evolving needs." },
-  { title: "Excellence", description: "We strive for the highest standards in all our services and products." },
-  { title: "Collaboration", description: "We believe in teamwork to achieve shared success with clients and partners." },
+  { 
+    icon: <Shield className="w-6 h-6 text-white" />, 
+    title: "Integrity", 
+    description: "We conduct our business with uncompromising honesty, transparency, and ethical practices.",
+    color: "bg-[#015B97]"
+  },
+  { 
+    icon: <Lightbulb className="w-6 h-6 text-white" />, 
+    title: "Innovation", 
+    description: "We embrace creativity to deliver cutting-edge fiber solutions for evolving digital needs.",
+    color: "bg-[#fb8c00]"
+  },
+  { 
+    icon: <Zap className="w-6 h-6 text-white" />, 
+    title: "Excellence", 
+    description: "We strive for the highest standards in speed, stability, and customer support.",
+    color: "bg-purple-600"
+  },
+  { 
+    icon: <Users className="w-6 h-6 text-white" />, 
+    title: "Collaboration", 
+    description: "We believe in teamwork to achieve shared success with our clients and communities.",
+    color: "bg-emerald-600"
+  },
 ];
+
+// Animation Variants
+const fadeUp = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6 } }
+};
+
+const staggerContainer = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
+};
 
 export default function AboutPage() {
   return (
-    <div
-      className="min-h-screen bg-white text-gray-900"
-      style={{ fontFamily: FONT_FAMILY }}
-    >
+    <div className="min-h-screen bg-white text-slate-900 font-sans" style={{ fontFamily: FONT_FAMILY }}>
       <Helmet>
-        <title>About Knoxville | Fibre Internet Provider</title>
-        <meta
-          name="description"
-          content="Learn about Knoxville Internet — our mission, vision, values, and commitment to delivering world-class fibre connectivity across Kenya."
-        />
+        <title>About Us | Knoxville Technologies</title>
+        <meta name="description" content="Learn about Knoxville Internet — our mission, vision, values, and commitment to delivering world-class fibre connectivity." />
       </Helmet>
 
       <Navbar />
 
-      {/* Hero Section — Matches Hero.jsx styling */}
-      <motion.section
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.7 }}
-        className="relative py-16 md:py-20 bg-white"
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto">
-            <motion.h1
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ duration: 0.6 }}
-              className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 leading-tight"
-              style={{ color: BRAND_BLUE }}
-            >
-              About Knoxville
-            </motion.h1>
-            <motion.p
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              className="text-lg md:text-xl mb-8 text-gray-700 leading-relaxed"
-            >
-              Pioneering digital solutions that transform businesses and empower communities
-            </motion.p>
-          </div>
+      {/* ================= HERO SECTION ================= */}
+      <section className="relative h-[60vh] min-h-[500px] flex items-center justify-center overflow-hidden">
+        {/* Background Image */}
+        <div className="absolute inset-0 z-0">
+          <img 
+            src="/about.jpg" 
+            alt="Knoxville Team Meeting" 
+            className="w-full h-full object-cover"
+          />
+          {/* Gradient Overlay for text readability */}
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-900/95 via-slate-900/80 to-slate-900/60"></div>
         </div>
-      </motion.section>
 
-      {/* Knoxville Info */}
-      <section className="py-16 bg-white">
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+          <motion.div
+            initial="hidden"
+            animate="visible"
+            variants={fadeUp}
+            className="max-w-3xl"
+          >
+            <div className="flex items-center gap-2 mb-6">
+              <div className="h-1 w-12 bg-[#fb8c00]"></div>
+              <span className="text-[#fb8c00] font-bold tracking-widest uppercase text-sm">Who We Are</span>
+            </div>
+            <h1 className="text-4xl md:text-6xl font-extrabold text-white mb-6 leading-tight">
+              Empowering Kenya <br /> Through <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#fb8c00] to-orange-400">Connectivity</span>
+            </h1>
+            <p className="text-xl text-slate-300 font-light leading-relaxed max-w-2xl">
+              We are more than an ISP. We are the bridge to the digital future, connecting homes and businesses to a world of opportunity.
+            </p>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ================= CORPORATE BIO (Redesigned for Readability) ================= */}
+      <section className="py-20 bg-slate-50 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <motion.div
-              initial={{ x: -50, opacity: 0 }}
-              whileInView={{ x: 0, opacity: 1 }}
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            
+            {/* Left: Text Content */}
+            <motion.div 
+              initial="hidden"
+              whileInView="visible"
               viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
+              variants={fadeUp}
             >
-              <h2
-                className="text-3xl font-bold mb-6"
-                style={{ color: BRAND_BLUE }}
-              >
-                What to Know About Knoxville
+              <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-6">
+                The Knoxville Story
               </h2>
-              <p className="text-gray-700 mb-4">
-                Founded by an experienced team from some of the biggest telecommunication brands,
-                <strong> Knoxville</strong> offers simple, affordable access to its
-                <strong> full-fibre</strong> network so everyone in the community can benefit,
-                regardless of income, technical knowledge or age.
-              </p>
-              <p className="text-gray-700">
-                <strong>Knoxville</strong> delivers the fastest broadband in the outskirts of Nairobi and Kiambu,
-                enabling homes, businesses, public services, and community groups to experience life-changing
-                <strong> full-fibre</strong> connectivity.
-              </p>
+              <div className="space-y-6 text-lg text-slate-600 leading-relaxed">
+                <p>
+                  <strong className="text-[#015B97]">Knoxville Technologies</strong> is a premier Kenyan Internet Service Provider focused on delivering ultra-fast, reliable, and affordable internet to underserved and developing regions.
+                </p>
+                <p>
+                  Founded by a team of telecommunication experts, we deploy high-capacity fiber-optic infrastructure to bridge the digital divide. We believe that reliable internet is not a luxury—it is a fundamental utility that enables education, innovation, and economic growth.
+                </p>
+                <p>
+                  From the heart of Nairobi to peri-urban communities, we are committed to empowering homes and businesses with seamless access to information. We don't just provide a connection; we provide a partnership.
+                </p>
+              </div>
+
+              <div className="mt-8 grid grid-cols-2 gap-4">
+                <div className="flex items-center gap-3">
+                  <div className="bg-blue-100 p-2 rounded-full">
+                    <CheckCircle2 className="w-5 h-5 text-[#015B97]" />
+                  </div>
+                  <span className="font-semibold text-slate-800">Licensed ISP</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="bg-orange-100 p-2 rounded-full">
+                    <CheckCircle2 className="w-5 h-5 text-[#fb8c00]" />
+                  </div>
+                  <span className="font-semibold text-slate-800">24/7 Local Support</span>
+                </div>
+              </div>
             </motion.div>
-            <motion.div
-              initial={{ x: 50, opacity: 0 }}
-              whileInView={{ x: 0, opacity: 1 }}
+
+            {/* Right: Visual/Image */}
+            <motion.div 
+              initial={{ opacity: 0, x: 50 }}
+              whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              className="flex justify-center"
+              transition={{ duration: 0.8 }}
+              className="relative"
             >
-              <img
-                src="/group2.jpg"
-                alt="Knoxville Team"
-                className="rounded-xl shadow-xl max-w-full h-auto"
-                style={{ maxWidth: '500px' }}
+              <div className="absolute top-0 right-0 w-2/3 h-full bg-[#015B97]/5 rounded-3xl -z-10 transform translate-x-8 -translate-y-8"></div>
+              <img 
+                src="/job.jpg"
+                alt="Knoxville Engineers"
+                className="rounded-2xl shadow-2xl w-full object-cover h-[500px]"
               />
+              {/* Floating Card */}
+              <div className="absolute bottom-8 left-[-20px] bg-white p-6 rounded-xl shadow-xl border-l-4 border-[#fb8c00] max-w-xs hidden md:block">
+                <p className="text-slate-900 font-bold text-lg">Community First</p>
+                <p className="text-slate-500 text-sm">Connecting over 5,000+ homes and businesses.</p>
+              </div>
             </motion.div>
+
           </div>
         </div>
       </section>
 
-      {/* Mission & Vision */}
+      {/* ================= MISSION & VISION ================= */}
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <motion.h2
-              initial={{ y: 20, opacity: 0 }}
-              whileInView={{ y: 0, opacity: 1 }}
-              viewport={{ once: true }}
-              className="text-3xl font-bold mb-4"
-              style={{ color: BRAND_BLUE }}
-            >
-              Our Purpose
-            </motion.h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Driving innovation through purpose-led solutions
-            </p>
-          </div>
-
           <div className="grid md:grid-cols-2 gap-8">
-            <motion.div
-              initial={{ y: 30, opacity: 0 }}
-              whileInView={{ y: 0, opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
-              className="bg-white p-8 rounded-lg border border-gray-200 hover:shadow-md transition-shadow"
+            
+            {/* Mission */}
+            <motion.div 
+              whileHover={{ y: -5 }}
+              className="bg-slate-50 p-10 rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-300"
             >
-              <h3
-                className="text-2xl font-bold mb-5"
-                style={{ color: BRAND_BLUE }}
-              >
-                Our Mission
-              </h3>
-              <p className="text-gray-700 mb-5">
-                To empower businesses and communities through reliable, innovative digital infrastructure that enables growth and creates opportunities.
+              <div className="w-14 h-14 bg-[#015B97] rounded-2xl flex items-center justify-center mb-6 rotate-3">
+                <Target className="w-7 h-7 text-white" />
+              </div>
+              <h3 className="text-2xl font-bold text-slate-900 mb-4">Our Mission</h3>
+              <p className="text-slate-600 leading-relaxed mb-6">
+                To empower businesses and communities through reliable, innovative digital infrastructure that enables growth and creates opportunities for everyone, regardless of location.
               </p>
               <ul className="space-y-2">
-                {["Deliver cutting-edge solutions", "Maintain uncompromising quality", "Foster sustainable digital ecosystems"].map((item, i) => (
-                  <li key={i} className="flex items-start">
-                    <span className="text-blue-600 mr-2 mt-0.5">✓</span>
-                    <span>{item}</span>
-                  </li>
+                {['Bridge the digital divide', 'Enable economic growth', 'Provide affordable access'].map((item, i) => (
+                   <li key={i} className="flex items-center text-sm text-slate-700">
+                     <ChevronRight className="w-4 h-4 text-[#fb8c00] mr-2" /> {item}
+                   </li>
                 ))}
               </ul>
             </motion.div>
 
-            <motion.div
-              initial={{ y: 30, opacity: 0 }}
-              whileInView={{ y: 0, opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-              className="bg-white p-8 rounded-lg border border-gray-200 hover:shadow-md transition-shadow"
+            {/* Vision */}
+            <motion.div 
+              whileHover={{ y: -5 }}
+              className="bg-slate-50 p-10 rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-300"
             >
-              <h3
-                className="text-2xl font-bold mb-5"
-                style={{ color: BRAND_ORANGE }}
-              >
-                Our Vision
-              </h3>
-              <p className="text-gray-700 mb-5">
-                To be the catalyst for Africa's digital revolution, connecting people, businesses, and ideas through world-class infrastructure and services.
+              <div className="w-14 h-14 bg-[#fb8c00] rounded-2xl flex items-center justify-center mb-6 -rotate-3">
+                <Globe className="w-7 h-7 text-white" />
+              </div>
+              <h3 className="text-2xl font-bold text-slate-900 mb-4">Our Vision</h3>
+              <p className="text-slate-600 leading-relaxed mb-6">
+                To be the catalyst for Kenya's digital revolution, connecting people, businesses, and ideas through world-class fiber infrastructure and exceptional service.
               </p>
               <ul className="space-y-2">
-                {["Bridge the digital divide", "Enable next-generation technologies", "Create lasting economic impact"].map((item, i) => (
-                  <li key={i} className="flex items-start">
-                    <span className="text-orange-500 mr-2 mt-0.5">✓</span>
-                    <span>{item}</span>
-                  </li>
+                {['Pan-African connectivity', 'Smart community enabler', 'Innovation leader'].map((item, i) => (
+                   <li key={i} className="flex items-center text-sm text-slate-700">
+                     <ChevronRight className="w-4 h-4 text-[#015B97] mr-2" /> {item}
+                   </li>
                 ))}
               </ul>
             </motion.div>
+
           </div>
         </div>
       </section>
 
-      {/* Core Values */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* ================= CORE VALUES ================= */}
+      <section className="py-24 bg-[#0f172a] text-white relative overflow-hidden">
+        {/* Background Pattern */}
+        <div className="absolute inset-0 opacity-5 bg-[url('https://www.transparenttextures.com/patterns/diamond-upholstery.png')]"></div>
+        
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center mb-16">
-            <motion.h2
-              initial={{ y: 20, opacity: 0 }}
-              whileInView={{ y: 0, opacity: 1 }}
-              viewport={{ once: true }}
-              className="text-3xl font-bold mb-4"
-              style={{ color: BRAND_BLUE }}
-            >
-              Our Core Values
-            </motion.h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              The foundation of everything we do
-            </p>
+            <span className="text-[#fb8c00] font-bold tracking-wider uppercase text-sm">Our Culture</span>
+            <h2 className="text-3xl md:text-4xl font-bold mt-3">Core Values</h2>
+            <div className="w-20 h-1 bg-[#fb8c00] mx-auto mt-6 rounded-full"></div>
           </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <motion.div 
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6"
+          >
             {values.map((value, index) => (
               <motion.div
                 key={index}
-                initial={{ y: 30, opacity: 0 }}
-                whileInView={{ y: 0, opacity: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="bg-white p-6 rounded-lg text-center border border-gray-200 hover:shadow-md transition-shadow"
+                variants={fadeUp}
+                className="bg-white/5 backdrop-blur-sm p-8 rounded-2xl border border-white/10 hover:bg-white/10 transition-all duration-300"
               >
-                <div
-                  className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4"
-                  style={{ backgroundColor: BRAND_BLUE }}
-                >
-                  <span className="text-white font-bold text-sm">{index + 1}</span>
+                <div className={`${value.color} w-12 h-12 rounded-lg flex items-center justify-center mb-6 shadow-lg`}>
+                  {value.icon}
                 </div>
-                <h3 className="text-lg font-bold mb-2" style={{ color: BRAND_BLUE }}>
+                <h3 className="text-xl font-bold mb-3 text-white">
                   {value.title}
                 </h3>
-                <p className="text-gray-700 text-sm">{value.description}</p>
+                <p className="text-slate-300 text-sm leading-relaxed">
+                  {value.description}
+                </p>
               </motion.div>
             ))}
-          </div>
+          </motion.div>
         </div>
       </section>
 
-      {/* Bio Section — Dark Blue Background */}
-      <section
-        className="py-20"
-        style={{ backgroundColor: BRAND_BLUE }}
-      >
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.h2
-            initial={{ y: 20, opacity: 0 }}
-            whileInView={{ y: 0, opacity: 1 }}
-            viewport={{ once: true }}
-            className="text-3xl md:text-4xl font-bold mb-8"
-            style={{ color: BRAND_WHITE }}
-          >
-            Knoxville Bio
-          </motion.h2>
-          {[
-            "Knoxville Technologies is a Kenyan ISP focused on delivering ultra-fast, reliable, and affordable internet to underserved and developing regions. We deploy high-capacity fiber-optic infrastructure to enable digital inclusion and bridge the connectivity gap in urban and peri-urban communities.",
-            "Our team is comprised of professionals with a deep understanding of network design, deployment, and service delivery. We believe everyone deserves access to world-class connectivity, regardless of location or income level.",
-            "Knoxville aims to be the backbone of digital transformation by supporting education, innovation, and enterprise through better broadband. We are committed to empowering homes and businesses with seamless access to information, communication, and opportunity."
-          ].map((para, i) => (
-            <motion.p
-              key={i}
-              initial={{ y: 20, opacity: 0 }}
-              whileInView={{ y: 0, opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.1 }}
-              className="text-lg mb-5 leading-relaxed"
-              style={{ color: BRAND_WHITE }}
-            >
-              {para}
-            </motion.p>
-          ))}
+      {/* ================= CTA SECTION ================= */}
+      <section className="py-20 bg-white">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+           <h2 className="text-3xl font-bold text-slate-900 mb-6">Ready to experience the difference?</h2>
+           <p className="text-lg text-slate-600 mb-8 max-w-2xl mx-auto">
+             Join thousands of happy customers who trust Knoxville for their daily connectivity needs.
+           </p>
+           <div className="flex flex-col sm:flex-row gap-4 justify-center">
+             <a href="/contact" className="px-8 py-3.5 bg-[#015B97] hover:bg-blue-700 text-white rounded-full font-bold transition-all shadow-lg hover:shadow-blue-900/20">
+               Get Connected
+             </a>
+             <a href="/coverage" className="px-8 py-3.5 bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 rounded-full font-bold transition-all">
+               Check Coverage
+             </a>
+           </div>
         </div>
       </section>
     </div>

@@ -3,27 +3,57 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { FaWhatsapp } from "react-icons/fa";
 import { Helmet } from "react-helmet";
-import { Wifi, Clock, HardHat, CheckCircle, Zap, X, Smartphone } from "lucide-react";
-
-// 🔥 Professional Color Palette
-const BRAND_BLACK = "#121212";
-const BRAND_DARK = "#1e1e1e";
-const BRAND_RED = "#e53935";
-const BRAND_ORANGE = "#fb8c00";
-const BRAND_LIGHT = "#f5f5f5";
-const BRAND_WHITE = "#ffffff";
-const BRAND_BLUE = "#015B97";
-// ✅ Hotspot-specific warm colors
-const HOTSPOT_COLORS = [
-  { bg: "linear-gradient(135deg, #d4af37 0%, #b8860b 100%)", text: "#ffffff" }, // Golden
-  { bg: "linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%)", text: "#ffffff" }, // Green
-  { bg: "linear-gradient(135deg, #c62828 0%, #b71c1c 100%)", text: "#ffffff" }, // Red
-  { bg: "linear-gradient(135deg, #ef6c00 0%, #e65100 100%)", text: "#ffffff" }, // Orange
-  { bg: "linear-gradient(135deg, #d97706 0%, #b45309 100%)", text: "#ffffff" }, // Amber
-];
+import { Wifi, Clock, HardHat, CheckCircle, Zap, X, Smartphone, ChevronRight, Star, Shield } from "lucide-react";
 
 // Font stack
 const FONT_FAMILY = `'Proxima Nova', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif`;
+
+// Hero Slides
+const heroSlides = [
+  {
+    backgroundImage: "https://itel.com/wp-content/uploads/2015/09/iStock_000012499607_XXXLarge-1024x576.jpg",
+    title: "Unlimited <span style='color: #fb8c00;'>Internet</span> For Your Home",
+    description: "Enjoy unlimited internet for your home with fast, reliable fibre connectivity.",
+    tag: "High-Speed Connectivity",
+    ctaText: "View Plans",
+    secondaryCtaText: "View Coverage"
+  },
+  {
+    backgroundImage: "https://images.unsplash.com/photo-1497366754035-f200968a6e72?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80",
+    title: "Business <span style='color: #fb8c00;'>Solutions</span> That Scale",
+    description: "Enterprise-grade connectivity with dedicated support and 99.9% uptime guarantee.",
+    tag: "Enterprise Ready",
+    ctaText: "Business Plans",
+    secondaryCtaText: "Contact Sales"
+  },
+  {
+    backgroundImage: "https://media.istockphoto.com/id/1494073880/photo/a-man-holding-icon-virtual-24-7-support-services-for-worldwide-nonstop-and-full-time.jpg?s=612x612&w=0&k=20&c=4YF-otaX3n8OiPOC4L_-_pAX1ibayzdvpkK1Ih2-p50=",
+    title: "We Offer <span style='color: #fb8c00;'> customer</span> 24/7 care services",
+    description: "We Offer 24/7 customer care services.",
+    tag: "Premium Service",
+    ctaText: "Explore Plans",
+    secondaryCtaText: "Check Speed"
+  }
+];
+
+// 🔥 ANIMATED PACKAGE THEMES
+const PACKAGE_THEMES = [
+  { name: 'blue', bg: 'bg-[#0061a8]', text: 'text-[#0061a8]', shadow: 'shadow-blue-500/40' },
+  { name: 'green', bg: 'bg-[#00a651]', text: 'text-[#00a651]', shadow: 'shadow-green-500/40' },
+  { name: 'orange', bg: 'bg-[#f7941d]', text: 'text-[#f7941d]', shadow: 'shadow-orange-500/40' },
+  { name: 'purple', bg: 'bg-[#662d91]', text: 'text-[#662d91]', shadow: 'shadow-purple-500/40' },
+  { name: 'red', bg: 'bg-[#ed1c24]', text: 'text-[#ed1c24]', shadow: 'shadow-red-500/40' },
+  { name: 'cyan', bg: 'bg-[#00aeef]', text: 'text-[#00aeef]', shadow: 'shadow-cyan-500/40' },
+];
+
+// Hotspot Colors
+const HOTSPOT_COLORS = [
+  { bg: "linear-gradient(135deg, #d4af37 0%, #b8860b 100%)", text: "#ffffff" },
+  { bg: "linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%)", text: "#ffffff" },
+  { bg: "linear-gradient(135deg, #c62828 0%, #b71c1c 100%)", text: "#ffffff" },
+  { bg: "linear-gradient(135deg, #ef6c00 0%, #e65100 100%)", text: "#ffffff" },
+  { bg: "linear-gradient(135deg, #d97706 0%, #b45309 100%)", text: "#ffffff" },
+];
 
 const plans = [
   {
@@ -32,7 +62,8 @@ const plans = [
     speed: "6Mbps",
     image: "https://images.pexels.com/photos/7606061/pexels-photo-7606061.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
     features: ["Great for browsing", "24/7 Support", "Free Installation"],
-    type: "home"
+    type: "home",
+    isPopular: false
   },
   {
     name: "Essential Plan",
@@ -40,7 +71,8 @@ const plans = [
     speed: "10Mbps",
     image: "https://www.safes.so/wp-content/uploads/2022/11/Can-Parental-Controls-See-Private-Browsing.jpg",
     features: ["Streaming & Social Media", "24/7 Support", "Free Installation"],
-    type: "home"
+    type: "home",
+    isPopular: false
   },
   {
     name: "Family Plan",
@@ -48,7 +80,8 @@ const plans = [
     speed: "15Mbps",
     image: "https://www.shutterstock.com/image-photo/gadgets-addiction-young-black-family-600nw-2015527172.jpg",
     features: ["Work from Home", "Streaming", "24/7 Support", "Free Installation"],
-    type: "home"
+    type: "home",
+    isPopular: true 
   },
   {
     name: "Smart Home Plan",
@@ -56,7 +89,8 @@ const plans = [
     speed: "20Mbps",
     image: "https://media.istockphoto.com/id/1313806319/photo/happy-african-american-family-holding-and-using-personal-gadgets.jpg?s=612x612&w=0&k=20&c=VpUS6Qgrzv0vXSYlm15_gqk5ao8-zWMkaq59jepyE-Y=",
     features: ["Multiple Devices", "Low Latency", "24/7 Support", "Free Installation"],
-    type: "home"
+    type: "home",
+    isPopular: false
   },
   {
     name: "Pro Streamer Plan",
@@ -64,7 +98,8 @@ const plans = [
     speed: "25Mbps",
     image: "https://cheapsslsecurity.com/blog/wp-content/uploads/2021/06/cyber-security-tips-for-small-business-feature.jpg",
     features: ["Heavy Streaming", "Gaming Ready", "24/7 Support", "Free Installation"],
-    type: "home"
+    type: "home",
+    isPopular: false
   },
   {
     name: "Ultra Plan",
@@ -72,7 +107,8 @@ const plans = [
     speed: "30Mbps",
     image: "https://c8.alamy.com/comp/2KFB1JH/an-early-old-vintage-internet-cybercafe-cyber-cafe-in-xian-china-prc-there-are-dozens-of-screens-in-the-room-with-many-people-browsing-the-net-and-operating-them-prc-china-125-2KFB1JH.jpg",
     features: ["High-Speed Everything", "Gaming & 4K", "24/7 Support", "Free Installation"],
-    type: "home"
+    type: "home",
+    isPopular: false
   },
   {
     name: "Business Basic",
@@ -80,7 +116,8 @@ const plans = [
     speed: "50Mbps",
     image: "https://images.unsplash.com/photo-1497366754035-f200968a6e72?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
     features: ["5 IP phones", "3 Static IPs", "Priority support", "99.5% uptime"],
-    type: "business"
+    type: "business",
+    isPopular: false
   },
   {
     name: "Business Plus",
@@ -88,7 +125,8 @@ const plans = [
     speed: "100Mbps",
     image: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
     features: ["10 IP phones", "5 Static IPs", "Dedicated line", "99.9% uptime"],
-    type: "business"
+    type: "business",
+    isPopular: true
   },
   {
     name: "Enterprise",
@@ -96,195 +134,156 @@ const plans = [
     speed: "500Mbps+",
     image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
     features: ["Unlimited IP phones", "10+ Static IPs", "SLA guarantee", "24/7 monitoring"],
-    type: "enterprise"
+    type: "enterprise",
+    isPopular: false
   }
 ];
 
-// ✅ Updated Hotspot Plans based on wifisys.knoxvillesys.co.ke
 const hotspotPlans = [
-  {
-    name: "1 Hour",
-    price: "10",
-    duration: "1hr",
-    devices: "1 Device",
-    features: ["Fast browsing", "Social media access", "Email checking"],
-  },
-  {
-    name: "2 Hours",
-    price: "20",
-    duration: "2hrs",
-    devices: "1 Device",
-    features: ["Extended browsing", "Streaming music", "Social media"],
-  },
-  {
-    name: "12 Hours",
-    price: "30",
-    duration: "12hrs",
-    devices: "1 Device",
-    features: ["Full day access", "Standard streaming", "Online gaming"],
-  },
-  {
-    name: "1 Day",
-    price: "40",
-    duration: "1 day",
-    devices: "1 Device",
-    features: ["Full day access", "Standard streaming", "Online gaming"],
-  },
-  {
-    name: "Weekly",
-    price: "250",
-    duration: "week",
-    devices: "2 Devices",
-    features: ["7 days unlimited", "HD streaming", "Multiple devices"],
-  },
-  {
-    name: "Monthly Solo",
-    price: "800",
-    duration: "month",
-    devices: "1 Device",
-    features: ["30 days access", "Priority bandwidth", "24/7 support"],
-  },
-  {
-    name: "Monthly X2",
-    price: "1200",
-    duration: "month",
-    devices: "2 Devices",
-    features: ["30 days access", "Priority bandwidth", "24/7 support"],
-  }
+  { name: "1 Hour", price: "10", duration: "1hr", devices: "1 Device", features: ["Fast browsing", "Socials"] },
+  { name: "2 Hours", price: "20", duration: "2hrs", devices: "1 Device", features: ["Streaming", "Socials"] },
+  { name: "12 Hours", price: "30", duration: "12hrs", devices: "1 Device", features: ["Full day", "Gaming"] },
+  { name: "1 Day", price: "40", duration: "1 day", devices: "1 Device", features: ["Full day", "Gaming"] },
+  { name: "Weekly", price: "250", duration: "week", devices: "2 Devices", features: ["7 days", "HD stream"] },
+  { name: "Monthly Solo", price: "800", duration: "month", devices: "1 Device", features: ["30 days", "Priority"] },
+  { name: "Monthly X2", price: "1200", duration: "month", devices: "2 Devices", features: ["30 days", "Priority"] }
 ];
+
+// Animation Variants
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.15 }
+  }
+};
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 50 },
+  visible: { 
+    opacity: 1, 
+    y: 0,
+    transition: { type: "spring", stiffness: 100, damping: 12 }
+  }
+};
 
 const Hero = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("home");
   const [showForm, setShowForm] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState(null);
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    location: '',
-    connectionType: ''
-  });
+  const [formData, setFormData] = useState({ name: '', email: '', phone: '', location: '', connectionType: '' });
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
 
   const handlePlanSelect = (plan) => {
     setSelectedPlan(plan);
-    setFormData(prev => ({
-      ...prev,
-      connectionType: plan.name
-    }));
+    setFormData(prev => ({ ...prev, connectionType: plan.name }));
     setShowForm(true);
   };
 
-  // ✅ HOTSPOT BUTTONS: Redirect directly to Knoxville hotspot portal
   const handleHotspotSelect = () => {
     window.open("https://wifisys.knoxvillesys.co.ke", "_blank");
   };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const whatsappNumber = "254726818938";
-    const message = `New Connection Request:%0A%0A` +
-                   `*Name:* ${formData.name}%0A` +
-                   `*Phone:* ${formData.phone}%0A` +
-                   `*Email:* ${formData.email}%0A` +
-                   `*Location:* ${formData.location}%0A` +
-                   `*Connection Type:* ${formData.connectionType}%0A%0A` +
-                   `I would like to get connected!`;
+    const message = `New Connection Request:%0A%0A*Name:* ${formData.name}%0A*Phone:* ${formData.phone}%0A*Location:* ${formData.location}%0A*Plan:* ${formData.connectionType}`;
     window.open(`https://wa.me/${whatsappNumber}?text=${message}`, '_blank');
-    setFormData({
-      name: '',
-      email: '',
-      phone: '',
-      location: '',
-      connectionType: ''
-    });
     setShowForm(false);
-    setSelectedPlan(null);
   };
 
   const filteredPlans = plans.filter(plan => plan.type === activeTab);
 
   useEffect(() => {
-    if (showForm) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
+    if (showForm) document.body.style.overflow = 'hidden';
+    else document.body.style.overflow = 'unset';
   }, [showForm]);
 
   return (
-    <div className="min-h-screen bg-white" style={{ fontFamily: FONT_FAMILY }}>
+    <div className="min-h-screen bg-black" style={{ fontFamily: FONT_FAMILY }}>
       <Helmet>
-        <title>Knoxville Internet | Unlimited Home Fibre & Business Plans</title>
-        <meta
-          name="description"
-          content="Knoxville Internet - Reliable and fast fibre internet for your home and business. Explore our affordable packages with 24/7 support and free installation."
-        />
-        <link rel="stylesheet" href="https://use.typekit.net/hus3mie.css" />
+        <title>Knoxville Internet | Unlimited Connectivity</title>
       </Helmet>
+      
+      <style>{`
+        @keyframes gradient-xy {
+          0% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+        }
+        .animate-gradient-bg {
+          background: linear-gradient(-45deg, #f8fafc, #f1f5f9, #e2e8f0);
+          background-size: 400% 400%;
+          animation: gradient-xy 15s ease infinite;
+        }
+      `}</style>
 
-      {/* Hero Section */}
-      <section
-        className="relative w-full overflow-hidden py-20 md:py-28 lg:py-32 px-4 sm:px-6 lg:px-8"
-        style={{
-          backgroundImage: `url('https://itel.com/wp-content/uploads/2015/09/iStock_000012499607_XXXLarge-1024x576.jpg')`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-          minHeight: '70vh'
-        }}
-      >
-        <div className="absolute inset-0 bg-black bg-opacity-60"></div>
-        <div className="relative z-10 max-w-7xl mx-auto h-full flex items-center">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-center w-full">
+      {/* ================= HERO SECTION (RESPONSIVE HEIGHT) ================= */}
+      {/* Mobile: h-[60vh] (Smaller, shrinks like before) */}
+      {/* Laptop/Large: lg:h-[85vh] (Extended down) */}
+      <section className="relative w-full overflow-hidden bg-black h-[60vh] md:h-[75vh] lg:h-[85vh]">
+        <div className="absolute inset-0">
+          <AnimatePresence mode="wait">
+            {heroSlides.map((slide, index) => (
+              index === currentSlide && (
+                <motion.div
+                  key={currentSlide}
+                  className="absolute inset-0"
+                  initial={{ opacity: 0, scale: 1.1 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 1.5 }}
+                >
+                  <div
+                    className="w-full h-full bg-cover bg-center"
+                    style={{ backgroundImage: `url('${slide.backgroundImage}')` }}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70"></div>
+                </motion.div>
+              )
+            ))}
+          </AnimatePresence>
+        </div>
+
+        {/* Content Container centered within the responsive height */}
+        <div className="relative z-10 w-full h-full flex items-center justify-center">
+          <div className="text-center w-full max-w-4xl px-4">
             <motion.div
-              initial={{ x: -50, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              transition={{ duration: 0.7, delay: 0.2 }}
+              key={currentSlide}
+              initial={{ y: 30, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
               className="text-white"
             >
-              <div className="inline-block mb-4 px-3 py-1 text-xs font-medium rounded-full" style={{ backgroundColor: BRAND_RED, color: BRAND_WHITE }}>
-                High-Speed Connectivity
-              </div>
-              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 leading-tight" style={{ fontFamily: '"adobe-garamond-pro", "Poppins", sans-serif' }}>
-                Unlimited <span style={{ color: BRAND_ORANGE }}>Internet</span> For Your Home
-              </h1>
-              <p className="text-base md:text-lg mb-6 text-white max-w-lg" style={{ opacity: 0.95 }}>
-                Enjoy unlimited internet for your home with fast, reliable fibre connectivity—perfect for streaming, gaming, and working from home.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-3">
+              <span className="inline-block mb-4 px-4 py-1 text-xs font-bold uppercase tracking-widest rounded-full bg-gradient-to-r from-orange-500 to-red-600 text-white shadow-lg animate-pulse">
+                {heroSlides[currentSlide].tag}
+              </span>
+              <h1 
+                className="text-4xl md:text-6xl font-bold mb-6 leading-tight drop-shadow-2xl" 
+                style={{ fontFamily: '"adobe-garamond-pro", "Poppins", sans-serif' }}
+                dangerouslySetInnerHTML={{ __html: heroSlides[currentSlide].title }}
+              />
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                   onClick={() => document.getElementById('plans-section').scrollIntoView({ behavior: 'smooth' })}
-                  className="font-bold py-2 px-5 rounded-full text-sm transition-all"
-                  style={{ backgroundColor: BRAND_WHITE, color: BRAND_BLACK, borderRadius: '50px' }}
-                  onMouseEnter={(e) => { e.target.style.backgroundColor = BRAND_RED; e.target.style.color = BRAND_WHITE; }}
-                  onMouseLeave={(e) => { e.target.style.backgroundColor = BRAND_WHITE; e.target.style.color = BRAND_BLACK; }}
+                  className="font-bold py-3 px-8 rounded-full text-base transition-all bg-white text-black hover:bg-gray-100"
                 >
-                  View Plans
-                </motion.button>
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={() => navigate("/coverage")}
-                  className="font-bold py-2 px-5 rounded-full text-sm transition-all"
-                  style={{ backgroundColor: 'transparent', color: BRAND_WHITE, border: `2px solid ${BRAND_WHITE}`, borderRadius: '50px' }}
-                  onMouseEnter={(e) => { e.target.style.backgroundColor = BRAND_ORANGE; e.target.style.borderColor = BRAND_ORANGE; }}
-                  onMouseLeave={(e) => { e.target.style.backgroundColor = 'transparent'; e.target.style.borderColor = BRAND_WHITE; }}
-                >
-                  View Coverage
+                  {heroSlides[currentSlide].ctaText}
                 </motion.button>
               </div>
             </motion.div>
@@ -292,49 +291,36 @@ const Hero = () => {
         </div>
       </section>
 
-      {/* Main Plans Section */}
-      <section id="plans-section" className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* ================= PLANS SECTION ================= */}
+      <section id="plans-section" className="py-20 animate-gradient-bg relative overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center max-w-3xl mx-auto mb-12">
             <motion.h2
               initial={{ y: 20, opacity: 0 }}
               whileInView={{ y: 0, opacity: 1 }}
               viewport={{ once: true }}
-              className="text-3xl md:text-4xl font-bold mb-3"
-              style={{ color: BRAND_BLACK }}
+              className="text-4xl font-extrabold mb-4 text-slate-800"
             >
-              Internet <span style={{ color: BRAND_RED }}>Plans</span>
+              Packages Designed for <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500">You</span>
             </motion.h2>
-            <motion.p
-              initial={{ y: 20, opacity: 0 }}
-              whileInView={{ y: 0, opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.1 }}
-              className="text-lg"
-              style={{ color: BRAND_BLACK }}
-            >
-              Fast, reliable, and unlimited fibre connectivity for home and business
-            </motion.p>
           </div>
 
-          <div className="flex justify-center mb-10">
-            <div className="inline-flex rounded-lg bg-gray-100 p-1">
+          {/* Tabs */}
+          <div className="flex justify-center mb-12">
+            <div className="inline-flex rounded-full bg-white/50 backdrop-blur-md border border-white/50 p-1.5 shadow-lg">
               {[
-                { id: "home", label: "Home Plans" },
-                { id: "business", label: "Business Plans" },
+                { id: "home", label: "Home Fiber" },
+                { id: "business", label: "Business" },
                 { id: "enterprise", label: "Enterprise" }
               ].map((tab) => (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`px-5 py-2 rounded-md text-sm font-medium transition-colors ${
-                    activeTab === tab.id ? "bg-white text-red-600 shadow-sm" : "text-gray-700 hover:text-gray-900"
+                  className={`px-6 py-2.5 text-sm md:text-base rounded-full font-bold transition-all duration-300 ${
+                    activeTab === tab.id 
+                    ? "bg-slate-800 text-white shadow-md scale-105" 
+                    : "text-slate-500 hover:text-slate-800 hover:bg-white/50"
                   }`}
-                  style={{
-                    backgroundColor: activeTab === tab.id ? BRAND_WHITE : '',
-                    color: activeTab === tab.id ? BRAND_RED : BRAND_BLACK,
-                    border: activeTab === tab.id ? `1px solid ${BRAND_RED}` : 'none'
-                  }}
                 >
                   {tab.label}
                 </button>
@@ -342,132 +328,174 @@ const Hero = () => {
             </div>
           </div>
 
-          {/* Reduced card sizes with better responsive grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
-            {filteredPlans.map((plan, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.05 }}
-                className="bg-white rounded-lg border border-gray-200 overflow-hidden hover:shadow-md transition-shadow flex flex-col"
-              >
-                {/* Reduced image height */}
-                <div className="h-32 overflow-hidden">
-                  <img src={plan.image} alt={plan.name} className="w-full h-full object-cover" />
-                </div>
-                {/* Reduced padding */}
-                <div className="p-4 flex flex-col flex-grow">
-                  <div className="flex justify-between items-start mb-2">
-                    <h3 className="text-base font-bold" style={{ color: BRAND_BLACK }}>{plan.name}</h3>
-                    <span className="text-xs px-2 py-1 rounded-full font-medium" style={{ backgroundColor: `${BRAND_ORANGE}20`, color: BRAND_ORANGE }}>{plan.speed}</span>
+          {/* Cards */}
+          <motion.div 
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.1 }}
+          >
+            <AnimatePresence mode="popLayout">
+            {filteredPlans.map((plan, index) => {
+              const theme = PACKAGE_THEMES[index % PACKAGE_THEMES.length];
+              
+              return (
+                <motion.div
+                  key={plan.name}
+                  variants={cardVariants}
+                  className={`
+                    relative bg-white rounded-[2rem] overflow-hidden flex flex-col h-full group shadow-xl
+                    hover:shadow-2xl transition-all duration-500 border-2
+                    ${plan.isPopular ? 'border-orange-400 ring-4 ring-orange-100/50' : 'border-white'}
+                  `}
+                  whileHover={{ y: -10 }}
+                >
+                  {/* IMAGE SECTION */}
+                  <div className="relative h-48 overflow-hidden">
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10" />
+                      <img 
+                        src={plan.image} 
+                        alt={plan.name} 
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 group-hover:rotate-1" 
+                      />
+                      {plan.isPopular && (
+                          <motion.div 
+                            initial={{ scale: 0 }} animate={{ scale: 1 }} 
+                            className="absolute top-4 right-4 z-20"
+                          >
+                            <span className="bg-gradient-to-r from-orange-500 to-amber-500 text-white text-[10px] font-bold px-3 py-1.5 rounded-full flex items-center gap-1 shadow-lg animate-pulse">
+                                <Star className="w-3 h-3 fill-current" /> POPULAR
+                            </span>
+                          </motion.div>
+                      )}
                   </div>
-                  <p className="text-lg font-bold mb-2" style={{ color: BRAND_BLUE }}>{plan.price}</p>
-                  {/* Smaller feature list */}
-                  <ul className="space-y-1.5 mb-4 flex-grow">
-                    {plan.features.map((feature, i) => (
-                      <li key={i} className="flex items-start text-xs" style={{ color: BRAND_BLACK }}>
-                        <CheckCircle className="w-3 h-3 text-orange-500 mr-2 mt-0.5 flex-shrink-0" />
-                        {feature}
-                      </li>
-                    ))}
-                  </ul>
-                  <motion.button
-                    whileHover={{ y: -2 }}
-                    whileTap={{ scale: 0.98 }}
-                    onClick={() => handlePlanSelect(plan)}
-                    className="w-full font-bold py-2 rounded-full text-xs transition-all"
-                    style={{ backgroundColor: BRAND_BLUE, color: BRAND_WHITE, borderRadius: '50px' }}
-                  >
-                    Get Connected
-                  </motion.button>
-                </div>
+
+                  {/* COLORED HEADER */}
+                  <div className={`${theme.bg} p-6 text-white relative overflow-hidden rounded-bl-[3rem] transition-colors duration-300`}>
+                      <div className="absolute -right-6 -top-6 w-24 h-24 bg-white/20 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-500"></div>
+                      
+                      <h3 className="text-sm font-bold uppercase tracking-wider opacity-90 mb-1">{plan.name}</h3>
+                      <div className="flex items-baseline gap-2">
+                          <h2 className="text-4xl font-extrabold tracking-tight">{plan.speed}</h2>
+                          <span className="opacity-75 text-sm">Speed</span>
+                      </div>
+                  </div>
+
+                  {/* BODY SECTION */}
+                  <div className="p-6 pt-4 flex flex-col flex-grow bg-white relative">
+                      <div className="mb-6 flex items-end">
+                        <span className={`text-2xl font-bold ${theme.text} group-hover:scale-105 transition-transform origin-left`}>
+                          {plan.price}
+                        </span>
+                        <span className="text-slate-400 text-xs font-bold uppercase mb-1 ml-1">/month</span>
+                      </div>
+
+                      <div className="w-full h-px bg-slate-100 mb-6" />
+
+                      <ul className="space-y-3 mb-8 flex-grow">
+                        {plan.features.map((feature, i) => (
+                          <li key={i} className="flex items-start text-sm text-slate-600 font-medium group-hover:text-slate-800 transition-colors">
+                            <CheckCircle className={`w-4 h-4 mr-3 mt-0.5 ${theme.text}`} />
+                            {feature}
+                          </li>
+                        ))}
+                      </ul>
+
+                      <motion.button
+                        whileTap={{ scale: 0.95 }}
+                        whileHover={{ scale: 1.03 }}
+                        onClick={() => handlePlanSelect(plan)}
+                        className={`
+                          w-full py-3.5 rounded-full font-bold text-sm flex items-center justify-center gap-2 transition-all duration-300 text-white shadow-md
+                          ${theme.bg} ${theme.shadow} hover:brightness-110 hover:shadow-lg
+                        `}
+                      >
+                        Get Connected <ChevronRight className="w-4 h-4" />
+                      </motion.button>
+                  </div>
+                </motion.div>
+              );
+            })}
+            </AnimatePresence>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ================= FEATURES ================= */}
+      <section className="py-16 bg-white relative z-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {[
+              { icon: <Clock />, title: "24/7 Support", desc: "Always online for you" },
+              { icon: <HardHat />, title: "Expert Install", desc: "Professional setup" },
+              { icon: <Zap />, title: "Low Latency", desc: "Gaming optimized" },
+              { icon: <Shield />, title: "Secure Net", desc: "DDOS Protected" }
+            ].map((item, i) => (
+              <motion.div 
+                key={i} 
+                whileHover={{ y: -8, backgroundColor: "#f8fafc" }}
+                className="flex flex-col items-center text-center p-6 rounded-3xl bg-white border border-slate-100 transition-all duration-300 cursor-default"
+              >
+                <motion.div 
+                  whileHover={{ rotate: 15, scale: 1.1 }}
+                  className="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 bg-slate-50 text-blue-600 shadow-sm"
+                >
+                    {React.cloneElement(item.icon, { size: 26 })}
+                </motion.div>
+                <h4 className="font-bold text-slate-800 text-lg">{item.title}</h4>
+                <p className="text-sm text-slate-500 mt-1">{item.desc}</p>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* 🔥 Hotspot Packages — Direct Redirect to Knoxville Portal */}
-      <section id="hotspot-section" className="py-12 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-8">
-            <motion.h2
-              initial={{ y: 20, opacity: 0 }}
-              whileInView={{ y: 0, opacity: 1 }}
-              viewport={{ once: true }}
-              className="text-2xl md:text-3xl font-bold mb-2"
-              style={{ color: BRAND_BLACK }}
-            >
-              Mobile <span style={{ color: "#d4af37" }}>Hotspot</span> Packages
-            </motion.h2>
-            <motion.p
-              initial={{ y: 20, opacity: 0 }}
-              whileInView={{ y: 0, opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.1 }}
-              className="text-base"
-              style={{ color: BRAND_BLACK }}
-            >
-              Pay-as-you-go internet for on-the-go connectivity
-            </motion.p>
+      {/* ================= HOTSPOT SECTION (CLEAN BACKGROUND) ================= */}
+      <section id="hotspot-section" className="py-20 bg-slate-50 relative overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="text-center max-w-3xl mx-auto mb-12">
+            <span className="text-orange-500 font-bold tracking-wider text-xs uppercase">On The Go?</span>
+            <h2 className="text-3xl md:text-4xl font-bold mt-2 mb-4 text-slate-900">
+              Mobile <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-amber-500">Hotspot</span> Zones
+            </h2>
           </div>
 
-          {/* ✅ Responsive Grid with Compact Cards - Centered last two items */}
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-3 max-w-6xl mx-auto">
             {hotspotPlans.map((plan, index) => {
               const color = HOTSPOT_COLORS[index % HOTSPOT_COLORS.length];
-              // Apply special classes for the last two items to center them
               const isLastTwo = index >= hotspotPlans.length - 2;
               return (
                 <motion.div
                   key={index}
-                  initial={{ opacity: 0, scale: 0.9 }}
+                  initial={{ opacity: 0, scale: 0.8 }}
                   whileInView={{ opacity: 1, scale: 1 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.4, delay: index * 0.05 }}
-                  className={`bg-white rounded-lg border border-gray-200 overflow-hidden hover:shadow-md transition-shadow flex flex-col ${
-                    isLastTwo 
-                      ? 'col-span-2 sm:col-span-1 md:col-span-1 lg:col-span-1 sm:col-start-2 md:col-start-auto lg:col-start-auto' 
-                      : ''
-                  }`}
+                  whileHover={{ scale: 1.05, zIndex: 10, boxShadow: "0px 15px 30px rgba(0,0,0,0.15)" }}
+                  transition={{ duration: 0.3, delay: index * 0.05 }}
+                  className={`
+                    rounded-xl overflow-hidden flex flex-col cursor-pointer shadow-lg
+                    ${isLastTwo ? 'col-span-2 sm:col-span-1 md:col-span-1 lg:col-span-1 sm:col-start-2 md:col-start-auto' : ''}
+                  `}
                   style={{ 
-                    height: '100%', 
+                    background: color.bg,
                     maxWidth: '140px',
-                    margin: isLastTwo ? '0 auto' : '0'
+                    margin: isLastTwo ? '0 auto' : '0',
+                    height: '100%'
                   }}
+                  onClick={handleHotspotSelect}
                 >
-                  <div className="p-2 flex flex-col flex-grow" style={{ background: color.bg }}>
-                    <div className="flex justify-between items-start mb-1">
-                      <h3 className="text-xs font-bold" style={{ color: color.text }}>
-                        {plan.name}
-                      </h3>
-                      <span className="text-[8px] px-1 py-0.5 rounded font-medium" style={{ backgroundColor: 'rgba(0,0,0,0.2)', color: color.text }}>
-                        {plan.duration}
-                      </span>
+                  <div className="p-3 flex flex-col flex-grow text-white">
+                    <div className="flex justify-between items-start mb-2">
+                      <h3 className="text-xs font-bold">{plan.name}</h3>
+                      <span className="text-[9px] bg-black/20 px-1.5 py-0.5 rounded">{plan.duration}</span>
                     </div>
-                    <p className="text-sm font-bold mb-1" style={{ color: color.text }}>
-                      Ksh {plan.price}
-                    </p>
-                    <ul className="space-y-0.5 mb-1 flex-grow">
-                      {plan.features.map((feature, i) => (
-                        <li key={i} className="flex items-start text-[9px]" style={{ color: color.text }}>
-                          <Smartphone className="w-2 h-2 mr-1 mt-0.5 flex-shrink-0" />
-                          {feature}
-                        </li>
-                      ))}
-                    </ul>
-                    {/* ✅ Compact Button */}
-                    <motion.button
-                      whileHover={{ y: -1 }}
-                      whileTap={{ scale: 0.98 }}
-                      onClick={handleHotspotSelect}
-                      className="w-full font-bold py-1 rounded-full text-[9px] transition-all"
-                      style={{ backgroundColor: 'rgba(0,0,0,0.2)', color: color.text }}
-                    >
-                      Subscribe Now
-                    </motion.button>
+                    <p className="text-lg font-extrabold mb-2">Ksh {plan.price}</p>
+                    <div className="mt-auto">
+                        <motion.button whileHover={{ backgroundColor: "rgba(255,255,255,0.3)" }} className="w-full bg-white/20 text-[10px] font-bold py-1.5 rounded-lg transition-colors">
+                            Select
+                        </motion.button>
+                    </div>
                   </div>
                 </motion.div>
               );
@@ -476,131 +504,58 @@ const Hero = () => {
         </div>
       </section>
 
-      {/* Features */}
-      <section className="py-12 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-base mb-6" style={{ color: BRAND_BLACK, fontWeight: 600 }}>
-            All plans include:
-          </p>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {[
-              { icon: <Clock className="w-4 h-4" />, label: "24/7 Support" },
-              { icon: <HardHat className="w-4 h-4" />, label: "Same-day Installation" },
-              { icon: <Zap className="w-4 h-4" />, label: "<5ms latency" },
-              { icon: <Wifi className="w-4 h-4" />, label: "Free Installation" }
-            ].map((item, i) => (
-              <div key={i} className="flex flex-col items-center">
-                <div className="w-10 h-10 rounded-full flex items-center justify-center mb-2" style={{ backgroundColor: `${BRAND_ORANGE}20` }}>
-                  <span style={{ color: BRAND_ORANGE }}>{item.icon}</span>
-                </div>
-                <span className="text-sm" style={{ color: BRAND_BLACK }}>{item.label}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Business Features */}
-      {activeTab !== "home" && (
-        <section className="py-12 bg-white">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <motion.h3
-              className="text-xl font-bold text-center mb-8"
-              style={{ color: BRAND_BLACK }}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-            >
-              Business Solutions Features
-            </motion.h3>
-            <div className="grid md:grid-cols-3 gap-6">
-              {[
-                { title: "SLA Guarantee", desc: "99.9% uptime with compensation" },
-                { title: "Dedicated Support", desc: "Priority technical support" },
-                { title: "IP Telephony", desc: "VoIP with multiple extensions" }
-              ].map((item, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.1 }}
-                  className="bg-gray-50 p-5 rounded-lg border border-gray-200"
-                >
-                  <h4 className="font-bold mb-1" style={{ color: BRAND_RED }}>{item.title}</h4>
-                  <p className="text-sm" style={{ color: BRAND_BLACK }}>{item.desc}</p>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* Modal — Only for main plans (not hotspot) */}
+      {/* ================= MODAL FORM ================= */}
       <AnimatePresence>
         {showForm && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
             <motion.div
-              initial={{ scale: 0.95, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              className="bg-white rounded-xl shadow-xl max-w-md w-full p-6"
+              initial={{ scale: 0.9, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.9, opacity: 0, y: 20 }}
+              className="bg-white rounded-3xl shadow-2xl max-w-md w-full overflow-hidden"
             >
-              <div className="flex justify-between items-center mb-4">
-                <h3 className="text-lg font-bold" style={{ color: BRAND_RED }}>
-                  Get {selectedPlan?.name}
-                </h3>
-                <button onClick={() => setShowForm(false)} className="text-gray-500 hover:text-gray-700">
+              <div className="px-6 py-5 bg-gradient-to-r from-slate-50 to-white border-b border-slate-100 flex justify-between items-center">
+                <div>
+                    <h3 className="text-lg font-bold text-slate-800">Quick Connect</h3>
+                    <div className="flex items-center gap-2 mt-1">
+                        <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                        <p className="text-xs text-slate-500">Requesting: <span className="text-blue-600 font-bold">{selectedPlan?.name}</span></p>
+                    </div>
+                </div>
+                <button onClick={() => setShowForm(false)} className="text-slate-400 hover:text-slate-600 bg-slate-100 p-2 rounded-full transition-colors">
                   <X className="w-5 h-5" />
                 </button>
               </div>
-              <form onSubmit={handleSubmit}>
-                <div className="space-y-3">
-                  {[
-                    { name: "name", label: "Full Name *", type: "text", required: true },
-                    { name: "phone", label: "Phone Number *", type: "tel", required: true },
-                    { name: "email", label: "Email Address", type: "email", required: false },
-                    { name: "location", label: "Location *", type: "text", required: true }
-                  ].map((field) => (
-                    <div key={field.name}>
-                      <label className="block text-sm font-medium mb-1" style={{ color: BRAND_BLACK }}>{field.label}</label>
-                      <input
-                        type={field.type}
-                        name={field.name}
-                        required={field.required}
-                        className="w-full px-3 py-2 bg-gray-50 border rounded-md focus:outline-none"
-                        style={{ borderColor: BRAND_RED }}
-                        value={formData[field.name]}
-                        onChange={handleInputChange}
-                      />
-                    </div>
-                  ))}
-                  <div>
-                    <label className="block text-sm font-medium mb-1" style={{ color: BRAND_BLACK }}>Connection Type</label>
+
+              <form onSubmit={handleSubmit} className="p-6 space-y-4">
+                {[
+                  { name: "name", label: "Full Name", type: "text", placeholder: "John Doe" },
+                  { name: "phone", label: "Phone Number", type: "tel", placeholder: "07..." },
+                  { name: "location", label: "Location / Estate", type: "text", placeholder: "e.g. Westlands" }
+                ].map((field) => (
+                  <div key={field.name}>
+                    <label className="block text-xs font-bold text-slate-400 uppercase mb-1 ml-1">{field.label}</label>
                     <input
-                      type="text"
-                      className="w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-md"
-                      value={formData.connectionType}
-                      readOnly
+                      type={field.type}
+                      name={field.name}
+                      required
+                      placeholder={field.placeholder}
+                      className="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all"
+                      value={formData[field.name]}
+                      onChange={handleInputChange}
                     />
                   </div>
-                </div>
-                <div className="mt-6 flex justify-end space-x-2">
-                  <button
-                    type="button"
-                    onClick={() => setShowForm(false)}
-                    className="px-4 py-2 text-sm rounded-full"
-                    style={{ color: BRAND_BLACK }}
-                  >
-                    Cancel
-                  </button>
+                ))}
+                
+                <div className="pt-2">
                   <motion.button
                     type="submit"
-                    whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    className="px-4 py-2 text-white rounded-full text-sm font-bold"
-                    style={{ backgroundColor: BRAND_RED }}
+                    className="w-full py-4 text-white rounded-xl text-sm font-bold shadow-lg hover:shadow-green-500/30 hover:brightness-105 transition-all flex items-center justify-center gap-2"
+                    style={{ background: 'linear-gradient(to right, #25D366, #128C7E)' }}
                   >
-                    Send via WhatsApp
+                    <FaWhatsapp className="text-xl" />
+                    Start WhatsApp Chat
                   </motion.button>
                 </div>
               </form>
@@ -609,15 +564,16 @@ const Hero = () => {
         )}
       </AnimatePresence>
 
-      {/* WhatsApp Button */}
+      {/* WhatsApp Floating Button */}
       <a
         href="https://wa.me/254726818938"
         target="_blank"
         rel="noopener noreferrer"
-        className="fixed bottom-6 right-6 z-50 w-12 h-12 rounded-full bg-green-500 flex items-center justify-center shadow-md hover:shadow-lg transition-shadow"
+        className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full flex items-center justify-center shadow-lg hover:shadow-xl hover:scale-110 transition-all duration-300 animate-bounce-slow"
+        style={{ background: 'linear-gradient(135deg, #25D366 0%, #128C7E 100%)' }}
         aria-label="Chat on WhatsApp"
       >
-        <FaWhatsapp className="text-white text-xl" />
+        <FaWhatsapp className="text-white text-3xl" />
       </a>
     </div>
   );

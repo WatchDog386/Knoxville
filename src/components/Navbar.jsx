@@ -1,238 +1,329 @@
-// src/components/Navbar.jsx
-import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
-import { NavLink, useLocation, useNavigate } from "react-router-dom";
-import { Menu, X, Phone } from "lucide-react";
-import { throttle } from "lodash-es";
-import { useClickOutside } from "../hooks/useClickOutside";
+import React, { useState, useEffect, useRef } from "react";
+import { NavLink, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
+import { 
+  Menu, 
+  X, 
+  Phone, 
+  ChevronDown, 
+  Globe, 
+  Shield, 
+  Cpu, 
+  BookOpen, 
+  Zap,
+  Mail,
+  User
+} from "lucide-react";
 
-// RISA Brand Colors
-const RISA_BLUE = "#015B97";
-const RISA_RED = "#DC2626"; // Changed from blue to red
-const RISA_TEXT = "#565A5C";
-const RISA_LIGHT_BG = "#f8f9fa";
+// Brand Colors
+const BRAND = {
+  blue: "#015B97",
+  darkBlue: "#004270",
+  orange: "#FF8C00",
+  text: "#334155",
+  slate: "#f8fafc"
+};
 
-// Font stack
 const FONT_FAMILY = `'Proxima Nova', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif`;
+
+// Menu Configuration with Icons for Dropdowns
+const MENU_ITEMS = [
+  { label: "Home", route: "/", id: "home" },
+  { label: "About Us", route: "/about", id: "about" },
+  { label: "Services", route: "/services", id: "services" },
+  { 
+    label: "Support", 
+    id: "support",
+    submenu: [
+      { label: "FAQs", route: "/faq", icon: <BookOpen size={18} />, desc: "Common questions answered" },
+      { label: "Tech Support", route: "/technicians", icon: <Cpu size={18} />, desc: "Get technical assistance" },
+      { label: "Coverage Map", route: "/coverage", icon: <Globe size={18} />, desc: "Check availability" },
+    ]
+  },
+  { label: "Resources", route: "/articles", id: "articles" },
+];
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [isContactOpen, setIsContactOpen] = useState(false);
+  const [hoveredMenu, setHoveredMenu] = useState(null);
   const location = useLocation();
-  const navigate = useNavigate();
   const navRef = useRef(null);
-  const contactRef = useRef(null);
 
-  const handleScroll = useCallback(
-    throttle(() => setScrolled(window.scrollY > 10), 100),
-    []
-  );
-
+  // Handle Scroll Effect
   useEffect(() => {
-    window.addEventListener("scroll", handleScroll, { passive: true });
+    const handleScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [handleScroll]);
+  }, []);
 
+  // Close mobile menu on route change
   useEffect(() => {
     setIsOpen(false);
-    window.scrollTo({ top: 0, behavior: "smooth" });
   }, [location]);
 
-  useClickOutside(navRef, () => setIsOpen(false));
-  useClickOutside(contactRef, () => setIsContactOpen(false));
-
-  const currentPath = location.pathname === "/" ? "home" : location.pathname.slice(1);
-
-  const menuItems = useMemo(() => [
-    { label: "Home", route: "/", id: "home" },
-    { label: "About us", route: "/about", id: "about" },
-    { label: "Services", route: "/services", id: "services" },
-    { 
-      label: "Support", 
-      id: "support",
-      submenu: [
-        { label: "FAQs", route: "/faq", id: "faq" },
-        { label: "Technical Support", route: "/technicians", id: "technicians" },
-      ]
-    },
-    { label: "Resources", route: "/articles", id: "articles" },
-  ], []);
-
-  const isActivePath = (item) => {
-    if (item.id === "home") return currentPath === "home";
-    if (item.submenu) return item.submenu.some(sub => sub.id === currentPath);
-    return location.pathname === item.route;
-  };
-
-  const NavItem = ({ item }) => {
-    const isActive = isActivePath(item);
-
-    if (item.submenu) {
-      return (
-        <div className="relative group">
-          <button
-            className="relative px-4 py-2 font-medium text-base transition-colors duration-200 flex items-center gap-1"
-            style={{ 
-              color: isActive ? RISA_BLUE : RISA_TEXT, 
-              fontFamily: FONT_FAMILY,
-              borderBottom: isActive ? `2px solid ${RISA_BLUE}` : 'none'
-            }}
-          >
-            {item.label}
-            <span>▼</span>
-          </button>
-
-          <div
-            className="absolute left-0 mt-2 w-screen max-w-7xl mx-auto rounded-lg bg-white shadow-xl z-50 py-6 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200"
-            style={{ boxShadow: "0 4px 16px rgba(0,0,0,0.08)" }}
-          >
-            <div className="grid grid-cols-4 gap-8 px-8">
-              {item.submenu.map((sub) => (
-                <NavLink
-                  key={sub.id}
-                  to={sub.route}
-                  className={({ isActive: subActive }) =>
-                    `block px-4 py-2 text-sm font-medium transition-colors ${
-                      subActive ? "text-[#015B97] bg-blue-50" : "text-[#565A5C] hover:text-[#015B97] hover:bg-gray-50"
-                    }`
-                  }
-                  style={{ fontFamily: FONT_FAMILY }}
-                  onClick={() => setIsOpen(false)}
-                >
-                  {sub.label}
-                </NavLink>
-              ))}
-            </div>
-          </div>
-        </div>
-      );
-    }
-
-    return (
-      <NavLink
-        to={item.route}
-        className={({ isActive: navActive }) =>
-          `relative px-4 py-2 font-medium text-base transition-colors duration-200 ${
-            navActive || (item.id === "home" && currentPath === "home")
-              ? "text-[#015B97] border-b-2 border-[#015B97]"
-              : "text-[#565A5C] hover:text-[#015B97] hover:border-b-2 hover:border-[#015B97]"
-          }`
-        }
-        style={{ fontFamily: FONT_FAMILY }}
-        onClick={() => setIsOpen(false)}
-      >
-        {item.label}
-      </NavLink>
-    );
-  };
-
   return (
-    <nav
-      ref={navRef}
-      className={`fixed top-0 left-0 w-full z-[999] transition-all duration-300 ${
-        scrolled ? "bg-white shadow-sm" : "bg-white/95 backdrop-blur-sm"
-      }`}
+    <header 
+      className="fixed top-0 left-0 w-full z-[999]" 
       style={{ fontFamily: FONT_FAMILY }}
     >
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
-          {/* Logo - Changed from blue to red */}
-          <div className="flex items-center gap-2">
-            <span
-              className="whitespace-nowrap text-[#DC2626] font-bold text-lg md:text-xl"
-              style={{ fontFamily: FONT_FAMILY }}
-            >
-              Knoxville Technologies Home Fibre
-            </span>
+      {/* ================= TOP UTILITY BAR ================= */}
+      <div className={`bg-[#004270] text-white transition-all duration-300 ${scrolled ? 'h-0 overflow-hidden opacity-0' : 'h-10 opacity-100'}`}>
+        <div className="max-w-7xl mx-auto px-4 h-full flex justify-between items-center text-xs font-medium tracking-wide">
+          <div className="flex items-center gap-6">
+            <a href="tel:+254726818938" className="flex items-center gap-2 hover:text-[#FF8C00] transition-colors">
+              <Phone size={14} /> <span>+254 726 818 938</span>
+            </a>
+            <a href="mailto:support@knoxville.co.ke" className="hidden sm:flex items-center gap-2 hover:text-[#FF8C00] transition-colors">
+              <Mail size={14} /> <span>support@knoxville.co.ke</span>
+            </a>
           </div>
+          <div className="flex items-center gap-4">
+            <a href="/portal" className="flex items-center gap-2 hover:text-[#FF8C00] transition-colors">
+              <User size={14} /> <span>Client Portal</span>
+            </a>
+          </div>
+        </div>
+      </div>
 
-          {/* Desktop Menu */}
-          <div className="hidden md:flex items-center gap-4">
-            {menuItems.map((item) => (
-              <NavItem key={item.id} item={item} />
+      {/* ================= MAIN NAVBAR ================= */}
+      <div 
+        className={`relative transition-all duration-300 border-b ${
+          scrolled 
+            ? "bg-white/95 backdrop-blur-md shadow-md py-3 border-slate-200" 
+            : "bg-white py-4 border-transparent"
+        }`}
+      >
+        <div className="max-w-7xl mx-auto px-4 flex items-center justify-between">
+          
+          {/* LOGO */}
+          <NavLink to="/" className="flex items-center gap-2 group">
+            <div className="w-10 h-10 bg-[#015B97] rounded-xl flex items-center justify-center text-white shadow-lg group-hover:scale-105 transition-transform">
+              <Zap size={24} fill="currentColor" />
+            </div>
+            <div className="flex flex-col">
+              <span className="text-xl font-bold text-slate-900 leading-none tracking-tight">Knoxville</span>
+              <span className="text-[10px] font-bold text-[#FF8C00] uppercase tracking-widest">Technologies</span>
+            </div>
+          </NavLink>
+
+          {/* DESKTOP NAVIGATION */}
+          <nav className="hidden lg:flex items-center gap-8">
+            {MENU_ITEMS.map((item) => (
+              <div 
+                key={item.id}
+                className="relative h-full flex items-center"
+                onMouseEnter={() => setHoveredMenu(item.id)}
+                onMouseLeave={() => setHoveredMenu(null)}
+              >
+                {item.submenu ? (
+                  <div className="relative cursor-pointer py-2">
+                    <button 
+                      className={`flex items-center gap-1 font-semibold text-sm transition-colors ${
+                        location.pathname.includes(item.route) || hoveredMenu === item.id 
+                          ? "text-[#015B97]" 
+                          : "text-slate-600 hover:text-[#015B97]"
+                      }`}
+                    >
+                      {item.label}
+                      <ChevronDown size={14} className={`transition-transform duration-200 ${hoveredMenu === item.id ? 'rotate-180' : ''}`} />
+                    </button>
+
+                    {/* Animated Dropdown */}
+                    <AnimatePresence>
+                      {hoveredMenu === item.id && (
+                        <motion.div
+                          initial={{ opacity: 0, y: 15, scale: 0.95 }}
+                          animate={{ opacity: 1, y: 0, scale: 1 }}
+                          exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                          transition={{ duration: 0.2 }}
+                          className="absolute top-full left-1/2 -translate-x-1/2 pt-4 w-64 z-50"
+                        >
+                          <div className="bg-white rounded-xl shadow-xl border border-slate-100 overflow-hidden p-2">
+                            {item.submenu.map((sub) => (
+                              <NavLink
+                                key={sub.route}
+                                to={sub.route}
+                                className={({ isActive }) => 
+                                  `flex items-start gap-3 p-3 rounded-lg transition-colors ${
+                                    isActive ? "bg-blue-50" : "hover:bg-slate-50"
+                                  }`
+                                }
+                              >
+                                <div className={`mt-0.5 ${location.pathname === sub.route ? "text-[#015B97]" : "text-slate-400"}`}>
+                                  {sub.icon}
+                                </div>
+                                <div>
+                                  <p className={`text-sm font-bold ${location.pathname === sub.route ? "text-[#015B97]" : "text-slate-700"}`}>
+                                    {sub.label}
+                                  </p>
+                                  <p className="text-xs text-slate-500 mt-0.5 leading-tight">{sub.desc}</p>
+                                </div>
+                              </NavLink>
+                            ))}
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                ) : (
+                  <NavLink
+                    to={item.route}
+                    className={({ isActive }) =>
+                      `text-sm font-semibold transition-colors relative py-2 ${
+                        isActive ? "text-[#015B97]" : "text-slate-600 hover:text-[#015B97]"
+                      }`
+                    }
+                  >
+                    {item.label}
+                    {location.pathname === item.route && (
+                      <motion.div 
+                        layoutId="underline" 
+                        className="absolute bottom-0 left-0 w-full h-0.5 bg-[#015B97] rounded-full" 
+                      />
+                    )}
+                  </NavLink>
+                )}
+              </div>
             ))}
+          </nav>
+
+          {/* ACTION BUTTONS */}
+          <div className="hidden lg:flex items-center gap-4">
+            <NavLink 
+              to="/contact"
+              className="px-6 py-2.5 bg-[#FF8C00] hover:bg-[#e67e00] text-white text-sm font-bold rounded-full transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
+            >
+              Get Connected
+            </NavLink>
           </div>
 
-          {/* Mobile Menu Button */}
-          <button
-            className="md:hidden p-2 text-[#565A5C] hover:text-[#015B97]"
-            onClick={() => setIsOpen(!isOpen)}
-            aria-label={isOpen ? "Close menu" : "Open menu"}
+          {/* MOBILE TOGGLE */}
+          <button 
+            onClick={() => setIsOpen(true)}
+            className="lg:hidden p-2 text-slate-700 hover:bg-slate-100 rounded-lg transition-colors"
           >
-            {isOpen ? <X size={24} /> : <Menu size={24} />}
+            <Menu size={28} />
           </button>
         </div>
       </div>
 
-      {/* Mobile Menu */}
+      {/* ================= MOBILE DRAWER (SLIDE IN) ================= */}
       <AnimatePresence>
         {isOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.25 }}
-            className="md:hidden overflow-hidden bg-white border-t"
-          >
-            <div className="px-4 py-6 space-y-5">
-              <div className="flex flex-col space-y-3 pt-2 pb-4 border-b border-gray-100">
-                <button
-                  className="px-4 py-2.5 border-2 border-[#015B97] text-[#015B97] rounded-full text-center font-medium"
-                  onClick={() => navigate("/contact")}
-                >
-                  Contact Us
-                </button>
-                <a
-                  href="tel:+254726818938"
-                  className="px-4 py-2.5 border-2 border-[#015B97] text-[#015B97] rounded-full text-center font-medium flex items-center justify-center gap-2"
-                >
-                  <Phone size={16} />
-                  +254726818938
-                </a>
-              </div>
-
-              {menuItems.map((item) => (
-                <div key={item.id}>
-                  {item.submenu ? (
-                    <div>
-                      <div className="font-medium text-[#565A5C] text-sm mb-2">{item.label}</div>
-                      <div className="pl-3 space-y-2">
-                        {item.submenu.map((sub) => (
-                          <NavLink
-                            key={sub.id}
-                            to={sub.route}
-                            className={({ isActive }) =>
-                              `block text-sm font-medium ${
-                                isActive ? "text-[#015B97]" : "text-[#565A5C]"
-                              }`
-                            }
-                            onClick={() => setIsOpen(false)}
-                          >
-                            {sub.label}
-                          </NavLink>
-                        ))}
-                      </div>
+          <>
+            {/* Backdrop */}
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsOpen(false)}
+              className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[1000] lg:hidden"
+            />
+            
+            {/* Drawer */}
+            <motion.div
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              className="fixed top-0 right-0 h-full w-[85%] max-w-sm bg-white shadow-2xl z-[1001] lg:hidden overflow-y-auto"
+            >
+              <div className="p-6 flex flex-col h-full">
+                {/* Drawer Header */}
+                <div className="flex justify-between items-center mb-8">
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 bg-[#015B97] rounded-lg flex items-center justify-center text-white">
+                      <Zap size={18} fill="currentColor" />
                     </div>
-                  ) : (
-                    <NavLink
-                      to={item.route}
-                      className={({ isActive }) =>
-                        `block text-base font-medium ${
-                          isActive ? "text-[#015B97]" : "text-[#565A5C]"
-                        }`
-                      }
-                      onClick={() => setIsOpen(false)}
-                    >
-                      {item.label}
-                    </NavLink>
-                  )}
+                    <span className="font-bold text-slate-900">Knoxville</span>
+                  </div>
+                  <button 
+                    onClick={() => setIsOpen(false)}
+                    className="p-2 text-slate-500 hover:bg-slate-100 rounded-full transition-colors"
+                  >
+                    <X size={24} />
+                  </button>
                 </div>
-              ))}
-            </div>
-          </motion.div>
+
+                {/* Mobile Links */}
+                <div className="flex-1 space-y-2">
+                  {MENU_ITEMS.map((item) => (
+                    <div key={item.id} className="border-b border-slate-50 pb-2 last:border-0">
+                      {item.submenu ? (
+                        <div className="py-2">
+                          <div className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 px-2">
+                            {item.label}
+                          </div>
+                          <div className="space-y-1 pl-2">
+                            {item.submenu.map((sub) => (
+                              <NavLink
+                                key={sub.route}
+                                to={sub.route}
+                                className={({ isActive }) => 
+                                  `flex items-center gap-3 p-3 rounded-xl text-sm font-medium transition-colors ${
+                                    isActive 
+                                      ? "bg-[#015B97]/10 text-[#015B97]" 
+                                      : "text-slate-600 hover:bg-slate-50"
+                                  }`
+                                }
+                              >
+                                <div className={location.pathname === sub.route ? "text-[#015B97]" : "text-slate-400"}>
+                                  {sub.icon}
+                                </div>
+                                {sub.label}
+                              </NavLink>
+                            ))}
+                          </div>
+                        </div>
+                      ) : (
+                        <NavLink
+                          to={item.route}
+                          className={({ isActive }) =>
+                            `block p-3 rounded-xl text-base font-semibold transition-colors ${
+                              isActive 
+                                ? "bg-[#015B97]/10 text-[#015B97]" 
+                                : "text-slate-800 hover:bg-slate-50"
+                            }`
+                          }
+                        >
+                          {item.label}
+                        </NavLink>
+                      )}
+                    </div>
+                  ))}
+                </div>
+
+                {/* Mobile Footer Actions */}
+                <div className="mt-6 space-y-3 pt-6 border-t border-slate-100">
+                   <NavLink 
+                    to="/contact"
+                    className="flex items-center justify-center w-full py-3.5 bg-[#FF8C00] text-white font-bold rounded-xl shadow-lg hover:brightness-110 transition-all"
+                  >
+                    Get Connected Now
+                  </NavLink>
+                  
+                  <div className="grid grid-cols-2 gap-3">
+                    <a 
+                      href="tel:+254726818938"
+                      className="flex items-center justify-center gap-2 py-3 border border-slate-200 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-colors"
+                    >
+                      <Phone size={16} /> Call
+                    </a>
+                    <a 
+                      href="/portal"
+                      className="flex items-center justify-center gap-2 py-3 border border-slate-200 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-colors"
+                    >
+                      <User size={16} /> Portal
+                    </a>
+                  </div>
+                </div>
+
+              </div>
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
-    </nav>
+    </header>
   );
 }
