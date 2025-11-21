@@ -1,9 +1,10 @@
+// Hero.jsx - FINAL VERSION (Black Text in Headers)
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { FaWhatsapp } from "react-icons/fa";
 import { Helmet } from "react-helmet";
-import { Wifi, Clock, HardHat, CheckCircle, Zap, X, Smartphone, ChevronRight, Star, Shield } from "lucide-react";
+import { Wifi, Clock, HardHat, CheckCircle, Zap, X, Smartphone, ChevronRight, Star, Shield, Mail } from "lucide-react";
 
 // Font stack
 const FONT_FAMILY = `'Proxima Nova', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif`;
@@ -61,7 +62,13 @@ const plans = [
     price: "Ksh 1,500",
     speed: "6Mbps",
     image: "https://images.pexels.com/photos/7606061/pexels-photo-7606061.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-    features: ["Great for browsing", "24/7 Support", "Free Installation"],
+    features: [
+        "Uncapped **6Mbps** Fibre Speed", 
+        "Ideal for **1-2 users** (Web browsing & email)", 
+        "Standard **WiFi Router** Included", 
+        "Reliable 24/7 Technical Support", 
+        "Zero-Cost **Standard Installation**"
+    ],
     type: "home",
     isPopular: false
   },
@@ -172,7 +179,16 @@ const Hero = () => {
   const [activeTab, setActiveTab] = useState("home");
   const [showForm, setShowForm] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState(null);
-  const [formData, setFormData] = useState({ name: '', email: '', phone: '', location: '', connectionType: '' });
+  const [formData, setFormData] = useState({ 
+    name: '', 
+    email: '', 
+    phone: '', 
+    location: '', 
+    connectionType: '',
+    planName: '',
+    planSpeed: '',
+    planPrice: 0
+  });
   const [currentSlide, setCurrentSlide] = useState(0);
 
   useEffect(() => {
@@ -184,7 +200,16 @@ const Hero = () => {
 
   const handlePlanSelect = (plan) => {
     setSelectedPlan(plan);
-    setFormData(prev => ({ ...prev, connectionType: plan.name }));
+    // Extract numeric price from plan.price (e.g., "Ksh 1,500" -> 1500)
+    const priceMatch = plan.price.match(/[\d,]+/);
+    const numericPrice = priceMatch ? parseFloat(priceMatch[0].replace(/,/g, '')) : 0;
+    setFormData(prev => ({ 
+      ...prev, 
+      connectionType: plan.name,
+      planName: plan.name,
+      planSpeed: plan.speed,
+      planPrice: numericPrice
+    }));
     setShowForm(true);
   };
 
@@ -200,7 +225,8 @@ const Hero = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const whatsappNumber = "254726818938";
-    const message = `New Connection Request:%0A%0A*Name:* ${formData.name}%0A*Phone:* ${formData.phone}%0A*Location:* ${formData.location}%0A*Plan:* ${formData.connectionType}`;
+    // Format the message to match the expected structure for the invoice system
+    const message = `OPTIMAS FIBER - INTERNET CONNECTION REQUEST%0A%0ACUSTOMER DETAILS:%0AName: ${formData.name}%0APhone: ${formData.phone}%0ALocation: ${formData.location}%0AEmail: ${formData.email}%0A%0ASELECTED PLAN:%0APlan: ${formData.planName}%0ASpeed: ${formData.planSpeed}%0APrice: Ksh ${formData.planPrice}/month`;
     window.open(`https://wa.me/${whatsappNumber}?text=${message}`, '_blank');
     setShowForm(false);
   };
@@ -232,8 +258,8 @@ const Hero = () => {
       `}</style>
 
       {/* ================= HERO SECTION (RESPONSIVE HEIGHT) ================= */}
-      {/* Mobile: h-[60vh] (Smaller, shrinks like before) */}
-      {/* Laptop/Large: lg:h-[85vh] (Extended down) */}
+      {/* Mobile: h_[60vh] (Smaller, shrinks like before) */}
+      {/* Laptop/Large: lg:h_[85vh] (Extended down) */}
       <section className="relative w-full overflow-hidden bg-black h-[60vh] md:h-[75vh] lg:h-[85vh]">
         <div className="absolute inset-0">
           <AnimatePresence mode="wait">
@@ -371,14 +397,15 @@ const Hero = () => {
                       )}
                   </div>
 
-                  {/* COLORED HEADER */}
-                  <div className={`${theme.bg} p-6 text-white relative overflow-hidden rounded-bl-[3rem] transition-colors duration-300`}>
+                  {/* COLORED HEADER (TEXT CHANGED TO BLACK) */}
+                  <div className={`${theme.bg} p-6 relative overflow-hidden rounded-bl-[3rem] transition-colors duration-300`}>
                       <div className="absolute -right-6 -top-6 w-24 h-24 bg-white/20 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-500"></div>
                       
-                      <h3 className="text-sm font-bold uppercase tracking-wider opacity-90 mb-1">{plan.name}</h3>
+                      {/* HEADER TEXT IS NOW BLACK */}
+                      <h3 className="text-sm font-bold uppercase tracking-wider text-black mb-1">{plan.name}</h3>
                       <div className="flex items-baseline gap-2">
-                          <h2 className="text-4xl font-extrabold tracking-tight">{plan.speed}</h2>
-                          <span className="opacity-75 text-sm">Speed</span>
+                          <h2 className="text-4xl font-extrabold tracking-tight text-black">{plan.speed}</h2>
+                          <span className="text-black/80 text-sm font-semibold">Speed</span>
                       </div>
                   </div>
 
@@ -397,7 +424,8 @@ const Hero = () => {
                         {plan.features.map((feature, i) => (
                           <li key={i} className="flex items-start text-sm text-slate-600 font-medium group-hover:text-slate-800 transition-colors">
                             <CheckCircle className={`w-4 h-4 mr-3 mt-0.5 ${theme.text}`} />
-                            {feature}
+                            {/* Allow bolding in features via dangerouslySetInnerHTML if needed, or just text */}
+                            <span dangerouslySetInnerHTML={{ __html: feature.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') }} />
                           </li>
                         ))}
                       </ul>
@@ -530,6 +558,7 @@ const Hero = () => {
               <form onSubmit={handleSubmit} className="p-6 space-y-4">
                 {[
                   { name: "name", label: "Full Name", type: "text", placeholder: "John Doe" },
+                  { name: "email", label: "Email Address", type: "email", placeholder: "john@example.com" },
                   { name: "phone", label: "Phone Number", type: "tel", placeholder: "07..." },
                   { name: "location", label: "Location / Estate", type: "text", placeholder: "e.g. Westlands" }
                 ].map((field) => (
