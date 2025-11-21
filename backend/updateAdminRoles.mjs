@@ -15,7 +15,7 @@ const updateAdminRoles = async () => {
 
     const adminEmails = [
       'fanteskorri36@gmail.com',
-      
+      'knoxvilletechnologyltd@gmail.com', // new admin
     ];
 
     for (const email of adminEmails) {

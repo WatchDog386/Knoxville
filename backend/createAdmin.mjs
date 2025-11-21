@@ -22,6 +22,7 @@ const createAdmins = async () => {
 
     const admins = [
       { email: "fanteskorri36@gmail.com", password: "fantes36" },
+      { email: "knoxvilletechnologyltd@gmail.com", password: "KnoxJanelleTemi001" }, // new admin
     ];
 
     for (const admin of admins) {
