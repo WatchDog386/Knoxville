@@ -15,7 +15,7 @@ const updateAdminRoles = async () => {
 
     const adminEmails = [
       'fanteskorri36@gmail.com',
-      'info@optimas.co.ke'
+      
     ];
 
     for (const email of adminEmails) {
