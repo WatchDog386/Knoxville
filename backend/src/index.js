@@ -35,7 +35,7 @@ if (missingEnvVars.length > 0) {
   process.exit(1);
 }
 
-// FRONTEND_URL cleanup (not used anymore for CORS, just logged)
+// FRONTEND_URL cleanup
 const FRONTEND_URL = (process.env.FRONTEND_URL || 'http://localhost:5173')
   .trim()
   .replace(/\/$/, '');
@@ -48,10 +48,12 @@ const app = express();
 const PORT = process.env.PORT || 1000;
 const NODE_ENV = process.env.NODE_ENV || 'development';
 
-// ⭐ CORS — Allow ALL ORIGINS
+// ⭐ FIXED CORS — Dynamic origin instead of "*"
 app.use(
   cors({
-    origin: '*',
+    origin: (origin, callback) => {
+      callback(null, true); // allow ALL origins properly
+    },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: [
@@ -66,7 +68,7 @@ app.use(
   })
 );
 
-// ⭐ Helmet Security — Allow ALL CONNECT SRC
+// ⭐ Helmet Security
 app.use(
   helmet({
     contentSecurityPolicy: {
@@ -76,7 +78,7 @@ app.use(
         fontSrc: ["'self'", "https:", "data:"],
         imgSrc: ["'self'", "data:", "https:", "blob:", "https://res.cloudinary.com"],
         scriptSrc: ["'self'", "'unsafe-inline'", "https:"],
-        connectSrc: ["*"], // allow API access from anywhere
+        connectSrc: ["*"],
       }
     },
     crossOriginEmbedderPolicy: false,
