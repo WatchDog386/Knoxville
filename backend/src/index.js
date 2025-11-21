@@ -48,32 +48,26 @@ const app = express();
 const PORT = process.env.PORT || 1000;
 const NODE_ENV = process.env.NODE_ENV || 'development';
 
-// ⭐ FIXED CORS — Proper origin validation for your domain
-const corsOptions = {
-  origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps or curl requests)
-    if (!origin && NODE_ENV === 'production') return callback(null, true);
-    
-    // In development, allow localhost
-    if (NODE_ENV !== 'production') {
-      return callback(null, true);
-    }
-    
-    // In production, only allow your specific frontend domain
-    const allowedOrigins = [
-      'https://knoxvilletechnologies.com',
-      FRONTEND_URL
-    ];
-    
-    if (allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      console.log('❌ Blocked by CORS:', origin);
-      callback(new Error('Not allowed by CORS'));
-    }
+/* ------------------------------------------------------
+   ⭐ FIXED CORS — Dev + Prod
+-------------------------------------------------------*/
+const allowedOrigins = [
+  'http://localhost:5173',
+  'https://knoxvilletechnologies.com'
+];
+
+app.use(cors({
+  origin: function(origin, callback) {
+    // Allow requests with no origin (curl, mobile apps)
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.includes(origin)) return callback(null, true);
+
+    console.log('❌ Blocked by CORS:', origin);
+    return callback(new Error('Not allowed by CORS'));
   },
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  methods: ['GET','POST','PUT','PATCH','DELETE','OPTIONS'],
   allowedHeaders: [
     'Origin',
     'X-Requested-With',
@@ -83,35 +77,37 @@ const corsOptions = {
     'X-API-Key'
   ],
   exposedHeaders: ['Content-Disposition']
-};
+}));
 
-app.use(cors(corsOptions));
+/* ------------------------------------------------------
+   Helmet Security
+-------------------------------------------------------*/
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      styleSrc: ["'self'", "'unsafe-inline'", "https:", "data:"],
+      fontSrc: ["'self'", "https:", "data:"],
+      imgSrc: ["'self'", "data:", "https:", "blob:", "https://res.cloudinary.com"],
+      scriptSrc: ["'self'", "'unsafe-inline'", "https:"],
+      connectSrc: ["'self'", ...allowedOrigins, "https://knoxville-rp7g.onrender.com"],
+    }
+  },
+  crossOriginEmbedderPolicy: false,
+  crossOriginResourcePolicy: { policy: 'cross-origin' }
+}));
 
-// ⭐ Helmet Security
-app.use(
-  helmet({
-    contentSecurityPolicy: {
-      directives: {
-        defaultSrc: ["'self'"],
-        styleSrc: ["'self'", "'unsafe-inline'", "https:", "data:"],
-        fontSrc: ["'self'", "https:", "data:"],
-        imgSrc: ["'self'", "data:", "https:", "blob:", "https://res.cloudinary.com"],
-        scriptSrc: ["'self'", "'unsafe-inline'", "https:"],
-        connectSrc: ["'self'", "https://knoxvilletechnologies.com", "https://knoxville-rp7g.onrender.com"],
-      }
-    },
-    crossOriginEmbedderPolicy: false,
-    crossOriginResourcePolicy: { policy: 'cross-origin' }
-  })
-);
-
-// Core middleware
+/* ------------------------------------------------------
+   Core middleware
+-------------------------------------------------------*/
 app.use(compression());
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 app.use(cookieParser());
 
-// Rate limits
+/* ------------------------------------------------------
+   Rate limits
+-------------------------------------------------------*/
 const generalLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: NODE_ENV === 'production' ? 200 : 2000,
@@ -126,12 +122,13 @@ const exportLimiter = rateLimit({
   message: { success: false, message: 'Too many export requests. Please wait a while.' }
 });
 
-// Apply limits
 app.use('/api/', generalLimiter);
 app.use('/api/invoices/export', exportLimiter);
 app.use('/api/receipts/export', exportLimiter);
 
-// Logging
+/* ------------------------------------------------------
+   Logging
+-------------------------------------------------------*/
 const logDir = path.join(__dirname, '../logs');
 if (!fs.existsSync(logDir)) fs.mkdirSync(logDir, { recursive: true });
 const accessLogStream = fs.createWriteStream(path.join(logDir, 'access.log'), { flags: 'a' });
@@ -144,7 +141,9 @@ app.use(
   )
 );
 
-// Static directories
+/* ------------------------------------------------------
+   Static directories
+-------------------------------------------------------*/
 const uploadsDir = path.join(__dirname, '../uploads');
 if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir, { recursive: true });
 app.use('/uploads', express.static(uploadsDir));
@@ -152,7 +151,9 @@ app.use('/uploads', express.static(uploadsDir));
 const exportsDir = path.join(__dirname, '../exports');
 if (!fs.existsSync(exportsDir)) fs.mkdirSync(exportsDir, { recursive: true });
 
-// Health check
+/* ------------------------------------------------------
+   Health check
+-------------------------------------------------------*/
 app.get('/health', (req, res) => {
   res.status(200).json({
     success: true,
@@ -165,12 +166,16 @@ app.get('/health', (req, res) => {
   });
 });
 
-// Root
+/* ------------------------------------------------------
+   Root
+-------------------------------------------------------*/
 app.get('/', (req, res) => {
   res.json({ success: true, message: '🚀 Backend running!', version: '2.0.0' });
 });
 
-// Routes
+/* ------------------------------------------------------
+   Routes
+-------------------------------------------------------*/
 app.use('/api/auth', authRoutes);
 app.use('/api/blog', blogRoutes);
 app.use('/api/portfolio', portfolioRoutes);
@@ -178,15 +183,18 @@ app.use('/api/settings', protect, settingRoutes);
 app.use('/api/invoices', protect, invoiceRoutes);
 app.use('/api/receipts', protect, receiptRoutes);
 
-// 404
+/* ------------------------------------------------------
+   404 handler
+-------------------------------------------------------*/
 app.use((req, res) => {
   res.status(404).json({ success: false, message: 'API endpoint not found', path: req.path });
 });
 
-// Error handler
+/* ------------------------------------------------------
+   Error handler
+-------------------------------------------------------*/
 app.use((err, req, res, next) => {
   console.error('❌ Global error:', err);
-  // If it's a CORS error, send a more specific message
   if (err.message.includes('CORS')) {
     res.status(403).json({
       success: false,
@@ -202,7 +210,9 @@ app.use((err, req, res, next) => {
   }
 });
 
-// Graceful shutdown
+/* ------------------------------------------------------
+   Graceful shutdown
+-------------------------------------------------------*/
 const gracefulShutdown = (signal) => () => {
   console.log(`\n${signal} received. Shutting down...`);
   server.close(() => {
@@ -214,7 +224,9 @@ const gracefulShutdown = (signal) => () => {
   setTimeout(() => process.exit(1), 10000);
 };
 
-// Start server
+/* ------------------------------------------------------
+   Start server
+-------------------------------------------------------*/
 const startServer = async () => {
   try {
     await connectDB();
