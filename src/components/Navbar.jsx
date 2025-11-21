@@ -12,7 +12,8 @@ import {
   BookOpen, 
   Zap,
   Mail,
-  User
+  User,
+  FileText
 } from "lucide-react";
 
 // Brand Colors
@@ -26,12 +27,15 @@ const BRAND = {
 
 const FONT_FAMILY = `'Proxima Nova', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif`;
 
-// Menu Configuration with Icons for Dropdowns
+// -----------------------------------------------
+// UPDATED MENU: "Resources" removed → replaced with Blog
+// -----------------------------------------------
 const MENU_ITEMS = [
   { label: "Home", route: "/", id: "home" },
   { label: "About Us", route: "/about", id: "about" },
   { label: "Services", route: "/services", id: "services" },
-  { 
+
+  {
     label: "Support", 
     id: "support",
     submenu: [
@@ -40,7 +44,9 @@ const MENU_ITEMS = [
       { label: "Coverage Map", route: "/coverage", icon: <Globe size={18} />, desc: "Check availability" },
     ]
   },
-  { label: "Resources", route: "/articles", id: "articles" },
+
+  // REPLACED "Resources" → NEW BLOG LINK
+  { label: "Blog", route: "/blogs", id: "blogs" },
 ];
 
 export default function Navbar() {
@@ -70,18 +76,26 @@ export default function Navbar() {
       {/* ================= TOP UTILITY BAR ================= */}
       <div className={`bg-[#004270] text-white transition-all duration-300 ${scrolled ? 'h-0 overflow-hidden opacity-0' : 'h-10 opacity-100'}`}>
         <div className="max-w-7xl mx-auto px-4 h-full flex justify-between items-center text-xs font-medium tracking-wide">
+          
+          {/* LEFT CONTACTS */}
           <div className="flex items-center gap-6">
             <a href="tel:+254726818938" className="flex items-center gap-2 hover:text-[#FF8C00] transition-colors">
               <Phone size={14} /> <span>+254 726 818 938</span>
             </a>
+
             <a href="mailto:support@knoxville.co.ke" className="hidden sm:flex items-center gap-2 hover:text-[#FF8C00] transition-colors">
               <Mail size={14} /> <span>support@knoxville.co.ke</span>
             </a>
           </div>
+
+          {/* RIGHT - UPDATED → ADMIN PORTAL */}
           <div className="flex items-center gap-4">
-            <a href="/portal" className="flex items-center gap-2 hover:text-[#FF8C00] transition-colors">
-              <User size={14} /> <span>Client Portal</span>
-            </a>
+            <NavLink
+              to="/login"
+              className="flex items-center gap-2 hover:text-[#FF8C00] transition-colors"
+            >
+              <User size={14} /> <span>Admin Portal</span>
+            </NavLink>
           </div>
         </div>
       </div>
@@ -116,11 +130,12 @@ export default function Navbar() {
                 onMouseEnter={() => setHoveredMenu(item.id)}
                 onMouseLeave={() => setHoveredMenu(null)}
               >
+                {/* DROPDOWN ITEM */}
                 {item.submenu ? (
-                  <div className="relative cursor-pointer py-2">
+                  <>
                     <button 
-                      className={`flex items-center gap-1 font-semibold text-sm transition-colors ${
-                        location.pathname.includes(item.route) || hoveredMenu === item.id 
+                      className={`flex items-center gap-1 font-semibold text-sm transition-colors py-2 ${
+                        hoveredMenu === item.id 
                           ? "text-[#015B97]" 
                           : "text-slate-600 hover:text-[#015B97]"
                       }`}
@@ -129,13 +144,12 @@ export default function Navbar() {
                       <ChevronDown size={14} className={`transition-transform duration-200 ${hoveredMenu === item.id ? 'rotate-180' : ''}`} />
                     </button>
 
-                    {/* Animated Dropdown */}
                     <AnimatePresence>
                       {hoveredMenu === item.id && (
                         <motion.div
-                          initial={{ opacity: 0, y: 15, scale: 0.95 }}
-                          animate={{ opacity: 1, y: 0, scale: 1 }}
-                          exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                          initial={{ opacity: 0, y: 15 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: 10 }}
                           transition={{ duration: 0.2 }}
                           className="absolute top-full left-1/2 -translate-x-1/2 pt-4 w-64 z-50"
                         >
@@ -144,20 +158,12 @@ export default function Navbar() {
                               <NavLink
                                 key={sub.route}
                                 to={sub.route}
-                                className={({ isActive }) => 
-                                  `flex items-start gap-3 p-3 rounded-lg transition-colors ${
-                                    isActive ? "bg-blue-50" : "hover:bg-slate-50"
-                                  }`
-                                }
+                                className="flex items-start gap-3 p-3 rounded-lg hover:bg-slate-50 transition-colors"
                               >
-                                <div className={`mt-0.5 ${location.pathname === sub.route ? "text-[#015B97]" : "text-slate-400"}`}>
-                                  {sub.icon}
-                                </div>
+                                <div className="text-slate-400">{sub.icon}</div>
                                 <div>
-                                  <p className={`text-sm font-bold ${location.pathname === sub.route ? "text-[#015B97]" : "text-slate-700"}`}>
-                                    {sub.label}
-                                  </p>
-                                  <p className="text-xs text-slate-500 mt-0.5 leading-tight">{sub.desc}</p>
+                                  <p className="text-sm font-bold text-slate-700">{sub.label}</p>
+                                  <p className="text-xs text-slate-500">{sub.desc}</p>
                                 </div>
                               </NavLink>
                             ))}
@@ -165,8 +171,9 @@ export default function Navbar() {
                         </motion.div>
                       )}
                     </AnimatePresence>
-                  </div>
+                  </>
                 ) : (
+                  /* REGULAR NAV LINK */
                   <NavLink
                     to={item.route}
                     className={({ isActive }) =>
@@ -176,19 +183,13 @@ export default function Navbar() {
                     }
                   >
                     {item.label}
-                    {location.pathname === item.route && (
-                      <motion.div 
-                        layoutId="underline" 
-                        className="absolute bottom-0 left-0 w-full h-0.5 bg-[#015B97] rounded-full" 
-                      />
-                    )}
                   </NavLink>
                 )}
               </div>
             ))}
           </nav>
 
-          {/* ACTION BUTTONS */}
+          {/* CTA BUTTON */}
           <div className="hidden lg:flex items-center gap-4">
             <NavLink 
               to="/contact"
@@ -208,11 +209,11 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* ================= MOBILE DRAWER (SLIDE IN) ================= */}
+      {/* ================= MOBILE DRAWER ================= */}
       <AnimatePresence>
         {isOpen && (
           <>
-            {/* Backdrop */}
+            {/* BACKDROP */}
             <motion.div 
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -220,8 +221,8 @@ export default function Navbar() {
               onClick={() => setIsOpen(false)}
               className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[1000] lg:hidden"
             />
-            
-            {/* Drawer */}
+
+            {/* DRAWER PANEL */}
             <motion.div
               initial={{ x: "100%" }}
               animate={{ x: 0 }}
@@ -230,7 +231,8 @@ export default function Navbar() {
               className="fixed top-0 right-0 h-full w-[85%] max-w-sm bg-white shadow-2xl z-[1001] lg:hidden overflow-y-auto"
             >
               <div className="p-6 flex flex-col h-full">
-                {/* Drawer Header */}
+
+                {/* HEADER */}
                 <div className="flex justify-between items-center mb-8">
                   <div className="flex items-center gap-2">
                     <div className="w-8 h-8 bg-[#015B97] rounded-lg flex items-center justify-center text-white">
@@ -246,7 +248,7 @@ export default function Navbar() {
                   </button>
                 </div>
 
-                {/* Mobile Links */}
+                {/* LINKS */}
                 <div className="flex-1 space-y-2">
                   {MENU_ITEMS.map((item) => (
                     <div key={item.id} className="border-b border-slate-50 pb-2 last:border-0">
@@ -260,17 +262,9 @@ export default function Navbar() {
                               <NavLink
                                 key={sub.route}
                                 to={sub.route}
-                                className={({ isActive }) => 
-                                  `flex items-center gap-3 p-3 rounded-xl text-sm font-medium transition-colors ${
-                                    isActive 
-                                      ? "bg-[#015B97]/10 text-[#015B97]" 
-                                      : "text-slate-600 hover:bg-slate-50"
-                                  }`
-                                }
+                                className="flex items-center gap-3 p-3 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50"
                               >
-                                <div className={location.pathname === sub.route ? "text-[#015B97]" : "text-slate-400"}>
-                                  {sub.icon}
-                                </div>
+                                <div className="text-slate-400">{sub.icon}</div>
                                 {sub.label}
                               </NavLink>
                             ))}
@@ -279,13 +273,7 @@ export default function Navbar() {
                       ) : (
                         <NavLink
                           to={item.route}
-                          className={({ isActive }) =>
-                            `block p-3 rounded-xl text-base font-semibold transition-colors ${
-                              isActive 
-                                ? "bg-[#015B97]/10 text-[#015B97]" 
-                                : "text-slate-800 hover:bg-slate-50"
-                            }`
-                          }
+                          className="block p-3 rounded-xl text-base font-semibold text-slate-800 hover:bg-slate-50 transition-colors"
                         >
                           {item.label}
                         </NavLink>
@@ -294,15 +282,17 @@ export default function Navbar() {
                   ))}
                 </div>
 
-                {/* Mobile Footer Actions */}
+                {/* FOOTER ACTIONS */}
                 <div className="mt-6 space-y-3 pt-6 border-t border-slate-100">
-                   <NavLink 
+                  
+                  {/* BUTTON */}
+                  <NavLink 
                     to="/contact"
                     className="flex items-center justify-center w-full py-3.5 bg-[#FF8C00] text-white font-bold rounded-xl shadow-lg hover:brightness-110 transition-all"
                   >
                     Get Connected Now
                   </NavLink>
-                  
+
                   <div className="grid grid-cols-2 gap-3">
                     <a 
                       href="tel:+254726818938"
@@ -310,13 +300,16 @@ export default function Navbar() {
                     >
                       <Phone size={16} /> Call
                     </a>
-                    <a 
-                      href="/portal"
+
+                    {/* UPDATED → LOGIN = ADMIN PORTAL */}
+                    <NavLink 
+                      to="/login"
                       className="flex items-center justify-center gap-2 py-3 border border-slate-200 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-colors"
                     >
-                      <User size={16} /> Portal
-                    </a>
+                      <User size={16} /> Admin Portal
+                    </NavLink>
                   </div>
+
                 </div>
 
               </div>

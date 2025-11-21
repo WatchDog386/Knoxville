@@ -1,605 +1,401 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
+import { Helmet } from "react-helmet";
 import { 
   Phone, Mail, MapPin, Star, CheckCircle, Zap, 
-  Shield, Cpu, Wifi, Calendar, ChevronDown, ChevronUp, X
+  Shield, Cpu, Wifi, ChevronDown, ChevronUp, X,
+  Users, Award, Clock, Wrench, MessageCircle
 } from "lucide-react";
 import { useInView } from "react-intersection-observer";
+import Navbar from "../components/Navbar";
 
-// RISA Brand Colors
-const RISA_BLUE = "#015B97";
-const RISA_TEXT = "#565A5C";
-const RISA_LIGHT_BG = "#f8f9fa";
-
-// Font stack (Proxima Nova via Adobe Fonts)
+// Font stack
 const FONT_FAMILY = `'Proxima Nova', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif`;
 
-// Technician Data (unchanged)
+// Colors & Themes
+const COLORS = {
+  blue: "#015B97",
+  orange: "#fb8c00",
+  slate: "#F8FAFC",
+  dark: "#0f172a"
+};
+
+const TECH_THEMES = [
+  { bg: 'bg-[#015B97]', light: 'bg-blue-50', text: 'text-[#015B97]' },
+  { bg: 'bg-[#fb8c00]', light: 'bg-orange-50', text: 'text-[#fb8c00]' },
+  { bg: 'bg-[#10b981]', light: 'bg-emerald-50', text: 'text-[#10b981]' },
+  { bg: 'bg-[#8b5cf6]', light: 'bg-violet-50', text: 'text-[#8b5cf6]' },
+];
+
+// Technician Data
 const technicians = [
   {
     id: "tech-1",
-    name: "Abraham",
-    role: "Chief Hardware Engineer",
+    name: "Abraham O.",
+    role: "Hardware Engineer",
     phone: "+254726818938",
     email: "ooroabraham@gmail.com",
-    location: "Nairobi, Kenya",
-    specialty: "hardware",
-    bookUrl: "#",
-    rating: 4.8,
+    location: "Nairobi, KE",
+    rating: 4.9,
     reviews: 42,
-    skills: ["Circuit Repair", "Data Recovery", "Component Replacement", "Diagnostics"],
+    skills: ["Circuit Repair", "Data Recovery", "Diagnostics"],
+    image: "https://images.unsplash.com/photo-1581092921461-eab62e97a782?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80", // Placeholder
     bio: "Certified hardware specialist with extensive experience in component-level repairs. Passionate about restoring devices to their optimal performance.",
-    stats: [
-      { value: "98%", label: "Success Rate" },
-      { value: "24h", label: "Avg. Response" },
-      { value: "500+", label: "Devices Fixed" }
-    ]
+    stats: [{ value: "98%", label: "Success" }, { value: "500+", label: "Fixed" }]
   },
   {
     id: "tech-2",
-    name: "Colins",
+    name: "Collins O.",
     role: "Network Architect",
     phone: "+254768085708",
     email: "collinsominde98@gmail.com",
-    location: "Nairobi, Kenya",
-    specialty: "networking",
-    bookUrl: "#",
-    rating: 4.6,
+    location: "Nairobi, KE",
+    rating: 4.8,
     reviews: 36,
-    skills: ["Network Setup", "Router Configuration", "Security", "Wireless Optimization"],
+    skills: ["Network Setup", "Router Config", "Security"],
+    image: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
     bio: "Network infrastructure expert focused on creating secure, high-performance solutions for businesses of all sizes.",
-    stats: [
-      { value: "95%", label: "Success Rate" },
-      { value: "2h", label: "Avg. Response" },
-      { value: "300+", label: "Networks Built" }
-    ]
+    stats: [{ value: "95%", label: "Uptime" }, { value: "300+", label: "Setups" }]
   },
   {
     id: "tech-3",
     name: "Bret Gift",
-    role: "Software Solutions Expert",
+    role: "Software Expert",
     phone: "+254713116766",
     email: "ggiftotieno@gmail.com",
-    location: "Nairobi, Kenya",
-    specialty: "software",
-    bookUrl: "#",
+    location: "Nairobi, KE",
     rating: 4.9,
     reviews: 51,
-    skills: ["Software Installation", "Virus Removal", "System Optimization", "Data Migration"],
+    skills: ["Installation", "Optimization", "Migration"],
+    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
     bio: "Software troubleshooter dedicated to solving complex system issues and optimizing performance.",
-    stats: [
-      { value: "99%", label: "Success Rate" },
-      { value: "1h", label: "Avg. Response" },
-      { value: "700+", label: "Systems Optimized" }
-    ]
+    stats: [{ value: "99%", label: "Speed" }, { value: "700+", label: "Optimized" }]
   },
   {
     id: "tech-4",
-    name: "Lameck",
+    name: "Lameck O.",
     role: "Security Specialist",
     phone: "+254758018533",
     email: "lameckooro@gmail.com",
-    location: "Nairobi, Kenya",
-    specialty: "security",
-    bookUrl: "#",
+    location: "Nairobi, KE",
     rating: 4.7,
     reviews: 39,
-    skills: ["Security Audits", "Firewall Setup", "Encryption", "Threat Analysis"],
+    skills: ["Audits", "Firewalls", "Encryption"],
+    image: "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
     bio: "Cybersecurity professional committed to protecting your digital assets with cutting-edge solutions.",
-    stats: [
-      { value: "97%", label: "Success Rate" },
-      { value: "4h", label: "Avg. Response" },
-      { value: "200+", label: "Systems Secured" }
-    ]
+    stats: [{ value: "97%", label: "Secure" }, { value: "200+", label: "Audits" }]
   }
 ];
 
 const specialties = [
-  { icon: <Cpu className="w-6 h-6" />, name: "Hardware", color: RISA_BLUE },
-  { icon: <Wifi className="w-6 h-6" />, name: "Networking", color: "#6B46C1" },
-  { icon: <Zap className="w-6 h-6" />, name: "Software", color: "#047857" },
-  { icon: <Shield className="w-6 h-6" />, name: "Security", color: "#B45309" }
-];
-
-const stats = [
-  { value: "1000+", label: "Devices Repaired" },
-  { value: "99%", label: "Satisfaction Rate" },
-  { value: "24/7", label: "Support Available" },
-  { value: "15min", label: "Average Response" }
-];
-
-const testimonials = [
-  {
-    id: 1,
-    name: "John D.",
-    company: "Tech Solutions Ltd",
-    content: "The team at Knoxville completely transformed our network infrastructure. Their expertise and professionalism were beyond our expectations.",
-    rating: 5
-  },
-  {
-    id: 2,
-    name: "Sarah M.",
-    company: "Innovate Africa",
-    content: "Prompt response and efficient service. Our security systems are now more robust thanks to Knoxville's comprehensive solutions.",
-    rating: 5
-  },
-  {
-    id: 3,
-    name: "Thomas K.",
-    company: "DataSecure Inc",
-    content: "Their hardware specialists recovered critical data we thought was lost forever. Truly exceptional technical skills and customer service.",
-    rating: 4
-  }
+  { icon: <Cpu className="w-6 h-6" />, name: "Hardware", desc: "Repairs & Upgrades" },
+  { icon: <Wifi className="w-6 h-6" />, name: "Network", desc: "Infrastructure" },
+  { icon: <Zap className="w-6 h-6" />, name: "Software", desc: "Optimization" },
+  { icon: <Shield className="w-6 h-6" />, name: "Security", desc: "Protection" }
 ];
 
 const faqs = [
-  {
-    question: "How quickly can you respond to service requests?",
-    answer: "We guarantee a response within 15 minutes during business hours, and our average onsite arrival time is under 2 hours in major urban areas."
-  },
-  {
-    question: "Do you offer ongoing maintenance contracts?",
-    answer: "Yes, we provide flexible maintenance packages tailored to your business needs, including 24/7 monitoring and priority response."
-  },
-  {
-    question: "What areas do you serve?",
-    answer: "We provide services throughout Kenya with a focus on Nairobi, Mombasa, and Kisumu. Enterprise solutions are available across East Africa."
-  },
-  {
-    question: "How do you ensure data security during repairs?",
-    answer: "All our technicians follow strict security protocols, and we offer signed NDAs for sensitive operations. Client data remains confidential at all times."
-  }
+  { q: "How quickly can you respond?", a: "We guarantee a response within 15 minutes during business hours." },
+  { q: "Do you offer maintenance contracts?", a: "Yes, we provide flexible maintenance packages tailored to your needs." },
+  { q: "What areas do you serve?", a: "We provide services throughout Nairobi, Kiambu, and surrounding environs." }
 ];
 
-const TechnicianCard = ({ tech, onClick }) => {
-  const [ref, inView] = useInView({ threshold: 0.1, triggerOnce: true });
+// Animation Variants
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
+};
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 100 } }
+};
+
+// --- SUB-COMPONENTS ---
+
+const TechHero = () => (
+  <section className="relative w-full overflow-hidden bg-slate-900 pb-32">
+    <div className="absolute inset-0 z-0">
+      <img 
+        src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80" 
+        alt="Technicians" 
+        className="w-full h-full object-cover opacity-30"
+      />
+      <div className="absolute inset-0 bg-gradient-to-b from-slate-900/90 via-slate-900/80 to-slate-900/95"></div>
+    </div>
+
+    <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center justify-center" style={{ minHeight: '60vh' }}>
+       <motion.div 
+         initial={{ opacity: 0, y: 30 }}
+         animate={{ opacity: 1, y: 0 }}
+         transition={{ duration: 0.8 }}
+         className="text-center max-w-3xl"
+       >
+         <span className="inline-block px-4 py-1 mb-4 rounded-full bg-blue-500/20 border border-blue-500 text-blue-400 text-xs font-bold uppercase tracking-widest backdrop-blur-sm">
+            Expert Support
+         </span>
+         <h1 className="text-5xl md:text-7xl font-extrabold text-white mb-6 leading-tight tracking-tight">
+           Meet Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">Elite Team</span>
+         </h1>
+         <p className="text-xl text-slate-300 font-light max-w-2xl mx-auto">
+           Certified professionals ready to solve your most complex technical challenges.
+         </p>
+       </motion.div>
+    </div>
+
+    {/* Wavy Separator */}
+    <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-[0] z-20">
+        <svg className="relative block w-[calc(100%+1.3px)] h-[80px] sm:h-[120px]" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+            <path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" className="fill-slate-50"></path>
+        </svg>
+    </div>
+  </section>
+);
+
+const TechnicianCard = ({ tech, index, onClick }) => {
+  const theme = TECH_THEMES[index % TECH_THEMES.length];
 
   return (
     <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 80 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.8 }}
-      className="bg-white rounded-xl p-6 shadow-sm border border-gray-200 hover:shadow-md transition-shadow cursor-pointer"
+      variants={cardVariants}
+      whileHover={{ y: -10 }}
+      className="relative bg-white rounded-[2rem] shadow-xl border border-white hover:border-blue-100 transition-all duration-300 flex flex-col overflow-visible group cursor-pointer h-full"
       onClick={onClick}
     >
-      <div className="space-y-4">
-        <div>
-          <h3 className="text-xl font-bold" style={{ color: RISA_BLUE }}>{tech.name}</h3>
-          <p className="text-sm" style={{ color: RISA_TEXT }}>{tech.role}</p>
-        </div>
-
-        <div className="flex flex-wrap gap-2">
-          {tech.skills.slice(0, 3).map((skill, index) => (
-            <span 
-              key={index}
-              className="text-xs px-2 py-1 rounded-full"
-              style={{ backgroundColor: `${RISA_BLUE}10`, color: RISA_BLUE }}
-            >
-              {skill}
-            </span>
-          ))}
-        </div>
-
-        <div className="flex justify-between items-center pt-2">
-          <div className="flex items-center gap-1 text-sm" style={{ color: RISA_TEXT }}>
-            <MapPin className="w-3.5 h-3.5" />
-            <span>{tech.location}</span>
-          </div>
-          
-          <a
-            href={`https://wa.me/${tech.phone.replace(/\D/g, '')}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="p-2 bg-green-600 rounded-full"
-            style={{ backgroundColor: '#22c55e' }}
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.515 5.392 1.521 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
-            </svg>
-          </a>
-        </div>
+      {/* 1. Curved Colored Header */}
+      <div className={`${theme.bg} h-32 rounded-t-[2rem] rounded-bl-[3rem] relative overflow-hidden`}>
+         <div className="absolute top-0 right-0 p-4 opacity-20">
+            <Wrench className="w-16 h-16 text-white" />
+         </div>
       </div>
-    </motion.div>
-  );
-};
 
-const TechnicianModal = ({ tech, onClose }) => {
-  const [activeTab, setActiveTab] = useState('overview');
+      {/* 2. Floating Avatar */}
+      <div className="absolute top-16 left-6 z-10">
+         <div className="w-20 h-20 rounded-full border-4 border-white shadow-lg overflow-hidden bg-slate-100">
+            <img src={tech.image} alt={tech.name} className="w-full h-full object-cover" />
+         </div>
+      </div>
 
-  return (
-    <AnimatePresence>
-      <motion.div 
-        className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-      >
-        <motion.div 
-          className="bg-white rounded-xl max-w-4xl w-full max-h-[90vh] overflow-hidden relative border"
-          initial={{ scale: 0.9, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          exit={{ scale: 0.9, opacity: 0 }}
-        >
-          <button 
-            onClick={onClose}
-            className="absolute top-4 right-4 p-2 rounded-full hover:bg-gray-100"
-          >
-            <X className="w-5 h-5" style={{ color: RISA_TEXT }} />
-          </button>
-          
-          <div className="grid lg:grid-cols-3 h-full">
-            <div className="lg:col-span-1 bg-gray-50 p-6">
-              <div className="flex flex-col items-center text-center">
-                <div className="w-24 h-24 rounded-full flex items-center justify-center text-white text-2xl font-bold mb-4" style={{ backgroundColor: RISA_BLUE }}>
-                  {tech.name.split(" ").map((n) => n[0]).join("")}
-                </div>
-                <h2 className="text-xl font-bold" style={{ color: RISA_BLUE }}>{tech.name}</h2>
-                <p className="text-sm" style={{ color: RISA_TEXT }}>{tech.role}</p>
-                <div className="flex mt-2">
-                  {[...Array(5)].map((_, i) => (
-                    <Star 
-                      key={i} 
-                      className={`w-4 h-4 ${i < Math.floor(tech.rating) ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`}
-                    />
-                  ))}
-                </div>
-                <p className="text-sm mt-1" style={{ color: RISA_TEXT }}>{tech.rating} ({tech.reviews} reviews)</p>
-              </div>
-            </div>
+      {/* 3. Action Button (Floating on Right) */}
+      <div className="absolute top-24 right-6 z-20">
+         <button className={`w-12 h-12 rounded-full bg-white shadow-md flex items-center justify-center border-2 border-slate-50 group-hover:scale-110 transition-transform ${theme.text}`}>
+            <MessageCircle className="w-6 h-6" />
+         </button>
+      </div>
+
+      {/* 4. Content */}
+      <div className="pt-12 px-6 pb-6 flex flex-col flex-grow">
+         <div>
+            <h3 className="text-xl font-bold text-slate-800">{tech.name}</h3>
+            <p className={`${theme.text} text-sm font-bold uppercase tracking-wider mb-3`}>{tech.role}</p>
             
-            <div className="lg:col-span-2 p-6 overflow-y-auto">
-              <div className="flex border-b border-gray-200 mb-6">
-                {['overview', 'reviews'].map((tab) => (
-                  <button
-                    key={tab}
-                    className={`px-4 py-2 font-medium text-sm capitalize ${
-                      activeTab === tab 
-                        ? `text-[${RISA_BLUE}] border-b-2 border-[${RISA_BLUE}]` 
-                        : 'text-gray-500 hover:text-gray-800'
-                    }`}
-                    onClick={() => setActiveTab(tab)}
-                  >
-                    {tab}
-                  </button>
-                ))}
-              </div>
-              
-              {activeTab === 'overview' && (
-                <div className="space-y-6">
-                  <div>
-                    <h3 className="text-lg font-bold" style={{ color: RISA_BLUE }}>About {tech.name.split(' ')[0]}</h3>
-                    <p className="text-sm mt-2" style={{ color: RISA_TEXT }}>{tech.bio}</p>
-                  </div>
-                  
-                  <div>
-                    <h3 className="text-lg font-bold" style={{ color: RISA_BLUE }}>Expertise</h3>
-                    <div className="mt-2 space-y-2">
-                      {tech.skills.map((skill, index) => (
-                        <div key={index} className="flex items-start gap-2">
-                          <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
-                          <span className="text-sm" style={{ color: RISA_TEXT }}>{skill}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                  
-                  <div>
-                    <h3 className="text-lg font-bold" style={{ color: RISA_BLUE }}>Performance</h3>
-                    <div className="grid grid-cols-3 gap-3 mt-2">
-                      {tech.stats.map((stat, index) => (
-                        <div key={index} className="bg-gray-50 rounded p-3 text-center">
-                          <p className="font-bold" style={{ color: RISA_BLUE }}>{stat.value}</p>
-                          <p className="text-xs" style={{ color: RISA_TEXT }}>{stat.label}</p>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                  
-                  <div>
-                    <h3 className="text-lg font-bold" style={{ color: RISA_BLUE }}>Contact</h3>
-                    <div className="space-y-2 mt-2">
-                      <div className="flex items-center gap-2 p-2 bg-gray-50 rounded">
-                        <Phone className="w-4 h-4" style={{ color: RISA_BLUE }} />
-                        <span className="text-sm" style={{ color: RISA_TEXT }}>{tech.phone}</span>
-                      </div>
-                      <div className="flex items-center gap-2 p-2 bg-gray-50 rounded">
-                        <Mail className="w-4 h-4" style={{ color: RISA_BLUE }} />
-                        <span className="text-sm" style={{ color: RISA_TEXT }}>{tech.email}</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-              
-              {activeTab === 'reviews' && (
-                <div className="space-y-4">
-                  <div className="bg-gray-50 rounded p-4">
-                    <div className="flex items-center gap-4">
-                      <p className="text-3xl font-bold" style={{ color: RISA_BLUE }}>{tech.rating}</p>
-                      <div className="flex">
-                        {[...Array(5)].map((_, i) => (
-                          <Star 
-                            key={i} 
-                            className={`w-4 h-4 ${i < Math.floor(tech.rating) ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`}
-                          />
-                        ))}
-                      </div>
-                    </div>
-                    <p className="text-sm mt-2" style={{ color: RISA_TEXT }}>{tech.reviews} reviews</p>
-                  </div>
-                  
-                  <div className="space-y-4">
-                    {[1, 2, 3].map((review) => (
-                      <div key={review} className="bg-gray-50 rounded p-4">
-                        <div className="flex justify-between mb-2">
-                          <div>
-                            <p className="font-medium" style={{ color: RISA_TEXT }}>
-                              {review === 1 ? 'John D.' : review === 2 ? 'Sarah M.' : 'Thomas K.'}
-                            </p>
-                            <div className="flex mt-1">
-                              {[...Array(5)].map((_, i) => (
-                                <Star 
-                                  key={i} 
-                                  className={`w-3 h-3 ${i < (review === 1 ? 5 : review === 2 ? 4 : 5) ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`}
-                                />
-                              ))}
-                            </div>
-                          </div>
-                        </div>
-                        <p className="text-sm" style={{ color: RISA_TEXT }}>
-                          {review === 1 
-                            ? `${tech.name} provided exceptional service. My device was repaired faster than expected and works perfectly now. Highly recommend!`
-                            : review === 2
-                            ? `Good service overall. There was a slight delay in parts delivery but the technician kept me informed throughout the process.`
-                            : `Absolutely brilliant work! Fixed an issue that two other technicians couldn't figure out. Will definitely use again.`}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
+            <div className="flex items-center gap-2 mb-4 text-sm text-slate-500">
+               <MapPin className="w-4 h-4" /> {tech.location}
+               <span className="w-1 h-1 bg-slate-300 rounded-full mx-1"></span>
+               <Star className="w-4 h-4 text-yellow-400 fill-current" /> {tech.rating}
             </div>
+         </div>
+
+         <div className="flex flex-wrap gap-2 mb-6">
+            {tech.skills.slice(0, 3).map((skill, i) => (
+               <span key={i} className={`text-[10px] px-2 py-1 rounded-full font-bold uppercase ${theme.light} ${theme.text}`}>
+                  {skill}
+               </span>
+            ))}
+         </div>
+
+         <div className="mt-auto border-t border-slate-100 pt-4 flex justify-between items-center">
+            {tech.stats.map((stat, i) => (
+               <div key={i} className="text-center">
+                  <p className="font-bold text-slate-800">{stat.value}</p>
+                  <p className="text-[10px] text-slate-400 uppercase">{stat.label}</p>
+               </div>
+            ))}
+         </div>
+      </div>
+    </motion.div>
+  );
+};
+
+const TechnicianModal = ({ tech, onClose }) => (
+  <motion.div 
+    initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+    className="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+    onClick={onClose}
+  >
+    <motion.div 
+      initial={{ scale: 0.9, y: 20 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.9, y: 20 }}
+      className="bg-white rounded-[2rem] max-w-2xl w-full overflow-hidden shadow-2xl relative"
+      onClick={e => e.stopPropagation()}
+    >
+       <button onClick={onClose} className="absolute top-4 right-4 p-2 bg-slate-100 rounded-full hover:bg-slate-200 transition-colors z-10">
+          <X className="w-5 h-5 text-slate-600" />
+       </button>
+
+       <div className="flex flex-col md:flex-row">
+          {/* Left Sidebar */}
+          <div className="w-full md:w-1/3 bg-slate-50 p-8 flex flex-col items-center text-center border-r border-slate-100">
+             <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-white shadow-lg mb-4">
+                <img src={tech.image} alt={tech.name} className="w-full h-full object-cover" />
+             </div>
+             <h2 className="text-xl font-bold text-slate-800">{tech.name}</h2>
+             <p className="text-[#015B97] text-xs font-bold uppercase mb-4">{tech.role}</p>
+             <a 
+               href={`https://wa.me/${tech.phone.replace(/\D/g, '')}`}
+               target="_blank" rel="noreferrer"
+               className="w-full py-3 rounded-xl bg-green-500 text-white font-bold text-sm hover:bg-green-600 transition-colors flex items-center justify-center gap-2 shadow-lg shadow-green-500/30"
+             >
+                <MessageCircle className="w-4 h-4" /> Chat Now
+             </a>
           </div>
-        </motion.div>
-      </motion.div>
-    </AnimatePresence>
-  );
-};
 
-const StatCard = ({ value, label, index }) => {
-  const [ref, inView] = useInView({ threshold: 0.5, triggerOnce: true });
+          {/* Right Content */}
+          <div className="w-full md:w-2/3 p-8">
+             <h3 className="text-lg font-bold text-slate-800 mb-2">About</h3>
+             <p className="text-slate-600 text-sm leading-relaxed mb-6">{tech.bio}</p>
 
-  return (
-    <motion.div
-      ref={ref}
-      className="bg-white rounded-lg p-5 border border-gray-200"
-      initial={{ opacity: 0, y: 50 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ delay: index * 0.1 }}
-    >
-      <p className="text-2xl font-bold" style={{ color: RISA_BLUE }}>{value}</p>
-      <p className="text-sm" style={{ color: RISA_TEXT }}>{label}</p>
+             <h3 className="text-lg font-bold text-slate-800 mb-2">Expertise</h3>
+             <div className="grid grid-cols-2 gap-3 mb-6">
+                {tech.skills.map((skill, i) => (
+                   <div key={i} className="flex items-center gap-2 text-sm text-slate-600">
+                      <CheckCircle className="w-4 h-4 text-green-500" /> {skill}
+                   </div>
+                ))}
+             </div>
+
+             <div className="bg-blue-50 rounded-xl p-4 flex justify-between items-center">
+                {tech.stats.map((stat, i) => (
+                   <div key={i} className="text-center flex-1">
+                      <p className="text-xl font-extrabold text-[#015B97]">{stat.value}</p>
+                      <p className="text-[10px] text-blue-400 uppercase font-bold">{stat.label}</p>
+                   </div>
+                ))}
+             </div>
+          </div>
+       </div>
     </motion.div>
-  );
-};
-
-const SpecialtyCard = ({ icon, name, color, index }) => {
-  const [ref, inView] = useInView({ threshold: 0.5, triggerOnce: true });
-
-  return (
-    <motion.div
-      ref={ref}
-      className="bg-white rounded-lg p-5 border border-gray-200"
-      initial={{ opacity: 0, y: 50 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ delay: index * 0.1 }}
-    >
-      <div className="w-10 h-10 rounded-full flex items-center justify-center mb-3" style={{ backgroundColor: `${color}20` }}>
-        <span style={{ color }}>{icon}</span>
-      </div>
-      <h3 className="font-bold" style={{ color: RISA_BLUE }}>{name}</h3>
-      <p className="text-sm mt-1" style={{ color: RISA_TEXT }}>
-        {name === "Hardware" 
-          ? "Component-level repairs"
-          : name === "Networking"
-          ? "Infrastructure setup"
-          : name === "Software"
-          ? "System troubleshooting"
-          : "Digital threat protection"}
-      </p>
-    </motion.div>
-  );
-};
-
-const TestimonialCard = ({ testimonial, index }) => {
-  const [ref, inView] = useInView({ threshold: 0.3, triggerOnce: true });
-  
-  return (
-    <motion.div
-      ref={ref}
-      className="bg-white rounded-lg p-5 border border-gray-200"
-      initial={{ opacity: 0, y: 50 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ delay: index * 0.2 }}
-    >
-      <div className="flex mb-3">
-        {[...Array(5)].map((_, i) => (
-          <Star 
-            key={i} 
-            className={`w-4 h-4 ${i < testimonial.rating ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`}
-          />
-        ))}
-      </div>
-      <p className="text-sm italic mb-3" style={{ color: RISA_TEXT }}>"{testimonial.content}"</p>
-      <div>
-        <p className="font-bold" style={{ color: RISA_BLUE }}>{testimonial.name}</p>
-        <p className="text-sm" style={{ color: RISA_TEXT }}>{testimonial.company}</p>
-      </div>
-    </motion.div>
-  );
-};
-
-const FAQItem = ({ faq, index, isOpen, toggle }) => {
-  const [ref, inView] = useInView({ threshold: 0.3, triggerOnce: true });
-  
-  return (
-    <motion.div
-      ref={ref}
-      className="border-b border-gray-200 py-4"
-      initial={{ opacity: 0, y: 20 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ delay: index * 0.1 }}
-    >
-      <button
-        className="flex justify-between items-center w-full text-left"
-        onClick={toggle}
-        style={{ color: RISA_TEXT, fontFamily: FONT_FAMILY }}
-      >
-        <h3 className="font-medium">{faq.question}</h3>
-        {isOpen ? (
-          <ChevronUp className="w-4 h-4" style={{ color: RISA_BLUE }} />
-        ) : (
-          <ChevronDown className="w-4 h-4" style={{ color: RISA_TEXT }} />
-        )}
-      </button>
-      {isOpen && (
-        <motion.div
-          className="mt-3 text-sm"
-          style={{ color: RISA_TEXT }}
-          initial={{ opacity: 0, height: 0 }}
-          animate={{ opacity: 1, height: 'auto' }}
-          exit={{ opacity: 0, height: 0 }}
-          transition={{ duration: 0.3 }}
-        >
-          {faq.answer}
-        </motion.div>
-      )}
-    </motion.div>
-  );
-};
+  </motion.div>
+);
 
 const Technicians = () => {
-  const { issue } = useParams();
-  const techSectionRef = useRef(null);
   const [selectedTech, setSelectedTech] = useState(null);
-  const [openIndex, setOpenIndex] = useState(null);
-  
-  useEffect(() => {
-    if (techSectionRef.current) {
-      techSectionRef.current.scrollIntoView({ behavior: "smooth" });
-    }
-  }, [issue]);
-
-  const toggleFAQ = (index) => {
-    setOpenIndex(openIndex === index ? null : index);
-  };
+  const [activeFaq, setActiveFaq] = useState(null);
 
   return (
-    <div
-      ref={techSectionRef}
-      className="min-h-screen bg-white"
-      style={{ fontFamily: FONT_FAMILY }}
-    >
-      <div className="pt-24 pb-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
+    <div className="min-h-screen bg-slate-50" style={{ fontFamily: FONT_FAMILY }}>
+      <Helmet>
+        <title>Experts | Knoxville Internet</title>
+      </Helmet>
+
+      <Navbar />
+      <TechHero />
+
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-20 -mt-20 pb-20">
+        
+        {/* --- STATS STRIP (Floating Dashboard) --- */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="text-center mb-12"
+          className="bg-white rounded-[2rem] shadow-xl border border-slate-100 p-6 mb-16 grid grid-cols-2 md:grid-cols-4 gap-8"
         >
-          <h1 className="text-3xl md:text-4xl font-bold" style={{ color: RISA_BLUE }}>
-            Elite Technical Experts
-          </h1>
-          <p className="text-lg mt-4 max-w-2xl mx-auto" style={{ color: RISA_TEXT }}>
-            Meet our certified professionals ready to solve your most complex technical challenges with precision and expertise.
-          </p>
+           {[
+             { label: "Experts", value: "15+", icon: <Users className="w-5 h-5 text-blue-500" /> },
+             { label: "Projects", value: "1k+", icon: <CheckCircle className="w-5 h-5 text-green-500" /> },
+             { label: "Response", value: "15m", icon: <Clock className="w-5 h-5 text-orange-500" /> },
+             { label: "Rating", value: "4.9", icon: <Star className="w-5 h-5 text-yellow-500" /> },
+           ].map((stat, i) => (
+             <div key={i} className="flex items-center gap-4 border-r last:border-0 border-slate-100">
+                <div className="p-3 bg-slate-50 rounded-2xl">{stat.icon}</div>
+                <div>
+                   <p className="text-2xl font-bold text-slate-800">{stat.value}</p>
+                   <p className="text-xs text-slate-400 uppercase font-bold tracking-wider">{stat.label}</p>
+                </div>
+             </div>
+           ))}
         </motion.div>
 
-        {/* Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-16">
-          {stats.map((stat, index) => (
-            <StatCard key={index} value={stat.value} label={stat.label} index={index} />
-          ))}
+        {/* --- SPECIALTIES --- */}
+        <div className="mb-20">
+           <div className="text-center mb-10">
+              <h2 className="text-3xl font-bold text-slate-800">Technical Specialties</h2>
+           </div>
+           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {specialties.map((spec, i) => (
+                 <motion.div 
+                   key={i}
+                   whileHover={{ y: -5 }}
+                   className="bg-white p-6 rounded-[1.5rem] border border-slate-100 shadow-sm hover:shadow-lg transition-all text-center group"
+                 >
+                    <div className="w-14 h-14 mx-auto bg-blue-50 rounded-2xl flex items-center justify-center text-[#015B97] mb-4 group-hover:scale-110 transition-transform">
+                       {spec.icon}
+                    </div>
+                    <h3 className="font-bold text-slate-800 text-lg">{spec.name}</h3>
+                    <p className="text-slate-500 text-sm">{spec.desc}</p>
+                 </motion.div>
+              ))}
+           </div>
         </div>
 
-        {/* Specialties */}
-        <div className="mb-16">
-          <h2 className="text-2xl font-bold text-center mb-8" style={{ color: RISA_BLUE }}>
-            Our Specialties
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {specialties.map((specialty, index) => (
-              <SpecialtyCard 
-                key={index} 
-                icon={specialty.icon} 
-                name={specialty.name} 
-                color={specialty.color} 
-                index={index} 
-              />
-            ))}
-          </div>
+        {/* --- TECHNICIANS GRID (Dribbble Style) --- */}
+        <div className="mb-20">
+           <div className="text-center mb-12">
+              <h2 className="text-4xl font-extrabold text-slate-800">Meet The Team</h2>
+              <p className="text-slate-500 mt-2">Click on a profile to view details and book.</p>
+           </div>
+
+           <motion.div 
+             variants={containerVariants}
+             initial="hidden"
+             whileInView="visible"
+             viewport={{ once: true }}
+             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
+           >
+              {technicians.map((tech, i) => (
+                 <TechnicianCard 
+                   key={tech.id} 
+                   tech={tech} 
+                   index={i} 
+                   onClick={() => setSelectedTech(tech)} 
+                 />
+              ))}
+           </motion.div>
         </div>
 
-        {/* Technicians */}
-        <div className="mb-16">
-          <h2 className="text-2xl font-bold text-center mb-8" style={{ color: RISA_BLUE }}>
-            Meet the Team
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {technicians.map((tech) => (
-              <TechnicianCard 
-                key={tech.id} 
-                tech={tech} 
-                onClick={() => setSelectedTech(tech)}
-              />
-            ))}
-          </div>
+        {/* --- FAQ SECTION --- */}
+        <div className="max-w-3xl mx-auto bg-white rounded-[2rem] shadow-lg border border-slate-100 p-8 md:p-12">
+           <h2 className="text-2xl font-bold text-center mb-8 text-slate-800">Common Questions</h2>
+           <div className="space-y-4">
+              {faqs.map((faq, i) => (
+                 <div key={i} className="border-b border-slate-100 last:border-0 pb-4 last:pb-0">
+                    <button 
+                      onClick={() => setActiveFaq(activeFaq === i ? null : i)}
+                      className="flex justify-between items-center w-full text-left font-bold text-slate-700 py-2"
+                    >
+                       {faq.q}
+                       {activeFaq === i ? <ChevronUp className="w-4 h-4 text-blue-500" /> : <ChevronDown className="w-4 h-4 text-slate-400" />}
+                    </button>
+                    <AnimatePresence>
+                       {activeFaq === i && (
+                          <motion.div 
+                            initial={{ height: 0, opacity: 0 }} 
+                            animate={{ height: 'auto', opacity: 1 }} 
+                            exit={{ height: 0, opacity: 0 }}
+                            className="text-sm text-slate-500 leading-relaxed overflow-hidden"
+                          >
+                             <p className="pt-2 pb-2">{faq.a}</p>
+                          </motion.div>
+                       )}
+                    </AnimatePresence>
+                 </div>
+              ))}
+           </div>
         </div>
 
-        {/* Testimonials */}
-        <div className="mb-16">
-          <h2 className="text-2xl font-bold text-center mb-8" style={{ color: RISA_BLUE }}>
-            Client Testimonials
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {testimonials.map((testimonial, index) => (
-              <TestimonialCard 
-                key={testimonial.id} 
-                testimonial={testimonial} 
-                index={index} 
-              />
-            ))}
-          </div>
-        </div>
-
-        {/* FAQ */}
-        <div className="mb-16 max-w-3xl mx-auto">
-          <h2 className="text-2xl font-bold text-center mb-8" style={{ color: RISA_BLUE }}>
-            Frequently Asked Questions
-          </h2>
-          <div className="bg-white rounded-lg border border-gray-200 p-6">
-            {faqs.map((faq, index) => (
-              <FAQItem 
-                key={index} 
-                faq={faq} 
-                index={index}
-                isOpen={openIndex === index}
-                toggle={() => toggleFAQ(index)}
-              />
-            ))}
-          </div>
-        </div>
       </div>
 
       <AnimatePresence>
-        {selectedTech && (
-          <TechnicianModal 
-            tech={selectedTech} 
-            onClose={() => setSelectedTech(null)} 
-          />
-        )}
+        {selectedTech && <TechnicianModal tech={selectedTech} onClose={() => setSelectedTech(null)} />}
       </AnimatePresence>
     </div>
   );
