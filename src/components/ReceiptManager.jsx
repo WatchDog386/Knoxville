@@ -1,5 +1,4 @@
-// ReceiptManager.jsx - UPDATED: sendReceiptToClient sends PDF via email
-// ReceiptManager.jsx - UPDATED: exportReceiptsToExcel fetches from backend API
+// ReceiptManager.jsx - UPDATED FOR KNOXVILLE TECHNOLOGIES
 import React, { useState, useEffect } from 'react';
 import { 
   FileText, 
@@ -44,12 +43,11 @@ const formatPrice = (price) => {
   const num = parseInt(cleanStr, 10);
   return isNaN(num) ? price : num.toLocaleString();
 };
-
-// Brand configuration to match your design
+// Brand configuration to match your design - UPDATED FOR KNOXVILLE TECHNOLOGIES
 const BRAND = {
-  name: "OPTIMAS FIBER",
-  tagline: "High-Speed Internet Solutions",
-  logoUrl: "/public/oppo.jpg", // Updated path to logo
+  name: "Knoxville Technologies",
+  tagline: "Your Technology Partner",
+  logoUrl: "/logo4.webp", // Updated path to logo
   colors: {
     primary: '#003366',
     accent: '#FFCC00',
@@ -58,17 +56,16 @@ const BRAND = {
     danger: '#dc3545'
   },
   contact: {
-    email: "support@optimasfiber.co.ke",
-    phone: "+254 741 874 200",
+    email: "support@knxville.co.ke", // Updated email
+    phone: "+254 712 345 678", // Updated phone
     bank: {
-      name: "Equity Bank",
-      accountName: "Optimas Fiber Ltd",
+      name: "KCB Bank", // Placeholder - Update with actual details
+      accountName: "Knoxville Technologies Ltd",
       accountNumber: "1234567890",
-      branch: "Nairobi Main"
+      branch: "Nairobi Main Branch"
     }
   }
 };
-
 const ReceiptManager = ({ darkMode, themeClasses, API_BASE_URL, showNotification, receipts, setReceipts, invoices }) => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -81,7 +78,6 @@ const ReceiptManager = ({ darkMode, themeClasses, API_BASE_URL, showNotification
   const [sendingReceipt, setSendingReceipt] = useState(null); // Tracks which receipt is being sent
   const [searchInvoiceTerm, setSearchInvoiceTerm] = useState('');
   const [showInvoiceSearch, setShowInvoiceSearch] = useState(false);
-
   // Form state for creating/editing receipts
   const [receiptForm, setReceiptForm] = useState({
     receiptNumber: '',
@@ -114,7 +110,6 @@ const ReceiptManager = ({ darkMode, themeClasses, API_BASE_URL, showNotification
     transactionId: '',
     bankReference: ''
   });
-
   // Fetch receipts from backend
   const fetchReceipts = async () => {
     try {
@@ -156,7 +151,6 @@ const ReceiptManager = ({ darkMode, themeClasses, API_BASE_URL, showNotification
       setLoading(false);
     }
   };
-
   useEffect(() => {
     if (!receipts || receipts.length === 0) {
       fetchReceipts();
@@ -164,7 +158,6 @@ const ReceiptManager = ({ darkMode, themeClasses, API_BASE_URL, showNotification
       setLoading(false);
     }
   }, []);
-
   // Generate sequential receipt number
   const generateReceiptNumber = () => {
     if (receipts.length === 0) return 'RCP-001';
@@ -178,7 +171,6 @@ const ReceiptManager = ({ darkMode, themeClasses, API_BASE_URL, showNotification
     }, 0);
     return `RCP-${String(latestNumber + 1).padStart(3, '0')}`;
   };
-
   // Calculate totals
   const calculateTotals = (items, taxRate = 0, discount = 0, discountType = 'none') => {
     const subtotal = items.reduce((sum, item) => sum + (parseFloat(item.amount) || 0), 0);
@@ -192,7 +184,6 @@ const ReceiptManager = ({ darkMode, themeClasses, API_BASE_URL, showNotification
     const total = subtotal + taxAmount - discountAmount;
     return { subtotal, taxAmount, total };
   };
-
   // Handle form input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -225,7 +216,6 @@ const ReceiptManager = ({ darkMode, themeClasses, API_BASE_URL, showNotification
       return updatedForm;
     });
   };
-
   // Handle item changes
   const handleItemChange = (index, field, value) => {
     const updatedItems = [...receiptForm.items];
@@ -254,7 +244,6 @@ const ReceiptManager = ({ darkMode, themeClasses, API_BASE_URL, showNotification
       balance: Math.max(0, total - (prev.amountPaid || 0))
     }));
   };
-
   // Add new item
   const addItem = () => {
     setReceiptForm(prev => ({
@@ -262,7 +251,6 @@ const ReceiptManager = ({ darkMode, themeClasses, API_BASE_URL, showNotification
       items: [...prev.items, { description: '', quantity: 1, unitPrice: 0, amount: 0 }]
     }));
   };
-
   // Remove item
   const removeItem = (index) => {
     if (receiptForm.items.length > 1) {
@@ -284,7 +272,6 @@ const ReceiptManager = ({ darkMode, themeClasses, API_BASE_URL, showNotification
       }));
     }
   };
-
   // Create new receipt
   const createReceipt = async () => {
     try {
@@ -298,7 +285,6 @@ const ReceiptManager = ({ darkMode, themeClasses, API_BASE_URL, showNotification
       if (!receiptForm.customerEmail?.trim()) {
         throw new Error('Customer email is required');
       }
-
       const receiptData = {
         receiptNumber: receiptForm.receiptNumber || generateReceiptNumber(),
         invoiceNumber: receiptForm.invoiceNumber || '',
@@ -334,7 +320,6 @@ const ReceiptManager = ({ darkMode, themeClasses, API_BASE_URL, showNotification
         transactionId: receiptForm.transactionId?.trim() || '',
         bankReference: receiptForm.bankReference?.trim() || ''
       };
-
       const response = await fetch(`${API_BASE_URL}/api/receipts`, {
         method: 'POST',
         headers: {
@@ -343,7 +328,6 @@ const ReceiptManager = ({ darkMode, themeClasses, API_BASE_URL, showNotification
         },
         body: JSON.stringify(receiptData)
       });
-
       const responseData = await response.json();
       if (response.ok) {
         const newReceipt = responseData.receipt || responseData.data || responseData;
@@ -363,7 +347,6 @@ const ReceiptManager = ({ darkMode, themeClasses, API_BASE_URL, showNotification
       showNotification(`🚨 Error: ${error.message}`, 'error');
     }
   };
-
   // Update receipt
   const updateReceipt = async () => {
     try {
@@ -371,7 +354,6 @@ const ReceiptManager = ({ darkMode, themeClasses, API_BASE_URL, showNotification
       if (!token) {
         throw new Error('Authentication session expired. Please log in again.');
       }
-
       const receiptData = {
         receiptNumber: receiptForm.receiptNumber,
         invoiceNumber: receiptForm.invoiceNumber,
@@ -407,7 +389,6 @@ const ReceiptManager = ({ darkMode, themeClasses, API_BASE_URL, showNotification
         transactionId: receiptForm.transactionId?.trim() || '',
         bankReference: receiptForm.bankReference?.trim() || ''
       };
-
       const response = await fetch(`${API_BASE_URL}/api/receipts/${editingReceipt._id}`, {
         method: 'PUT',
         headers: {
@@ -416,7 +397,6 @@ const ReceiptManager = ({ darkMode, themeClasses, API_BASE_URL, showNotification
         },
         body: JSON.stringify(receiptData)
       });
-
       const responseData = await response.json();
       if (response.ok) {
         const updatedReceipt = responseData.receipt || responseData.data || responseData;
@@ -439,7 +419,6 @@ const ReceiptManager = ({ darkMode, themeClasses, API_BASE_URL, showNotification
       showNotification(`🚨 Error: ${error.message}`, 'error');
     }
   };
-
   // Delete receipt
   const deleteReceipt = async (receiptId) => {
     if (!window.confirm('Are you sure you want to delete this receipt? This action cannot be undone.')) {
@@ -450,14 +429,12 @@ const ReceiptManager = ({ darkMode, themeClasses, API_BASE_URL, showNotification
       if (!token) {
         throw new Error('Authentication session expired. Please log in again.');
       }
-
       const response = await fetch(`${API_BASE_URL}/api/receipts/${receiptId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`
         }
       });
-
       if (response.ok) {
         setReceipts(prev => prev.filter(rec => rec._id !== receiptId));
         showNotification('✅ Receipt deleted successfully!', 'success');
@@ -470,7 +447,6 @@ const ReceiptManager = ({ darkMode, themeClasses, API_BASE_URL, showNotification
       showNotification(`🚨 Error: ${error.message}`, 'error');
     }
   };
-
   // Generate receipt from invoice
   const generateReceiptFromInvoice = (invoice) => {
     const items = invoice.items && invoice.items.length > 0 
@@ -521,8 +497,7 @@ const ReceiptManager = ({ darkMode, themeClasses, API_BASE_URL, showNotification
     setShowInvoiceSearch(false);
     setShowCreateModal(true);
   };
-
-  // ✅ FIXED: PDF Generation with complete, styled HTML and proper layout
+  // ✅ FIXED: PDF Generation with complete, styled HTML and proper layout - UPDATED FOR KNOXVILLE TECHNOLOGIES
   const exportReceiptPDF = (receipt) => {
     const element = document.createElement('div');
     element.innerHTML = `
@@ -634,7 +609,7 @@ const ReceiptManager = ({ darkMode, themeClasses, API_BASE_URL, showNotification
                             <p style="margin: 3px 0;"><strong>Acc No:</strong> ${BRAND.contact.bank.accountNumber}</p>
                         </td>
                         <td style="padding: 5px 0; font-size: 11px; text-align: left; vertical-align: top;">
-                            <p style="margin: 3px 0;"><strong>Paybill:</strong> 123456</p>
+                            <p style="margin: 3px 0;"><strong>Paybill:</strong> 501501</p> <!-- Updated Paybill -->
                             <p style="margin: 3px 0;"><strong>Account:</strong> ${receipt.customerName?.split(' ')[0] || 'Customer'}</p>
                         </td>
                     </tr>
@@ -648,7 +623,6 @@ const ReceiptManager = ({ darkMode, themeClasses, API_BASE_URL, showNotification
         </div>
       </div>
     `;
-
     document.body.appendChild(element);
     const opt = {
       margin: [10, 10, 10, 10],
@@ -663,7 +637,6 @@ const ReceiptManager = ({ darkMode, themeClasses, API_BASE_URL, showNotification
       },
       jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
     };
-
     html2pdf().from(element).set(opt).save().then(() => {
       showNotification('✅ PDF generated successfully!', 'success');
     }).catch(err => {
@@ -673,8 +646,7 @@ const ReceiptManager = ({ darkMode, themeClasses, API_BASE_URL, showNotification
       document.body.removeChild(element);
     });
   };
-
-  // NEW: Function to send receipt as PDF via email
+  // NEW: Function to send receipt as PDF via email - UPDATED FOR KNOXVILLE TECHNOLOGIES
   const sendReceiptToClient = async (receipt) => {
     try {
       setSendingReceipt(receipt._id);
@@ -794,7 +766,7 @@ const ReceiptManager = ({ darkMode, themeClasses, API_BASE_URL, showNotification
                               <p style="margin: 3px 0;"><strong>Acc No:</strong> ${BRAND.contact.bank.accountNumber}</p>
                           </td>
                           <td style="padding: 5px 0; font-size: 11px; text-align: left; vertical-align: top;">
-                              <p style="margin: 3px 0;"><strong>Paybill:</strong> 123456</p>
+                              <p style="margin: 3px 0;"><strong>Paybill:</strong> 501501</p> <!-- Updated Paybill -->
                               <p style="margin: 3px 0;"><strong>Account:</strong> ${receipt.customerName?.split(' ')[0] || 'Customer'}</p>
                           </td>
                       </tr>
@@ -808,9 +780,7 @@ const ReceiptManager = ({ darkMode, themeClasses, API_BASE_URL, showNotification
           </div>
         </div>
       `;
-
       document.body.appendChild(element);
-
       // Configure html2pdf options for PDF generation (without saving)
       const opt = {
         margin: [10, 10, 10, 10],
@@ -825,10 +795,8 @@ const ReceiptManager = ({ darkMode, themeClasses, API_BASE_URL, showNotification
         },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
       };
-
       // Generate the PDF as a blob
       const pdfBlob = await html2pdf().from(element).set(opt).outputPdf('blob');
-
       // Create a download link for the blob
       const url = URL.createObjectURL(pdfBlob);
       const a = document.createElement('a');
@@ -836,11 +804,9 @@ const ReceiptManager = ({ darkMode, themeClasses, API_BASE_URL, showNotification
       a.download = `receipt-${receipt.receiptNumber || 'N/A'}.pdf`;
       document.body.appendChild(a);
       a.click();
-
       // Clean up
       document.body.removeChild(element);
       URL.revokeObjectURL(url);
-
       showNotification('✅ PDF receipt downloaded. Please attach it to your email.', 'success');
       showNotification('📧 Please open your email client and attach the downloaded PDF to send to: ' + customerEmail, 'info');
     } catch (error) {
@@ -850,7 +816,6 @@ const ReceiptManager = ({ darkMode, themeClasses, API_BASE_URL, showNotification
       setSendingReceipt(null);
     }
   };
-
   // NEW: Updated function to export all receipts to Excel via backend API
   const exportReceiptsToExcel = async () => {
     try {
@@ -859,7 +824,6 @@ const ReceiptManager = ({ darkMode, themeClasses, API_BASE_URL, showNotification
       if (!token) {
         throw new Error('Authentication session expired. Please log in again.');
       }
-
       const response = await fetch(`${API_BASE_URL}/api/receipts/export/excel`, {
         method: 'GET', // Or 'POST' if your backend expects it
         headers: {
@@ -867,7 +831,6 @@ const ReceiptManager = ({ darkMode, themeClasses, API_BASE_URL, showNotification
           'Content-Type': 'application/json' // Optional, but good practice
         }
       });
-
       if (response.ok) {
         const blob = await response.blob();
         const url = window.URL.createObjectURL(blob);
@@ -901,13 +864,11 @@ const ReceiptManager = ({ darkMode, themeClasses, API_BASE_URL, showNotification
       setExportLoading(false);
     }
   };
-
   // Preview PDF
   const previewPDF = (receipt) => {
     setSelectedReceipt(receipt);
     setShowPDFModal(true);
   };
-
   // Reset form
   const resetForm = () => {
     setReceiptForm({
@@ -942,7 +903,6 @@ const ReceiptManager = ({ darkMode, themeClasses, API_BASE_URL, showNotification
       bankReference: ''
     });
   };
-
   // Edit receipt
   const editReceipt = (receipt) => {
     setReceiptForm({
@@ -979,13 +939,11 @@ const ReceiptManager = ({ darkMode, themeClasses, API_BASE_URL, showNotification
     setEditingReceipt(receipt);
     setShowCreateModal(true);
   };
-
   // View receipt details
   const viewReceipt = (receipt) => {
     setSelectedReceipt(receipt);
     setShowReceiptModal(true);
   };
-
   // Filter receipts
   const filteredReceipts = Array.isArray(receipts) 
     ? receipts.filter(receipt => {
@@ -1000,41 +958,34 @@ const ReceiptManager = ({ darkMode, themeClasses, API_BASE_URL, showNotification
         );
       })
     : [];
-
   // ✅ REAL-TIME CHART DATA
   const prepareChartData = () => {
     if (!receipts || receipts.length === 0) return { statusData: [], revenueData: [], trendData: [] };
-
     const statusData = [
       { name: 'Paid', value: receipts.filter(r => r.status === 'paid').length, color: BRAND.colors.success },
       { name: 'Issued', value: receipts.filter(r => r.status === 'issued').length, color: BRAND.colors.warning },
       { name: 'Refunded', value: receipts.filter(r => r.status === 'refunded').length, color: BRAND.colors.danger }
     ];
-
     const now = new Date();
     const monthly = receipts.filter(r => {
       const date = new Date(r.receiptDate || r.createdAt);
       return date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear();
     }).reduce((sum, r) => sum + (r.total || 0), 0);
-
     const quarterly = receipts.filter(r => {
       const date = new Date(r.receiptDate || r.createdAt);
       const currentQuarter = Math.floor(now.getMonth() / 3);
       const receiptQuarter = Math.floor(date.getMonth() / 3);
       return date.getFullYear() === now.getFullYear() && receiptQuarter === currentQuarter;
     }).reduce((sum, r) => sum + (r.total || 0), 0);
-
     const annually = receipts.filter(r => {
       const date = new Date(r.receiptDate || r.createdAt);
       return date.getFullYear() === now.getFullYear();
     }).reduce((sum, r) => sum + (r.total || 0), 0);
-
     const revenueData = [
       { name: 'Monthly', value: monthly },
       { name: 'Quarterly', value: quarterly },
       { name: 'Annually', value: annually }
     ];
-
     const trendData = [];
     for (let i = 5; i >= 0; i--) {
       const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
@@ -1047,12 +998,9 @@ const ReceiptManager = ({ darkMode, themeClasses, API_BASE_URL, showNotification
         .reduce((sum, r) => sum + (r.total || 0), 0);
       trendData.push({ name: monthKey, revenue: amount });
     }
-
     return { statusData, revenueData, trendData };
   };
-
   const { statusData, revenueData, trendData } = prepareChartData();
-
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">
@@ -1060,7 +1008,6 @@ const ReceiptManager = ({ darkMode, themeClasses, API_BASE_URL, showNotification
       </div>
     );
   }
-
   return (
     <div>
       {/* Header */}
@@ -1108,7 +1055,6 @@ const ReceiptManager = ({ darkMode, themeClasses, API_BASE_URL, showNotification
           </button>
         </div>
       </div>
-
       {/* ✅ REAL-TIME ANALYTICS CHARTS */}
       {receipts.length > 0 && (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
@@ -1168,7 +1114,6 @@ const ReceiptManager = ({ darkMode, themeClasses, API_BASE_URL, showNotification
           </div>
         </div>
       )}
-
       {/* Search */}
       <div className={`${themeClasses.card} p-4 mb-6 rounded-xl shadow-sm border backdrop-blur-sm`}>
         <div className="relative">
@@ -1182,7 +1127,6 @@ const ReceiptManager = ({ darkMode, themeClasses, API_BASE_URL, showNotification
           />
         </div>
       </div>
-
       {/* Receipts Table */}
       <div className={`${themeClasses.card} rounded-xl shadow-lg border backdrop-blur-sm overflow-hidden`}>
         <div className="overflow-x-auto">
@@ -1240,7 +1184,7 @@ const ReceiptManager = ({ darkMode, themeClasses, API_BASE_URL, showNotification
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                        Ksh {formatPrice(receipt.total || 0)}
+                        Ksh ${formatPrice(receipt.total || 0)}
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap hidden md:table-cell">
@@ -1312,7 +1256,6 @@ const ReceiptManager = ({ darkMode, themeClasses, API_BASE_URL, showNotification
           </table>
         </div>
       </div>
-
       {/* ALL YOUR MODALS REMAIN EXACTLY AS IN YOUR ORIGINAL FILE — NO CHANGES MADE TO MODAL LOGIC */}
       {/* Create/Edit Modal */}
       {showCreateModal && (
@@ -1653,20 +1596,20 @@ const ReceiptManager = ({ darkMode, themeClasses, API_BASE_URL, showNotification
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                   <div>
                     <div className="font-medium">Subtotal:</div>
-                    <div className="font-bold">Ksh {formatPrice(receiptForm.subtotal)}</div>
+                    <div className="font-bold">Ksh ${formatPrice(receiptForm.subtotal)}</div>
                   </div>
                   <div>
                     <div className="font-medium">Tax:</div>
-                    <div className="font-bold">Ksh {formatPrice(receiptForm.taxAmount)}</div>
+                    <div className="font-bold">Ksh ${formatPrice(receiptForm.taxAmount)}</div>
                   </div>
                   <div>
                     <div className="font-medium">Total:</div>
-                    <div className="font-bold text-lg">Ksh {formatPrice(receiptForm.total)}</div>
+                    <div className="font-bold text-lg">Ksh ${formatPrice(receiptForm.total)}</div>
                   </div>
                   <div>
                     <div className="font-medium">Balance:</div>
                     <div className={`font-bold ${receiptForm.balance > 0 ? 'text-red-600' : 'text-green-600'}`}>
-                      Ksh {formatPrice(receiptForm.balance)}
+                      Ksh ${formatPrice(receiptForm.balance)}
                     </div>
                   </div>
                 </div>
@@ -1722,7 +1665,6 @@ const ReceiptManager = ({ darkMode, themeClasses, API_BASE_URL, showNotification
           </div>
         </div>
       )}
-
       {/* Invoice Search Modal */}
       {showInvoiceSearch && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
@@ -1787,7 +1729,7 @@ const ReceiptManager = ({ darkMode, themeClasses, API_BASE_URL, showNotification
                             {invoice.customerName} • {invoice.customerEmail}
                           </p>
                           <p className="text-sm font-medium mt-1">
-                            Ksh {formatPrice(invoice.totalAmount || invoice.planPrice || 0)}
+                            Ksh ${formatPrice(invoice.totalAmount || invoice.planPrice || 0)}
                           </p>
                           <p className="text-xs text-gray-500 mt-1">
                             {invoice.planName} • {invoice.planSpeed}
@@ -1811,7 +1753,6 @@ const ReceiptManager = ({ darkMode, themeClasses, API_BASE_URL, showNotification
           </div>
         </div>
       )}
-
       {/* Receipt Details Modal */}
       {showReceiptModal && selectedReceipt && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
@@ -1884,32 +1825,32 @@ const ReceiptManager = ({ darkMode, themeClasses, API_BASE_URL, showNotification
                         <tr key={index}>
                           <td className="px-4 py-2 text-sm">{item.description}</td>
                           <td className="px-4 py-2 text-sm text-center">{item.quantity || 1}</td>
-                          <td className="px-4 py-2 text-sm text-right">Ksh {formatPrice(item.unitPrice || item.amount)}</td>
-                          <td className="px-4 py-2 text-sm text-right">Ksh {formatPrice(item.amount)}</td>
+                          <td className="px-4 py-2 text-sm text-right">Ksh ${formatPrice(item.unitPrice || item.amount)}</td>
+                          <td className="px-4 py-2 text-sm text-right">Ksh ${formatPrice(item.amount)}</td>
                         </tr>
                       ))}
                     </tbody>
                     <tfoot className={`${darkMode ? 'bg-gray-700' : 'bg-gray-50'}`}>
                       <tr>
                         <td colSpan="3" className="px-4 py-2 text-sm font-bold text-right">Subtotal</td>
-                        <td className="px-4 py-2 text-sm font-bold text-right">Ksh {formatPrice(selectedReceipt.subtotal || selectedReceipt.total || 0)}</td>
+                        <td className="px-4 py-2 text-sm font-bold text-right">Ksh ${formatPrice(selectedReceipt.subtotal || selectedReceipt.total || 0)}</td>
                       </tr>
                       <tr>
                         <td colSpan="3" className="px-4 py-2 text-sm font-bold text-right">Tax</td>
-                        <td className="px-4 py-2 text-sm font-bold text-right">Ksh {formatPrice(selectedReceipt.taxAmount || 0)}</td>
+                        <td className="px-4 py-2 text-sm font-bold text-right">Ksh ${formatPrice(selectedReceipt.taxAmount || 0)}</td>
                       </tr>
                       <tr>
                         <td colSpan="3" className="px-4 py-2 text-sm font-bold text-right">Total</td>
-                        <td className="px-4 py-2 text-sm font-bold text-right">Ksh {formatPrice(selectedReceipt.total || 0)}</td>
+                        <td className="px-4 py-2 text-sm font-bold text-right">Ksh ${formatPrice(selectedReceipt.total || 0)}</td>
                       </tr>
                       <tr className="border-t">
                         <td colSpan="3" className="px-4 py-2 text-sm font-bold text-green-600 text-right">Amount Paid</td>
-                        <td className="px-4 py-2 text-sm font-bold text-right text-green-600">Ksh {formatPrice(selectedReceipt.amountPaid || 0)}</td>
+                        <td className="px-4 py-2 text-sm font-bold text-right text-green-600">Ksh ${formatPrice(selectedReceipt.amountPaid || 0)}</td>
                       </tr>
                       {selectedReceipt.balance > 0 && (
                         <tr>
                           <td colSpan="3" className="px-4 py-2 text-sm font-bold text-red-600 text-right">Balance Due</td>
-                          <td className="px-4 py-2 text-sm font-bold text-right text-red-600">Ksh {formatPrice(selectedReceipt.balance || 0)}</td>
+                          <td className="px-4 py-2 text-sm font-bold text-right text-red-600">Ksh ${formatPrice(selectedReceipt.balance || 0)}</td>
                         </tr>
                       )}
                     </tfoot>
@@ -1957,7 +1898,6 @@ const ReceiptManager = ({ darkMode, themeClasses, API_BASE_URL, showNotification
           </div>
         </div>
       )}
-
       {/* PDF Preview Modal */}
       {showPDFModal && selectedReceipt && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
@@ -2018,32 +1958,32 @@ const ReceiptManager = ({ darkMode, themeClasses, API_BASE_URL, showNotification
                       <tr key={index} className={`border-b ${darkMode ? 'border-gray-600' : 'border-gray-300'}`}>
                         <td className="py-2">{item.description}</td>
                         <td className="text-center py-2">{item.quantity || 1}</td>
-                        <td className="text-right py-2">Ksh {formatPrice(item.unitPrice || item.amount)}</td>
-                        <td className="text-right py-2">Ksh {formatPrice(item.amount)}</td>
+                        <td className="text-right py-2">Ksh ${formatPrice(item.unitPrice || item.amount)}</td>
+                        <td className="text-right py-2">Ksh ${formatPrice(item.amount)}</td>
                       </tr>
                     ))}
                   </tbody>
                   <tfoot>
                     <tr>
                       <td colSpan="3" className="py-2 font-semibold text-right">Subtotal</td>
-                      <td className="text-right py-2">Ksh {formatPrice(selectedReceipt.subtotal || selectedReceipt.total || 0)}</td>
+                      <td className="text-right py-2">Ksh ${formatPrice(selectedReceipt.subtotal || selectedReceipt.total || 0)}</td>
                     </tr>
                     <tr>
                       <td colSpan="3" className="py-2 font-semibold text-right">Tax</td>
-                      <td className="text-right py-2">Ksh {formatPrice(selectedReceipt.taxAmount || 0)}</td>
+                      <td className="text-right py-2">Ksh ${formatPrice(selectedReceipt.taxAmount || 0)}</td>
                     </tr>
                     <tr className={`border-t ${darkMode ? 'border-gray-600' : 'border-gray-300'}`}>
                       <td colSpan="3" className="py-2 font-bold">Total</td>
-                      <td className="text-right py-2 font-bold">Ksh {formatPrice(selectedReceipt.total || 0)}</td>
+                      <td className="text-right py-2 font-bold">Ksh ${formatPrice(selectedReceipt.total || 0)}</td>
                     </tr>
                     <tr className={`border-t ${darkMode ? 'border-gray-600' : 'border-gray-300'}`}>
                       <td colSpan="3" className="py-2 font-bold text-green-600">Amount Paid</td>
-                      <td className="text-right py-2 font-bold text-green-600">Ksh {formatPrice(selectedReceipt.amountPaid || 0)}</td>
+                      <td className="text-right py-2 font-bold text-green-600">Ksh ${formatPrice(selectedReceipt.amountPaid || 0)}</td>
                     </tr>
                     {selectedReceipt.balance > 0 && (
                       <tr>
                         <td colSpan="3" className="py-2 font-bold text-red-600">Balance Due</td>
-                        <td className="text-right py-2 font-bold text-red-600">Ksh {formatPrice(selectedReceipt.balance || 0)}</td>
+                        <td className="text-right py-2 font-bold text-red-600">Ksh ${formatPrice(selectedReceipt.balance || 0)}</td>
                       </tr>
                     )}
                   </tfoot>
@@ -2051,7 +1991,7 @@ const ReceiptManager = ({ darkMode, themeClasses, API_BASE_URL, showNotification
                 {selectedReceipt.notes && (
                   <div className={`mt-4 p-4 rounded-lg ${darkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
                     <p className="text-sm font-semibold mb-1">Notes:</p>
-                    <p className="text-sm">{selectedReceipt.notes}</p>
+                    <p className="text-sm">${selectedReceipt.notes}</p>
                   </div>
                 )}
                 <div className={`mt-8 p-4 rounded-lg ${darkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
@@ -2086,5 +2026,4 @@ const ReceiptManager = ({ darkMode, themeClasses, API_BASE_URL, showNotification
     </div>
   );
 };
-
 export default ReceiptManager;

@@ -1,4 +1,4 @@
-// InvoiceManager.jsx - FINAL UPDATED VERSION WITH FIXED LAYOUT, LOGO, CORRECT API URL, WHATSAPP PASTE, PLAN VALIDATION, AND REPOSITIONED NOTIFICATIONS
+// InvoiceManager.jsx - UPDATED FOR KNOXVILLE TECHNOLOGIES
 import React, { useState, useEffect } from 'react';
 import { 
   FileText, 
@@ -29,8 +29,11 @@ import {
   Zap,
   ArrowUpRight,
   Share2,
-  ClipboardPaste, // Added for the new feature
-  AlertTriangle // Added for warning icon
+  ClipboardPaste,
+  AlertTriangle,
+  Building2,
+  Shield,
+  HardHat
 } from 'lucide-react';
 // Import recharts for visualization
 import {
@@ -43,80 +46,111 @@ import html2pdf from 'html2pdf.js';
 // Utility function for consistent price formatting in KSH
 const formatPrice = (price) => {
   if (price === undefined || price === null) return '0.00';
-  // Ensure the price is treated as a number for proper formatting
   const num = parseFloat(price);
   return isNaN(num) ? price : num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 };
-// WiFi Plans data from your wifiplans.jsx
-const WIFI_PLANS = [
-  { 
-    id: 1, 
-    name: "Jumbo", 
-    price: "1499", 
-    speed: "8Mbps", 
-    features: ["Great for browsing", "24/7 Support", "Free Installation"], 
-    type: "home", 
-    popular: false 
-  },
-  { 
-    id: 2, 
-    name: "Buffalo", 
-    price: "1999", 
-    speed: "15Mbps", 
-    features: ["Streaming & Social Media", "24/7 Support", "Free Installation"], 
-    type: "home", 
-    popular: false 
-  },
-  { 
-    id: 3, 
-    name: "Ndovu", 
-    price: "2499", 
-    speed: "25Mbps", 
-    features: ["Work from Home", "Streaming", "24/7 Support", "Free Installation"], 
-    type: "home", 
-    popular: false 
-  },
-  { 
-    id: 4, 
-    name: "Gazzelle", 
-    price: "2999", 
-    speed: "30Mbps", 
-    features: ["Multiple Devices", "Low Latency", "24/7 Support", "Free Installation"], 
-    type: "home", 
-    popular: true 
-  },
-  { 
-    id: 5, 
-    name: "Tiger", 
-    price: "3999", 
-    speed: "40Mbps", 
-    features: ["Heavy Streaming", "Gaming Ready", "24/7 Support", "Free Installation"], 
-    type: "home", 
-    popular: false 
-  },
-  { 
-    id: 6, 
-    name: "Chui", 
-    price: "4999", 
-    speed: "60Mbps", 
-    features: ["High-Speed Everything", "Gaming & 4K", "24/7 Support", "Free Installation"], 
-    type: "home", 
-    popular: false 
-  },
-];
-// Mock company info to match wifiplans.jsx
+
+// --- COMPANY INFORMATION FOR KNOXVILLE TECHNOLOGIES ---
 const COMPANY_INFO = {
-  name: "OPTIMAS FIBER",
-  tagline: "High-Speed Internet Solutions",
-  logoUrl: "/oppo.jpg", // Corrected path to logo in public folder
-  bankName: "Equity Bank",
-  accountName: "Optimas Fiber Ltd",
+  name: "Knoxville Technologies",
+  tagline: "Your Technology Partner",
+  logoUrl: "/logo4.webp", // Updated logo path
+  bankName: "KCB Bank", // Placeholder - Update with actual details
+  accountName: "Knoxville Technologies Ltd",
   accountNumber: "1234567890",
-  branch: "Nairobi Main",
-  supportEmail: "support@optimasfiber.co.ke",
-  supportPhone: "+254 741 874 200",
-  paybill: "123456" // Added paybill for payment instructions
+  branch: "Nairobi Main Branch",
+  supportEmail: "support@knxville.co.ke", // Updated email
+  supportPhone: "+254 712 345 678", // Placeholder - Update with actual number
+  paybill: "501501" // Placeholder - Update with actual Paybill
 };
+
+// ... (WIFI_PLANS constant remains unchanged if it's relevant, or can be removed if not needed for Knoxville) ...
+// Assuming you want to keep the WiFi plans structure for now, as it's tied into the invoice creation logic
+const WIFI_PLANS = [
+  {
+    id: 1,
+    name: "Essential Fiber",
+    price: "1500",
+    speed: "6Mbps",
+    features: ["Basic Browsing & Email", "24/7 Customer Support", "Standard Installation", "Unlimited Data Usage"],
+    type: "home",
+    popular: false
+  },
+  {
+    id: 2,
+    name: "Streamer Plan",
+    price: "1999",
+    speed: "10Mbps",
+    features: ["HD Video Streaming", "Social Media Optimized", "Quick Installation", "Stable Connectivity"],
+    type: "home",
+    popular: false
+  },
+  {
+    id: 3,
+    name: "Family Premium",
+    price: "2499",
+    speed: "15Mbps",
+    features: ["Multiple Device Support", "Work from Home Ready", "Priority Installation", "Family Entertainment"],
+    type: "home",
+    popular: true
+  },
+  {
+    id: 4,
+    name: "Smart Home Pro",
+    price: "2999",
+    speed: "20Mbps",
+    features: ["4K Ultra HD Streaming", "Smart Home Integration", "Low Latency Gaming", "Professional Setup"],
+    type: "home",
+    popular: false
+  },
+  {
+    id: 5,
+    name: "Gaming Elite",
+    price: "3999",
+    speed: "25Mbps",
+    features: ["Competitive Gaming", "Live Streaming", "Priority Technical Support", "Advanced Router"],
+    type: "home",
+    popular: false
+  },
+  {
+    id: 6,
+    name: "Ultra Performance",
+    price: "4999",
+    speed: "30Mbps",
+    features: ["8K Content Ready", "Large File Transfers", "Power User Optimized", "Premium Hardware"],
+    type: "home",
+    popular: false
+  },
+  {
+    id: 7,
+    name: "Business Starter",
+    price: "8000",
+    speed: "50Mbps",
+    features: ["5 IP Telephony Lines", "3 Static IP Addresses", "Priority Business Support", "99.5% Uptime SLA"],
+    type: "business",
+    popular: false
+  },
+  {
+    id: 8,
+    name: "Business Plus",
+    price: "15000",
+    speed: "100Mbps",
+    features: ["10 IP Telephony Lines", "5 Static IP Addresses", "Dedicated Fiber Line", "99.9% Uptime Guarantee"],
+    type: "business",
+    popular: true
+  },
+  {
+    id: 9,
+    name: "Enterprise Solution",
+    price: "0", // Custom quote
+    speed: "500Mbps+",
+    features: ["Unlimited IP Telephony", "10+ Static IP Addresses", "Service Level Agreement", "24/7 Network Monitoring"],
+    type: "enterprise",
+    popular: false,
+    customQuote: true
+  }
+];
+
 const initialFormState = {
   invoiceNumber: '',
   customerName: '',
@@ -126,8 +160,9 @@ const initialFormState = {
   planName: '',
   planPrice: 0,
   planSpeed: '',
+  planType: 'home', // NEW: Added plan type
   features: [],
-  connectionType: 'Fiber Optic',
+  connectionType: 'Fiber Optic', // Could be changed if Knoxville offers other types
   invoiceDate: new Date().toISOString().split('T')[0],
   dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
   items: [],
@@ -146,6 +181,7 @@ const initialFormState = {
   terms: 'Payment due within 30 days. Late payments subject to fees.',
   billingCycle: 'monthly'
 };
+
 const InvoiceManager = ({ darkMode, themeClasses, API_BASE_URL, showNotification, invoices, setInvoices, receipts, setReceipts }) => {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('all');
@@ -159,24 +195,23 @@ const InvoiceManager = ({ darkMode, themeClasses, API_BASE_URL, showNotification
   const [sendingInvoice, setSendingInvoice] = useState(null);
   const [showPlanSelection, setShowPlanSelection] = useState(false);
   const [invoiceForm, setInvoiceForm] = useState(initialFormState);
-  // NEW: State for WhatsApp paste functionality
+  const [planCategory, setPlanCategory] = useState('home'); // NEW: Plan category filter
   const [whatsappText, setWhatsappText] = useState('');
   const [showPasteModal, setShowPasteModal] = useState(false);
+
   // Reset form
   const resetForm = () => {
     setInvoiceForm(initialFormState);
-    // NEW: Reset the paste state as well
     setWhatsappText('');
+    setPlanCategory('home');
   };
-  // Calculate totals based on your model structure (Ensures consistency)
+
+  // Calculate totals based on your model structure
   const calculateTotals = (items, taxRate = 0, discount = 0, discountType = 'none') => {
-    // 1. Calculate Subtotal from items
     const subtotal = items.reduce((sum, item) => sum + (parseFloat(item.amount) || 0), 0);
     const numericSubtotal = parseFloat(subtotal) || 0;
-    // 2. Calculate Tax
     const numericTaxRate = parseFloat(taxRate) || 0;
     const taxAmount = (numericSubtotal * numericTaxRate) / 100;
-    // 3. Calculate Discount
     let discountAmount = 0;
     const numericDiscount = parseFloat(discount) || 0;
     if (discountType === 'percentage') {
@@ -184,7 +219,6 @@ const InvoiceManager = ({ darkMode, themeClasses, API_BASE_URL, showNotification
     } else if (discountType === 'fixed') {
       discountAmount = numericDiscount;
     }
-    // 4. Calculate Total
     const totalAmount = numericSubtotal + taxAmount - discountAmount;
     return { 
       subtotal: numericSubtotal, 
@@ -193,7 +227,8 @@ const InvoiceManager = ({ darkMode, themeClasses, API_BASE_URL, showNotification
       totalAmount: Math.max(0, totalAmount) 
     };
   };
-  // Effect to recalculate totals when form changes (simulating mongoose pre-save hook)
+
+  // Effect to recalculate totals when form changes
   useEffect(() => {
       const { subtotal, taxAmount, totalAmount } = calculateTotals(
           invoiceForm.items, 
@@ -205,7 +240,6 @@ const InvoiceManager = ({ darkMode, themeClasses, API_BASE_URL, showNotification
           const amountPaid = parseFloat(prev.amountPaid) || 0;
           const newBalanceDue = Math.max(0, totalAmount - amountPaid);
           let newStatus = prev.status;
-          // Auto-update status based on payment
           if (amountPaid > 0) {
               if (amountPaid >= totalAmount) {
                   newStatus = 'paid';
@@ -225,6 +259,7 @@ const InvoiceManager = ({ darkMode, themeClasses, API_BASE_URL, showNotification
           };
       });
   }, [invoiceForm.items, invoiceForm.taxRate, invoiceForm.discount, invoiceForm.discountType, invoiceForm.amountPaid]);
+
   // Fetch invoices from backend
   const fetchInvoices = async () => {
     try {
@@ -253,6 +288,7 @@ const InvoiceManager = ({ darkMode, themeClasses, API_BASE_URL, showNotification
       setLoading(false);
     }
   };
+
   useEffect(() => {
     if (!invoices || invoices.length === 0) {
       fetchInvoices();
@@ -260,6 +296,7 @@ const InvoiceManager = ({ darkMode, themeClasses, API_BASE_URL, showNotification
       setLoading(false);
     }
   }, []);
+
   // Generate sequential invoice number (Client-side estimate)
   const generateInvoiceNumber = () => {
     if (!invoices || invoices.length === 0) return 'INV-0001';
@@ -273,7 +310,8 @@ const InvoiceManager = ({ darkMode, themeClasses, API_BASE_URL, showNotification
     }, 0);
     return `INV-${String(latestNumber + 1).padStart(4, '0')}`;
   };
-  // NEW: Parse WhatsApp text and populate form
+
+  // NEW: Parse WhatsApp text and populate form - UPDATED FOR NEW PLANS
   const parseAndPopulateFromWhatsApp = () => {
     const text = whatsappText;
     if (!text) {
@@ -286,34 +324,29 @@ const InvoiceManager = ({ darkMode, themeClasses, API_BASE_URL, showNotification
     const locationMatch = text.match(/Location:\s*(.+)/i);
     const emailMatch = text.match(/Email:\s*(.+)/i);
     const planMatch = text.match(/Plan:\s*(.+)/i);
-    const speedMatch = text.match(/Speed:\s*(.+)/i);
-    const priceMatch = text.match(/Price:\s*Ksh\s*([\d,]+)/i);
     const customerName = nameMatch ? nameMatch[1].trim() : '';
     const customerPhone = phoneMatch ? phoneMatch[1].trim() : '';
     const customerLocation = locationMatch ? locationMatch[1].trim() : '';
     const customerEmail = emailMatch ? emailMatch[1].trim() : '';
     const planName = planMatch ? planMatch[1].trim() : '';
-    const planSpeed = speedMatch ? speedMatch[1].trim() : '';
-    const planPrice = priceMatch ? parseFloat(priceMatch[1].replace(/,/g, '')) || 0 : 0;
-    // Find the selected plan from the list to get features
+
+    // Find the selected plan from the updated list
     let selectedPlan = null;
     if (planName) {
-        // Check for exact match first
-        selectedPlan = WIFI_PLANS.find(p => p.name.toLowerCase() === planName.toLowerCase());
-        // If not found, try to find by name part (e.g., "Jumbo (Ndovu)" -> "Ndovu")
-        if (!selectedPlan) {
-            const planNameParts = planName.split(' \\(');
-            if (planNameParts.length > 1) {
-                const actualPlanName = planNameParts[1].replace('\\)', '');
-                selectedPlan = WIFI_PLANS.find(p => p.name.toLowerCase() === actualPlanName.toLowerCase());
-            }
-        }
+        selectedPlan = WIFI_PLANS.find(p => 
+          p.name.toLowerCase() === planName.toLowerCase() ||
+          p.name.toLowerCase().includes(planName.toLowerCase()) ||
+          planName.toLowerCase().includes(p.name.toLowerCase())
+        );
     }
-    // If plan details are found, use them; otherwise, use parsed values
+
+    // Use selected plan details or default values
     const finalPlanName = selectedPlan ? selectedPlan.name : planName;
-    const finalPlanSpeed = selectedPlan ? selectedPlan.speed : planSpeed;
-    const finalPlanPrice = selectedPlan ? parseFloat(selectedPlan.price) : planPrice;
+    const finalPlanSpeed = selectedPlan ? selectedPlan.speed : '';
+    const finalPlanPrice = selectedPlan ? parseFloat(selectedPlan.price) : 0;
+    const finalPlanType = selectedPlan ? selectedPlan.type : 'home';
     const finalFeatures = selectedPlan ? selectedPlan.features : [];
+
     // Create an item for the invoice
     const items = [{
       description: `${finalPlanName} Internet Plan - ${finalPlanSpeed}`,
@@ -321,12 +354,14 @@ const InvoiceManager = ({ darkMode, themeClasses, API_BASE_URL, showNotification
       unitPrice: finalPlanPrice,
       amount: finalPlanPrice
     }];
+
     const { subtotal, taxAmount, totalAmount } = calculateTotals(
       items, 
       invoiceForm.taxRate, 
       invoiceForm.discount, 
       invoiceForm.discountType
     );
+
     // Update the form state
     setInvoiceForm(prev => ({
       ...prev,
@@ -337,6 +372,7 @@ const InvoiceManager = ({ darkMode, themeClasses, API_BASE_URL, showNotification
       planName: finalPlanName,
       planPrice: finalPlanPrice,
       planSpeed: finalPlanSpeed,
+      planType: finalPlanType,
       features: finalFeatures,
       items: items,
       subtotal: subtotal,
@@ -344,10 +380,14 @@ const InvoiceManager = ({ darkMode, themeClasses, API_BASE_URL, showNotification
       totalAmount: totalAmount,
       balanceDue: totalAmount - (prev.amountPaid || 0)
     }));
+
+    // Also set the plan category for the selection modal
+    setPlanCategory(finalPlanType);
     showNotification('✅ Form populated from WhatsApp message!', 'success');
     setShowPasteModal(false);
-    setWhatsappText(''); // Clear the paste text after use
+    setWhatsappText('');
   };
+
   // Handle form input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -356,7 +396,8 @@ const InvoiceManager = ({ darkMode, themeClasses, API_BASE_URL, showNotification
       [name]: value
     }));
   };
-  // Select WiFi plan
+
+  // Select WiFi plan - UPDATED FOR NEW PLAN STRUCTURE
   const selectPlan = (plan) => {
     const planPrice = parseFloat(plan.price) || 0;
     const items = [{
@@ -365,18 +406,20 @@ const InvoiceManager = ({ darkMode, themeClasses, API_BASE_URL, showNotification
       unitPrice: planPrice,
       amount: planPrice
     }];
-    // Calculate totals for the new plan items
+
     const { subtotal, taxAmount, totalAmount } = calculateTotals(
       items, 
       invoiceForm.taxRate, 
       invoiceForm.discount, 
       invoiceForm.discountType
     );
+
     setInvoiceForm(prev => ({
       ...prev,
       planName: plan.name,
       planPrice: planPrice,
       planSpeed: plan.speed,
+      planType: plan.type,
       features: plan.features,
       items: items,
       subtotal: subtotal,
@@ -387,6 +430,7 @@ const InvoiceManager = ({ darkMode, themeClasses, API_BASE_URL, showNotification
     setShowPlanSelection(false);
     showNotification(`✅ ${plan.name} plan selected!`, 'success');
   };
+
   // Handle item changes
   const handleItemChange = (index, field, value) => {
     const updatedItems = [...invoiceForm.items];
@@ -397,7 +441,7 @@ const InvoiceManager = ({ darkMode, themeClasses, API_BASE_URL, showNotification
       updatedItems[index] = {
         ...item,
         [field]: parseFloat(value) || 0,
-        amount: quantity * unitPrice // Calculate amount locally
+        amount: quantity * unitPrice
       };
     } else {
       updatedItems[index] = {
@@ -405,12 +449,12 @@ const InvoiceManager = ({ darkMode, themeClasses, API_BASE_URL, showNotification
         [field]: value
       };
     }
-    // The useEffect hook will automatically recalculate totals based on the new items state
     setInvoiceForm(prev => ({
       ...prev,
       items: updatedItems
     }));
   };
+
   // Add new item
   const addItem = () => {
     setInvoiceForm(prev => ({
@@ -418,17 +462,18 @@ const InvoiceManager = ({ darkMode, themeClasses, API_BASE_URL, showNotification
       items: [...prev.items, { description: '', quantity: 1, unitPrice: 0, amount: 0 }]
     }));
   };
+
   // Remove item
   const removeItem = (index) => {
     if (invoiceForm.items.length > 0) {
       const updatedItems = invoiceForm.items.filter((_, i) => i !== index);
-      // The useEffect hook will automatically recalculate totals based on the new items state
       setInvoiceForm(prev => ({
         ...prev,
         items: updatedItems,
       }));
     }
   };
+
   // Mark invoice as paid
   const markAsPaid = async (invoiceId) => {
     try {
@@ -436,18 +481,16 @@ const InvoiceManager = ({ darkMode, themeClasses, API_BASE_URL, showNotification
       if (!token) {
         throw new Error('Authentication session expired. Please log in again.');
       }
-      // Fetch the latest invoice data to get the totalAmount for payment
       const invoiceToPay = invoices.find(inv => inv._id === invoiceId);
       if (!invoiceToPay) {
           throw new Error('Invoice not found in local state.');
       }
       const response = await fetch(`${API_BASE_URL}/api/invoices/${invoiceId}/paid`, {
-        method: 'PATCH', // Using the dedicated 'markInvoiceAsPaid' route from controller
+        method: 'PATCH',
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
         },
-        // Send the full amount due for marking as paid
         body: JSON.stringify({ amount: invoiceToPay.totalAmount || invoiceToPay.planPrice })
       });
       if (response.ok) {
@@ -465,30 +508,31 @@ const InvoiceManager = ({ darkMode, themeClasses, API_BASE_URL, showNotification
       showNotification(`🚨 Error: ${error.message}`, 'error');
     }
   };
-  // Create new invoice
+
+  // Create new invoice - UPDATED WITH PLAN TYPE VALIDATION
   const createInvoice = async () => {
     try {
       const token = localStorage.getItem('token');
       if (!token) {
         throw new Error('Authentication session expired. Please log in again.');
       }
-      // NEW: Client-side validation for required fields including Plan Name
+      // Client-side validation for required fields
       if (!invoiceForm.customerName?.trim() || !invoiceForm.customerEmail?.trim() || !invoiceForm.planName?.trim()) {
         let missingFields = [];
         if (!invoiceForm.customerName?.trim()) missingFields.push('Customer Name');
         if (!invoiceForm.customerEmail?.trim()) missingFields.push('Customer Email');
-        if (!invoiceForm.planName?.trim()) missingFields.push('Plan Name'); // NEW: Check for Plan Name
+        if (!invoiceForm.planName?.trim()) missingFields.push('Plan Name');
         const errorMessage = `⚠️ Missing required fields: ${missingFields.join(', ')}. Please fill them before creating the invoice.`;
         showNotification(errorMessage, 'warning');
-        return; // Stop execution if validation fails
+        return;
       }
-      // Final data preparation, ensuring date objects for backend
+
+      // Final data preparation
       const invoiceData = {
         ...invoiceForm,
-        invoiceNumber: invoiceForm.invoiceNumber || undefined, // Let backend generate if empty
+        invoiceNumber: invoiceForm.invoiceNumber || undefined,
         invoiceDate: new Date(invoiceForm.invoiceDate),
         dueDate: new Date(invoiceForm.dueDate),
-        // Ensure all financial fields are numbers (already done by useEffect, but double-checking)
         planPrice: parseFloat(invoiceForm.planPrice) || 0,
         subtotal: parseFloat(invoiceForm.subtotal) || 0,
         taxRate: parseFloat(invoiceForm.taxRate) || 0,
@@ -498,7 +542,9 @@ const InvoiceManager = ({ darkMode, themeClasses, API_BASE_URL, showNotification
         amountPaid: parseFloat(invoiceForm.amountPaid) || 0,
         balanceDue: parseFloat(invoiceForm.balanceDue) || 0,
       };
+
       console.log('📤 Creating invoice:', invoiceData);
+
       const response = await fetch(`${API_BASE_URL}/api/invoices`, {
         method: 'POST',
         headers: {
@@ -507,6 +553,7 @@ const InvoiceManager = ({ darkMode, themeClasses, API_BASE_URL, showNotification
         },
         body: JSON.stringify(invoiceData)
       });
+
       if (response.ok) {
         const newInvoice = await response.json();
         setInvoices(prev => [...prev, newInvoice.invoice || newInvoice.data || newInvoice]);
@@ -523,23 +570,24 @@ const InvoiceManager = ({ darkMode, themeClasses, API_BASE_URL, showNotification
       showNotification(`🚨 Error: ${error.message}`, 'error');
     }
   };
-  // Update invoice
+
+  // Update invoice - UPDATED WITH PLAN TYPE
   const updateInvoice = async () => {
     try {
       const token = localStorage.getItem('token');
       if (!token) {
         throw new Error('Authentication session expired. Please log in again.');
       }
-      // NEW: Client-side validation for required fields including Plan Name for updates too
       if (!invoiceForm.customerName?.trim() || !invoiceForm.customerEmail?.trim() || !invoiceForm.planName?.trim()) {
         let missingFields = [];
         if (!invoiceForm.customerName?.trim()) missingFields.push('Customer Name');
         if (!invoiceForm.customerEmail?.trim()) missingFields.push('Customer Email');
-        if (!invoiceForm.planName?.trim()) missingFields.push('Plan Name'); // NEW: Check for Plan Name
+        if (!invoiceForm.planName?.trim()) missingFields.push('Plan Name');
         const errorMessage = `⚠️ Missing required fields: ${missingFields.join(', ')}. Please fill them before updating the invoice.`;
         showNotification(errorMessage, 'warning');
-        return; // Stop execution if validation fails
+        return;
       }
+
       const invoiceData = {
         ...invoiceForm,
         invoiceDate: new Date(invoiceForm.invoiceDate),
@@ -553,6 +601,7 @@ const InvoiceManager = ({ darkMode, themeClasses, API_BASE_URL, showNotification
         amountPaid: parseFloat(invoiceForm.amountPaid) || 0,
         balanceDue: parseFloat(invoiceForm.balanceDue) || 0,
       };
+
       const response = await fetch(`${API_BASE_URL}/api/invoices/${editingInvoice._id}`, {
         method: 'PUT',
         headers: {
@@ -561,6 +610,7 @@ const InvoiceManager = ({ darkMode, themeClasses, API_BASE_URL, showNotification
         },
         body: JSON.stringify(invoiceData)
       });
+
       if (response.ok) {
         const updatedInvoice = await response.json();
         setInvoices(prev => prev.map(inv => 
@@ -580,6 +630,7 @@ const InvoiceManager = ({ darkMode, themeClasses, API_BASE_URL, showNotification
       showNotification(`🚨 Error: ${error.message}`, 'error');
     }
   };
+
   // Delete invoice
   const deleteInvoice = async (invoiceId) => {
     if (!window.confirm('Are you sure you want to delete this invoice? This action cannot be undone.')) {
@@ -608,12 +659,11 @@ const InvoiceManager = ({ darkMode, themeClasses, API_BASE_URL, showNotification
       showNotification(`🚨 Error: ${error.message}`, 'error');
     }
   };
-  // Client-side PDF generation using html2pdf.js - **FIXED LAYOUT AND STYLED**
+
+  // Client-side PDF generation using html2pdf.js - UPDATED FOR KNOXVILLE TECHNOLOGIES
   const generateClientSidePDF = (invoice) => {
     return new Promise((resolve, reject) => {
         showNotification('📄 Preparing PDF for sending...', 'info');
-        // --- Dynamic Content Generation for PDF ---
-        // Get the primary item or list all items
         const primaryItem = invoice.items?.[0] || {
             description: invoice.planName ? `${invoice.planName} - ${invoice.planSpeed}` : 'Internet Service', 
             quantity: 1, 
@@ -629,6 +679,7 @@ const InvoiceManager = ({ darkMode, themeClasses, API_BASE_URL, showNotification
             <td style="padding: 8px 12px; text-align: right; font-size: 13px; width: 25%; font-weight: bold;">Ksh ${formatPrice(item.amount)}</td>
           </tr>
         `).join('');
+
         const featureHtml = (invoice.features || WIFI_PLANS.find(p => p.name === invoice.planName)?.features || []).map(feature => `
             <div style="display: inline-flex; align-items: center; gap: 5px; min-width: 200px; margin-bottom: 5px; font-size: 12px;">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#28a745" stroke-width="2" style="flex-shrink: 0;">
@@ -637,18 +688,21 @@ const InvoiceManager = ({ darkMode, themeClasses, API_BASE_URL, showNotification
               <span style="color: #333;">${feature}</span>
             </div>
         `).join('');
+
         const statusColor = invoice.status === 'paid' ? '#28a745' : invoice.status === 'pending' ? '#ffc107' : '#dc3545';
         const totalColor = invoice.balanceDue > 0 ? '#dc3545' : '#28a745';
+
         // Create a temporary hidden container for HTML to be rendered to PDF
         const pdfContainer = document.createElement('div');
         pdfContainer.id = 'pdf-container';
-        pdfContainer.style.width = '210mm'; // A4 width
+        pdfContainer.style.width = '210mm';
         pdfContainer.style.padding = '15px';
         pdfContainer.style.boxSizing = 'border-box';
         pdfContainer.style.backgroundColor = '#ffffff';
         pdfContainer.style.fontFamily = 'Helvetica, Arial, sans-serif';
         pdfContainer.style.fontSize = '12px';
         document.body.appendChild(pdfContainer);
+
         // Populate the container with the enhanced HTML template
         pdfContainer.innerHTML = `
           <div id="pdf-invoice-content" style="margin: 0 auto; padding: 15px; max-width: 100%;">
@@ -682,6 +736,9 @@ const InvoiceManager = ({ darkMode, themeClasses, API_BASE_URL, showNotification
                     <strong>Status:</strong> 
                     <span style="font-weight: bold; color: ${statusColor}; text-transform: uppercase;">${invoice.status || 'DRAFT'}</span>
                 </p>
+                <p style="margin: 2px 0; font-size: 12px;">
+                    <strong>Plan Type:</strong> ${invoice.planType ? invoice.planType.charAt(0).toUpperCase() + invoice.planType.slice(1) : 'Home'}
+                </p>
               </div>
             </div>
             <div style="margin-bottom: 20px; border: 1px solid #ddd; border-radius: 5px; overflow: hidden;">
@@ -701,12 +758,12 @@ const InvoiceManager = ({ darkMode, themeClasses, API_BASE_URL, showNotification
             </div>
             <div style="display: flex; justify-content: space-between; font-size: 12px;">
                 <div style="flex: 1; padding-right: 20px;">
-                    <h3 style="font-size: 13px; font-weight: bold; color: #003366; margin: 0 0 5px 0;">Notes:</h3>
-                    <p style="margin: 0; white-space: pre-wrap; line-height: 1.4;">${invoice.notes || 'N/A'}</p>
-                    <h3 style="font-size: 13px; font-weight: bold; color: #003366; margin: 10px 0 5px 0;">Features:</h3>
+                    <h3 style="font-size: 13px; font-weight: bold; color: #003366; margin: 0 0 5px 0;">Plan Features:</h3>
                     <div style="display: flex; flex-wrap: wrap; gap: 8px;">
                         ${featureHtml}
                     </div>
+                    <h3 style="font-size: 13px; font-weight: bold; color: #003366; margin: 10px 0 5px 0;">Notes:</h3>
+                    <p style="margin: 0; white-space: pre-wrap; line-height: 1.4;">${invoice.notes || 'N/A'}</p>
                 </div>
                 <div style="width: 220px;">
                     <table style="width: 100%; border-collapse: collapse; font-size: 12px;">
@@ -757,88 +814,89 @@ const InvoiceManager = ({ darkMode, themeClasses, API_BASE_URL, showNotification
             </div>
           </div>
         `;
-        // --- PDF Generation using html2pdf.js ---
+
         const opt = {
-          margin: [10, 10, 10, 10], // Slightly reduced margins
+          margin: [10, 10, 10, 10],
           filename: `${invoice.invoiceNumber || 'DRAFT'}-invoice.pdf`,
           image: { type: 'jpeg', quality: 0.98 },
           html2canvas: { 
-            scale: 2, // Reduced scale for better fit
+            scale: 2,
             logging: false, 
             dpi: 192, 
             letterRendering: true, 
-            useCORS: true, // Crucial for loading external images like the logo
-            windowWidth: 800, // Set a specific width to avoid dynamic viewport issues
-            width: 800, // Explicitly set width for canvas
+            useCORS: true,
+            windowWidth: 800,
+            width: 800,
           },
           jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-          enableLinks: false // Disable internal links in PDF for cleaner output
+          enableLinks: false
         };
-        // Use the container element
+
         html2pdf().from(pdfContainer).set(opt).outputPdf('blob').then((blob) => {
           showNotification('✅ PDF generated successfully!', 'success');
-          // Clean up the temporary container
           document.body.removeChild(pdfContainer);
-          resolve(blob); // Resolve the promise with the PDF blob
+          resolve(blob);
         }).catch(err => {
           console.error('PDF generation error:', err);
           showNotification('🚨 Failed to generate PDF', 'error');
-          // Ensure cleanup even on error
           if (document.body.contains(pdfContainer)) {
               document.body.removeChild(pdfContainer);
           }
-          reject(err); // Reject the promise on error
+          reject(err);
         });
     });
   };
-  // Export invoice as PDF - Using client-side generation
+
+  // Export invoice as PDF
   const exportInvoicePDF = async (invoice) => {
     try {
         const pdfBlob = await generateClientSidePDF(invoice);
-        // Create a URL for the blob
         const url = URL.createObjectURL(pdfBlob);
-        // Create a link element
         const a = document.createElement('a');
         a.href = url;
         a.download = `${invoice.invoiceNumber || 'DRAFT'}-invoice.pdf`;
-        // Append to the body, click, and remove
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
-        // Clean up the object URL
         URL.revokeObjectURL(url);
     } catch (error) {
         console.error('Error exporting PDF:', error);
         showNotification('🚨 Failed to download PDF', 'error');
     }
   };
-  // Preview PDF - Same as export, but typically for display only (we'll use the same function for simplicity)
+
+  // Preview PDF
   const previewPDF = (invoice) => {
-    // For a true preview, you'd render the HTML to an iframe/div, not download.
-    // For simplicity, we'll re-use the detail modal for a detailed view, 
-    // and rely on the Export/Download buttons to trigger the PDF generation.
     setSelectedInvoice(invoice);
     setShowPDFModal(true);
   };
-  // Helper function to generate email body text (as a fallback or summary)
+
+  // Helper function to generate email body text
   const generateEmailBody = (invoice) => {
     const customerName = invoice.customerName || 'Customer';
     const invoiceNumber = invoice.invoiceNumber || 'N/A';
     const amount = formatPrice(invoice.totalAmount);
     const dueDate = invoice.dueDate ? new Date(invoice.dueDate).toLocaleDateString() : 'N/A';
     const totalDue = formatPrice(invoice.balanceDue);
+
     return `Hello ${customerName},
-Your Optimas Fiber invoice is ready. Please find the details below:
+
+Your Knoxville Technologies invoice is ready. Please find the details below:
+
 *Invoice #: ${invoiceNumber}*
 *Total Amount: Ksh ${amount}*
 *Balance Due: Ksh ${totalDue}*
 *Due Date: ${dueDate}*
+
 The full invoice details are attached as a PDF.
+
 Payment via Mobile Money:
 - *Paybill:* ${COMPANY_INFO.paybill}
 - *Account No:* ${invoice.customerPhone || customerName.split(' ')[0]}
-Thank you for choosing Optimas Fiber!`;
+
+Thank you for choosing Knoxville Technologies!`;
   };
+
   // Send invoice to client via Email with PDF attachment
   const sendInvoiceToClient = async (invoice) => {
     try {
@@ -850,25 +908,20 @@ Thank you for choosing Optimas Fiber!`;
       }
       const subject = `Invoice ${invoice.invoiceNumber || 'N/A'} from ${COMPANY_INFO.name}`;
       const body = encodeURIComponent(generateEmailBody(invoice));
-      // Generate the PDF blob
+
       const pdfBlob = await generateClientSidePDF(invoice);
       const pdfUrl = URL.createObjectURL(pdfBlob);
-      // Construct the mailto link with the PDF as an attachment
-      // Note: mailto: links have limitations and may not work perfectly with attachments across all email clients.
-      // The most reliable way is to let the user download the PDF and attach it manually.
-      // For attachment, the user will likely need to download and attach manually.
-      const mailtoLink = `mailto:${customerEmail}?subject=${encodeURIComponent(subject)}&body=${body}`;
-      // Inform the user that the PDF is ready and they need to attach it
+
       showNotification('📄 PDF ready. Please attach the downloaded invoice to your email.', 'info');
-      // Download the PDF first so the user can attach it
+
       const a = document.createElement('a');
       a.href = pdfUrl;
       a.download = `${invoice.invoiceNumber || 'DRAFT'}-invoice.pdf`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
-      // Then open the email client with the body filled
-      window.open(mailtoLink, '_blank');
+
+      window.open(`mailto:${customerEmail}?subject=${encodeURIComponent(subject)}&body=${body}`, '_blank');
     } catch (error) {
       console.error('Error preparing email with PDF:', error);
       showNotification(`🚨 Error: ${error.message}`, 'error');
@@ -876,7 +929,8 @@ Thank you for choosing Optimas Fiber!`;
       setSendingInvoice(null);
     }
   };
-  // Export all invoices to Excel (Updated implementation with fixed regex)
+
+  // Export all invoices to Excel
   const exportInvoicesToExcel = async () => {
     try {
       setExportLoading(true);
@@ -884,24 +938,21 @@ Thank you for choosing Optimas Fiber!`;
       if (!token) {
           throw new Error('Authentication session expired. Please log in again.');
       }
-      // Assuming your backend /api/invoices/export/excel is implemented to return an Excel file
       const response = await fetch(`${API_BASE_URL}/api/invoices/export/excel`, {
-        method: 'GET', // Typically an export endpoint is a GET request
+        method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json' // Backend might expect this, though not always necessary for file downloads
+          'Content-Type': 'application/json'
         }
       });
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.message || `Failed to export Excel: ${response.status} ${response.statusText}`);
       }
-      // Handle the Excel file download
-      const blob = await response.blob(); // Get the response as a binary blob
-      const disposition = response.headers.get('Content-Disposition'); // Try to get filename from header
-      let filename = `invoices-${new Date().toISOString().split('T')[0]}.xlsx`; // Default filename
+      const blob = await response.blob();
+      const disposition = response.headers.get('Content-Disposition');
+      let filename = `invoices-${new Date().toISOString().split('T')[0]}.xlsx`;
       if (disposition && disposition.includes('filename=')) {
-        // Fixed Regex: Properly escaped parentheses and quotes
         const filenameMatch = disposition.match(/filename[^;=\s]*=(([\'\"])((?:.(?!\2|\\|\s))*.)?\2|([^;\s]*))/);
         if (filenameMatch && filenameMatch[3]) {
           filename = filenameMatch[3];
@@ -909,17 +960,13 @@ Thank you for choosing Optimas Fiber!`;
           filename = filenameMatch[5];
         }
       }
-      // Create a temporary URL for the blob
       const url = window.URL.createObjectURL(blob);
-      // Create a temporary link element
       const link = document.createElement('a');
       link.href = url;
-      link.download = filename; // Set the desired filename
-      // Append the link to the body, click it to trigger download, then remove it
+      link.download = filename;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-      // Clean up the temporary URL
       window.URL.revokeObjectURL(url);
       showNotification('✅ Invoices exported to Excel successfully!', 'success');
     } catch (error) {
@@ -929,9 +976,9 @@ Thank you for choosing Optimas Fiber!`;
       setExportLoading(false);
     }
   };
-  // Edit invoice
+
+  // Edit invoice - UPDATED WITH PLAN TYPE
   const editInvoice = (invoice) => {
-    // Populate form with existing invoice data, ensuring dates are in correct format
     setInvoiceForm({
       invoiceNumber: invoice.invoiceNumber || '',
       customerName: invoice.customerName || '',
@@ -941,6 +988,7 @@ Thank you for choosing Optimas Fiber!`;
       planName: invoice.planName || '',
       planPrice: invoice.planPrice || 0,
       planSpeed: invoice.planSpeed || '',
+      planType: invoice.planType || 'home', // NEW: Added plan type
       features: invoice.features || [],
       connectionType: invoice.connectionType || 'Fiber Optic',
       invoiceDate: invoice.invoiceDate ? new Date(invoice.invoiceDate).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
@@ -950,7 +998,7 @@ Thank you for choosing Optimas Fiber!`;
           quantity: parseFloat(item.quantity) || 1,
           unitPrice: parseFloat(item.unitPrice) || 0,
           amount: parseFloat(item.amount) || 0
-      })) : [{ description: `${invoice.planName} - ${invoice.planSpeed}`, quantity: 1, unitPrice: invoice.planPrice, amount: invoice.planPrice }], // Use plan info as default item if none
+      })) : [{ description: `${invoice.planName} - ${invoice.planSpeed}`, quantity: 1, unitPrice: invoice.planPrice, amount: invoice.planPrice }],
       subtotal: invoice.subtotal || 0,
       taxRate: invoice.taxRate || 0,
       taxAmount: invoice.taxAmount || 0,
@@ -969,12 +1017,14 @@ Thank you for choosing Optimas Fiber!`;
     setEditingInvoice(invoice);
     setShowCreateModal(true);
   };
+
   // View invoice details
   const viewInvoice = (invoice) => {
     setSelectedInvoice(invoice);
     setShowInvoiceModal(true);
   };
-  // Filter and search invoices
+
+  // Filter and search invoices - UPDATED WITH PLAN TYPE FILTER
   const filteredInvoices = Array.isArray(invoices) 
     ? invoices.filter(invoice => {
         if (!invoice || typeof invoice !== 'object') return false;
@@ -989,10 +1039,12 @@ Thank you for choosing Optimas Fiber!`;
           (invoice.invoiceNumber?.toLowerCase() || '').includes(lowerSearchTerm) ||
           (invoice.customerEmail?.toLowerCase() || '').includes(lowerSearchTerm) ||
           (invoice.customerPhone?.toLowerCase() || '').includes(lowerSearchTerm) ||
-          (invoice.planName?.toLowerCase() || '').includes(lowerSearchTerm);
+          (invoice.planName?.toLowerCase() || '').includes(lowerSearchTerm) ||
+          (invoice.planType?.toLowerCase() || '').includes(lowerSearchTerm);
         return matchesFilter && matchesSearch;
       })
     : [];
+
   // Calculate stats for charts
   const stats = {
     totalInvoices: invoices.length,
@@ -1005,6 +1057,7 @@ Thank you for choosing Optimas Fiber!`;
     annualRevenue: invoices.filter(inv => inv.billingCycle === 'annually').reduce((sum, inv) => sum + (parseFloat(inv.totalAmount) || parseFloat(inv.planPrice) || 0), 0),
     oneTimeRevenue: invoices.filter(inv => inv.billingCycle === 'one_time').reduce((sum, inv) => sum + (parseFloat(inv.totalAmount) || parseFloat(inv.planPrice) || 0), 0)
   };
+
   // Data for charts
   const statusData = [
     { name: 'Paid', value: stats.paidInvoices, color: '#28a745' },
@@ -1012,13 +1065,15 @@ Thank you for choosing Optimas Fiber!`;
     { name: 'Overdue', value: stats.overdueInvoices, color: '#dc3545' },
     { name: 'Draft/Other', value: stats.totalInvoices - stats.paidInvoices - stats.pendingInvoices - stats.overdueInvoices, color: '#6c757d' }
   ].filter(d => d.value > 0);
+
   const revenueData = [
     { name: 'Monthly', value: stats.monthlyRevenue },
     { name: 'Quarterly', value: stats.quarterlyRevenue },
     { name: 'Annually', value: stats.annualRevenue },
     { name: 'One Time', value: stats.oneTimeRevenue }
   ].filter(d => d.value > 0);
-  // Prepare time series data (e.g., monthly trend)
+
+  // Prepare time series data
   const timeSeriesMap = invoices
     .filter(inv => inv.invoiceDate)
     .reduce((acc, inv) => {
@@ -1027,10 +1082,15 @@ Thank you for choosing Optimas Fiber!`;
       acc[dateKey] = (acc[dateKey] || 0) + amount;
       return acc;
     }, {});
+
   const timeSeriesData = Object.keys(timeSeriesMap).map(date => ({
     date,
     amount: timeSeriesMap[date]
   })).sort((a, b) => new Date(a.date) - new Date(b.date));
+
+  // Filter plans by category
+  const filteredPlans = WIFI_PLANS.filter(plan => plan.type === planCategory);
+
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">
@@ -1038,14 +1098,12 @@ Thank you for choosing Optimas Fiber!`;
       </div>
     );
   }
+
   return (
     <div>
-      {/* NEW: Notifications Container - Positioned above the main content */}
+      {/* Notifications Container */}
       <div className="mb-6">
-        {/* You can render notifications here if the showNotification prop provides them */}
-        {/* For now, we rely on the parent component's notification system, which is typically positioned globally */}
-        {/* The modals below will appear on top of this, so notifications must be handled by a global system or passed down */}
-        {/* If you want to render them directly here, you'd need a local state for notifications */}
+        {/* Global notifications handled by parent */}
       </div>
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
         <div>
@@ -1087,7 +1145,8 @@ Thank you for choosing Optimas Fiber!`;
           </button>
         </div>
       </div>
-      {/* Charts Section - **Enhanced Graphics** */}
+
+      {/* Charts Section */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
         {/* Status Pie Chart */}
         <div className={`${themeClasses.card} p-4 rounded-xl border backdrop-blur-sm`}>
@@ -1156,12 +1215,12 @@ Thank you for choosing Optimas Fiber!`;
                 contentStyle={{ backgroundColor: darkMode ? '#1f2937' : '#fff', border: '1px solid #4b5563', borderRadius: '5px' }}
               />
               <Line type="monotone" dataKey="amount" stroke="#FFCC00" strokeWidth={3} dot={{ stroke: '#003366', strokeWidth: 2, r: 4 }} activeDot={{ r: 8 }} />
-              {/* Optional: Add a reference line for average revenue */}
               <ReferenceLine y={stats.totalRevenue / timeSeriesData.length} stroke="#003366" strokeDasharray="3 3" label={{ position: 'right', value: 'Avg', fill: '#003366', fontSize: 12 }} />
             </LineChart>
           </ResponsiveContainer>
         </div>
       </div>
+
       {/* Filters and Search */}
       <div className={`${themeClasses.card} p-4 mb-6 rounded-xl shadow-sm border backdrop-blur-sm`}>
         <div className="flex flex-col md:flex-row gap-4 items-center">
@@ -1170,7 +1229,7 @@ Thank you for choosing Optimas Fiber!`;
               <Search size={18} className={`absolute left-3 top-1/2 transform -translate-y-1/2 ${darkMode ? 'text-gray-400' : 'text-gray-500'}`} />
               <input
                 type="text"
-                placeholder="Search by customer name, invoice number, email, or phone..."
+                placeholder="Search by customer name, invoice number, email, phone, or plan..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className={`w-full pl-10 pr-4 py-2 border rounded-lg text-sm transition-all duration-200 focus:ring-2 focus:ring-[#003366] focus:border-transparent ${themeClasses.input}`}
@@ -1224,7 +1283,8 @@ Thank you for choosing Optimas Fiber!`;
           </div>
         </div>
       </div>
-      {/* Invoices Table - UPDATED WITH KSH PRICING AND MORE DATA */}
+
+      {/* Invoices Table */}
       <div className={`${themeClasses.card} rounded-xl shadow-lg border backdrop-blur-sm overflow-hidden`}>
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
@@ -1297,7 +1357,7 @@ Thank you for choosing Optimas Fiber!`;
                           {invoice.planName || 'N/A'}
                         </div>
                         <div className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                          {invoice.planSpeed || 'N/A'}
+                          {invoice.planSpeed || 'N/A'} • {invoice.planType ? invoice.planType.charAt(0).toUpperCase() + invoice.planType.slice(1) : 'Home'}
                         </div>
                       </div>
                     </td>
@@ -1368,7 +1428,7 @@ Thank you for choosing Optimas Fiber!`;
                           }`}
                           title="Send to Client (Email)"
                         >
-                          <Send size={16} /> {/* Changed icon to Send */}
+                          <Send size={16} />
                         </button>
                         {invoice.status !== 'paid' && (
                           <button
@@ -1402,7 +1462,8 @@ Thank you for choosing Optimas Fiber!`;
           </table>
         </div>
       </div>
-      {/* Create/Edit Invoice Modal - UPDATED WITH ALL MODEL FIELDS */}
+
+      {/* Create/Edit Invoice Modal - UPDATED WITH PLAN TYPE */}
       {showCreateModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className={`${themeClasses.card} rounded-xl shadow-2xl max-w-6xl w-full max-h-[90vh] overflow-y-auto`}>
@@ -1424,7 +1485,7 @@ Thank you for choosing Optimas Fiber!`;
               </div>
             </div>
             <div className="p-6 space-y-6">
-              {/* NEW: WhatsApp Paste Button */}
+              {/* WhatsApp Paste Button */}
               <div className="flex justify-end">
                 <button
                   onClick={() => setShowPasteModal(true)}
@@ -1473,7 +1534,7 @@ Thank you for choosing Optimas Fiber!`;
                     value={invoiceForm.customerPhone}
                     onChange={handleInputChange}
                     className={`w-full p-3 border rounded-lg text-sm transition-all duration-200 focus:ring-2 focus:ring-[#003366] focus:border-transparent ${themeClasses.input}`}
-                    required // Added required based on model
+                    required
                   />
                 </div>
                 <div>
@@ -1486,7 +1547,7 @@ Thank you for choosing Optimas Fiber!`;
                     value={invoiceForm.customerLocation}
                     onChange={handleInputChange}
                     className={`w-full p-3 border rounded-lg text-sm transition-all duration-200 focus:ring-2 focus:ring-[#003366] focus:border-transparent ${themeClasses.input}`}
-                    required // Added required based on model
+                    required
                   />
                 </div>
                 <div>
@@ -1543,12 +1604,13 @@ Thank you for choosing Optimas Fiber!`;
                   </select>
                 </div>
               </div>
-              {/* Plan Selection */}
+
+              {/* Plan Selection - UPDATED WITH CATEGORY TABS */}
               <h4 className={`font-bold border-b pb-1 pt-4 ${darkMode ? 'text-gray-300 border-gray-700' : 'text-gray-700 border-gray-200'}`}>Internet Plan Selection</h4>
               <div>
                 <div className="flex justify-between items-center mb-4">
                   <span className={`text-sm font-medium ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                      **Selected Plan:** {invoiceForm.planName || 'None'} ({invoiceForm.planSpeed || 'N/A'})
+                      Selected Plan: {invoiceForm.planName || 'None'} ({invoiceForm.planSpeed || 'N/A'}) - {invoiceForm.planType ? invoiceForm.planType.charAt(0).toUpperCase() + invoiceForm.planType.slice(1) : 'Home'}
                   </span>
                   <button
                     type="button"
@@ -1559,8 +1621,8 @@ Thank you for choosing Optimas Fiber!`;
                     Select Plan
                   </button>
                 </div>
-                {/* Note: Plan details are now primarily driven by items below, but we keep this for easy selection */}
               </div>
+
               {/* Invoice Items */}
               <h4 className={`font-bold border-b pb-1 pt-4 ${darkMode ? 'text-gray-300 border-gray-700' : 'text-gray-700 border-gray-200'}`}>Itemized Billing</h4>
               <div>
@@ -1618,7 +1680,7 @@ Thank you for choosing Optimas Fiber!`;
                       </div>
                       <div className="md:col-span-2">
                         <input
-                          type="text" // Change to text to use formatPrice
+                          type="text"
                           placeholder="Amount"
                           value={formatPrice(item.amount)}
                           readOnly
@@ -1639,6 +1701,7 @@ Thank you for choosing Optimas Fiber!`;
                   ))}
                 </div>
               </div>
+
               {/* Financial Summary & Payment */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4 border-t border-gray-200 dark:border-gray-700">
                 <div className="space-y-4">
@@ -1742,6 +1805,7 @@ Thank you for choosing Optimas Fiber!`;
                     </div>
                 </div>
               </div>
+
               {/* Notes and Terms */}
               <h4 className={`font-bold border-b pb-1 pt-4 ${darkMode ? 'text-gray-300 border-gray-700' : 'text-gray-700 border-gray-200'}`}>Notes & Terms</h4>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -1772,6 +1836,7 @@ Thank you for choosing Optimas Fiber!`;
                   ></textarea>
                 </div>
               </div>
+
               <div className="flex justify-end space-x-3 pt-4">
                 <button
                   onClick={() => {
@@ -1794,7 +1859,8 @@ Thank you for choosing Optimas Fiber!`;
           </div>
         </div>
       )}
-      {/* NEW: WhatsApp Paste Modal */}
+
+      {/* WhatsApp Paste Modal */}
       {showPasteModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className={`${themeClasses.card} rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto`}>
@@ -1829,16 +1895,11 @@ Thank you for choosing Optimas Fiber!`;
               </div>
               <div className="text-xs text-gray-500 dark:text-gray-400">
                 <p>Expected format:</p>
-                <p>OPTIMAS FIBER - INTERNET CONNECTION REQUEST</p>
-                <p>CUSTOMER DETAILS:</p>
                 <p>Name: [Customer Name]</p>
                 <p>Phone: [Phone Number]</p>
                 <p>Location: [Location]</p>
                 <p>Email: [Email]</p>
-                <p>SELECTED PLAN:</p>
                 <p>Plan: [Plan Name]</p>
-                <p>Speed: [Speed]</p>
-                <p>Price: Ksh [Amount]/month</p>
               </div>
               <div className="flex justify-end space-x-3">
                 <button
@@ -1862,7 +1923,8 @@ Thank you for choosing Optimas Fiber!`;
           </div>
         </div>
       )}
-      {/* Plan Selection Modal */}
+
+      {/* Plan Selection Modal - UPDATED WITH CATEGORY TABS AND NEW PLANS */}
       {showPlanSelection && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className={`${themeClasses.card} rounded-xl shadow-2xl max-w-6xl w-full max-h-[90vh] overflow-y-auto`}>
@@ -1880,8 +1942,32 @@ Thank you for choosing Optimas Fiber!`;
               </div>
             </div>
             <div className="p-6">
+              {/* Plan Category Tabs */}
+              <div className="flex justify-center mb-6">
+                <div className="inline-flex bg-gray-100 dark:bg-gray-700 p-1 rounded-2xl border border-gray-200 dark:border-gray-600">
+                  {[
+                    { id: "home", label: "Residential Plans", icon: <Building2 className="w-4 h-4 mr-2" /> },
+                    { id: "business", label: "Business Solutions", icon: <Shield className="w-4 h-4 mr-2" /> },
+                    { id: "enterprise", label: "Enterprise", icon: <Wifi className="w-4 h-4 mr-2" /> }
+                  ].map((tab) => (
+                    <button
+                      key={tab.id}
+                      onClick={() => setPlanCategory(tab.id)}
+                      className={`flex items-center px-6 py-3 rounded-xl text-sm font-medium transition-all duration-300 ${
+                        planCategory === tab.id 
+                          ? "bg-white dark:bg-gray-600 text-gray-900 dark:text-gray-100 shadow-md border border-gray-200 dark:border-gray-500" 
+                          : "text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-white/60 dark:hover:bg-gray-600/60"
+                      }`}
+                    >
+                      {tab.icon}
+                      {tab.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              {/* Plans Grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {WIFI_PLANS.map((plan) => (
+                {filteredPlans.map((plan) => (
                   <div
                     key={plan.id}
                     className={`border rounded-xl p-4 cursor-pointer transition-all hover:shadow-lg ${
@@ -1893,15 +1979,22 @@ Thank you for choosing Optimas Fiber!`;
                       <h4 className="font-bold text-gray-900 dark:text-gray-100">{plan.name}</h4>
                       {plan.popular && (
                         <span className="bg-yellow-500 text-yellow-900 text-xs px-2 py-1 rounded-full font-bold">
-                          Popular
+                          ⭐ RECOMMENDED
+                        </span>
+                      )}
+                      {plan.customQuote && (
+                        <span className="bg-purple-500 text-white text-xs px-2 py-1 rounded-full font-bold">
+                          Custom Quote
                         </span>
                       )}
                     </div>
                     <div className="mb-3">
                       <div className="text-2xl font-bold text-[#003366] dark:text-[#FFCC00]">
-                        Ksh {formatPrice(plan.price)}
+                        {plan.customQuote ? 'Custom Quote' : `Ksh ${formatPrice(plan.price)}`}
                       </div>
-                      <div className="text-sm text-gray-600 dark:text-gray-400">per month</div>
+                      <div className="text-sm text-gray-600 dark:text-gray-400">
+                        {plan.customQuote ? 'Contact for pricing' : 'per month'}
+                      </div>
                     </div>
                     <div className="mb-3">
                       <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
@@ -1924,7 +2017,8 @@ Thank you for choosing Optimas Fiber!`;
           </div>
         </div>
       )}
-      {/* Invoice Details Modal - UPDATED WITH REAL-TIME DATA & KSH PRICING */}
+
+      {/* Invoice Details Modal - UPDATED WITH PLAN TYPE */}
       {showInvoiceModal && selectedInvoice && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className={`${themeClasses.card} rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto`}>
@@ -1959,6 +2053,7 @@ Thank you for choosing Optimas Fiber!`;
                                             selectedInvoice.createdAt ? new Date(selectedInvoice.createdAt).toLocaleDateString() : 'N/A'}<br/>
                     <strong>Due Date:</strong> {selectedInvoice.dueDate ? new Date(selectedInvoice.dueDate).toLocaleDateString() : 'N/A'}<br/>
                     <strong>Plan:</strong> {selectedInvoice.planName || 'N/A'} • {selectedInvoice.planSpeed || 'N/A'}<br/>
+                    <strong>Type:</strong> {selectedInvoice.planType ? selectedInvoice.planType.charAt(0).toUpperCase() + selectedInvoice.planType.slice(1) : 'Home'}<br/>
                     <strong>Status:</strong> <span className={`font-semibold ${
                       selectedInvoice.status === 'paid' ? 'text-green-600' : 
                       selectedInvoice.status === 'pending' || selectedInvoice.status === 'partially_paid' ? 'text-yellow-600' : 
@@ -2042,7 +2137,7 @@ Thank you for choosing Optimas Fiber!`;
                     sendingInvoice === selectedInvoice._id ? 'opacity-50 cursor-not-allowed' : ''
                   }`}
                 >
-                  <Send size={16} className="mr-1.5" /> {/* Changed icon to Send */}
+                  <Send size={16} className="mr-1.5" />
                   {sendingInvoice === selectedInvoice._id ? 'Sending...' : 'Send to Client'}
                 </button>
                 {selectedInvoice.status !== 'paid' && (
@@ -2062,7 +2157,8 @@ Thank you for choosing Optimas Fiber!`;
           </div>
         </div>
       )}
-      {/* PDF Preview Modal - Uses the same logic as the new PDF generation for display consistency */}
+
+      {/* PDF Preview Modal - UPDATED FOR KNOXVILLE TECHNOLOGIES */}
       {showPDFModal && selectedInvoice && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className={`${themeClasses.card} rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto`}>
@@ -2086,11 +2182,8 @@ Thank you for choosing Optimas Fiber!`;
                     </button>
                 </div>
             </div>
-            {/* The actual HTML structure from generateClientSidePDF is rendered here for visual consistency */}
             <div className="p-6">
                 <div className={`border-2 border-dashed rounded-lg p-8 ${darkMode ? 'border-gray-600 bg-gray-900' : 'border-gray-300 bg-white'}`}>
-                    {/* Render the core PDF content using the improved structure for preview */}
-                    {/* This is a simplified preview block, the true rendering happens in html2pdf on download */}
                     <div style={{ fontFamily: 'Helvetica Neue, Arial, sans-serif', color: darkMode ? '#f3f4f6' : '#333' }}>
                         <div className="flex justify-between items-start border-b border-gray-300 dark:border-gray-700 pb-3 mb-4">
                             <div>
@@ -2098,7 +2191,6 @@ Thank you for choosing Optimas Fiber!`;
                                 <p className="text-xs text-gray-500">{COMPANY_INFO.tagline}</p>
                             </div>
                             <div className="text-right">
-                                <img src="${COMPANY_INFO.logoUrl}" alt="Company Logo" style="max-height: 50px; max-width: 90px; object-fit: contain; margin-bottom: 5px;" />
                                 <h2 className="text-4xl font-extrabold text-[#FFCC00] dark:text-gray-100">INVOICE</h2>
                                 <p className="text-lg font-bold text-[#003366] dark:text-gray-300"># {selectedInvoice.invoiceNumber || 'DRAFT'}</p>
                             </div>
@@ -2113,6 +2205,7 @@ Thank you for choosing Optimas Fiber!`;
                             <div className="text-right">
                                 <p><strong>Date:</strong> {selectedInvoice.invoiceDate ? new Date(selectedInvoice.invoiceDate).toLocaleDateString() : 'N/A'}</p>
                                 <p><strong>Due:</strong> {selectedInvoice.dueDate ? new Date(selectedInvoice.dueDate).toLocaleDateString() : 'N/A'}</p>
+                                <p><strong>Type:</strong> {selectedInvoice.planType ? selectedInvoice.planType.charAt(0).toUpperCase() + selectedInvoice.planType.slice(1) : 'Home'}</p>
                                 <p><strong>Status:</strong> <span className={`font-bold ${selectedInvoice.status === 'paid' ? 'text-green-500' : selectedInvoice.status === 'overdue' ? 'text-red-500' : 'text-yellow-500'}`}>{selectedInvoice.status?.toUpperCase()}</span></p>
                             </div>
                         </div>

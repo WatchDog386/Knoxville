@@ -1,4 +1,4 @@
-// src/models/Invoice.js - FULLY UPDATED (Hardened & Fixed, pre-save-safe invoiceNumber)
+// src/models/Invoice.js - UPDATED TO MATCH YOUR WIFI PLANS
 import mongoose from 'mongoose';
 
 const itemSchema = new mongoose.Schema({
@@ -28,7 +28,7 @@ const invoiceSchema = new mongoose.Schema({
   // Invoice Number - fix applied
   invoiceNumber: {
     type: String,
-    required: false,     // allow pre-save hook to generate
+    required: false,
     default: null,
     unique: true,
     index: true,
@@ -61,12 +61,25 @@ const invoiceSchema = new mongoose.Schema({
     maxlength: [200, 'Location cannot exceed 200 characters']
   },
 
-  // Plan Information
+  // Plan Information - UPDATED TO MATCH YOUR WIFI PLANS
   planName: {
     type: String,
     required: [true, 'Plan name is required'],
     trim: true,
-    enum: ['Jumbo', 'Buffalo', 'Ndovu', 'Gazzelle', 'Tiger', 'Chui', 'Custom']
+    enum: [
+      // Home Plans
+      'Essential Fiber',
+      'Streamer Plan', 
+      'Family Premium',
+      'Smart Home Pro',
+      'Gaming Elite',
+      'Ultra Performance',
+      // Business Plans
+      'Business Starter',
+      'Business Plus',
+      'Enterprise Solution',
+      'Custom'
+    ]
   },
   planPrice: {
     type: Number,
@@ -77,7 +90,18 @@ const invoiceSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Plan speed is required'],
     trim: true,
-    enum: ['8Mbps', '15Mbps', '25Mbps', '30Mbps', '40Mbps', '60Mbps', '100Mbps', 'Custom']
+    enum: [
+      '6Mbps', '10Mbps', '15Mbps', '20Mbps', '25Mbps', '30Mbps', 
+      '50Mbps', '100Mbps', '500Mbps+', 'Custom'
+    ]
+  },
+
+  // Plan Type
+  planType: {
+    type: String,
+    required: true,
+    enum: ['home', 'business', 'enterprise'],
+    default: 'home'
   },
 
   // Itemized billing
@@ -90,6 +114,7 @@ const invoiceSchema = new mongoose.Schema({
     type: String,
     trim: true
   }],
+  
   connectionType: {
     type: String,
     default: 'Fiber Optic',
@@ -126,17 +151,34 @@ const invoiceSchema = new mongoose.Schema({
 
   // Financials
   subtotal: { type: Number, default: 0 },
-  taxRate: { type: Number, default: 0, min: [0, 'Tax rate cannot be negative'], max: [100, 'Tax rate cannot exceed 100%'] },
+  taxRate: { 
+    type: Number, 
+    default: 0, 
+    min: [0, 'Tax rate cannot be negative'], 
+    max: [100, 'Tax rate cannot exceed 100%'] 
+  },
   taxAmount: { type: Number, default: 0 },
   discount: { type: Number, default: 0 },
-  discountType: { type: String, enum: ['percentage', 'fixed', 'none'], default: 'none' },
+  discountType: { 
+    type: String, 
+    enum: ['percentage', 'fixed', 'none'], 
+    default: 'none' 
+  },
   totalAmount: { type: Number, default: 0 },
   amountPaid: { type: Number, default: 0 },
   balanceDue: { type: Number, default: 0 },
 
   // Notes & terms
-  notes: { type: String, default: '', maxlength: [1000, 'Notes cannot exceed 1000 characters'] },
-  terms: { type: String, default: 'Payment due within 30 days. Late payments subject to fees.', maxlength: [500, 'Terms cannot exceed 500 characters'] },
+  notes: { 
+    type: String, 
+    default: '', 
+    maxlength: [1000, 'Notes cannot exceed 1000 characters'] 
+  },
+  terms: { 
+    type: String, 
+    default: 'Payment due within 30 days. Late payments subject to fees.', 
+    maxlength: [500, 'Terms cannot exceed 500 characters'] 
+  },
 
   // Payment tracking
   paidAt: { type: Date },
@@ -163,13 +205,20 @@ const invoiceSchema = new mongoose.Schema({
   installationDate: { type: Date },
 
   // Billing cycle
-  billingCycle: { type: String, enum: ['monthly', 'quarterly', 'annually', 'one_time'], default: 'monthly' },
+  billingCycle: { 
+    type: String, 
+    enum: ['monthly', 'quarterly', 'annually', 'one_time'], 
+    default: 'monthly' 
+  },
   nextBillingDate: { type: Date },
 
   // Email tracking
   sentToCustomer: { type: Boolean, default: false },
   lastSentAt: { type: Date },
   sendCount: { type: Number, default: 0 },
+
+  // Popular plan flag
+  isPopularPlan: { type: Boolean, default: false },
 
   // Audit
   createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
@@ -204,6 +253,7 @@ invoiceSchema.pre('validate', function(next) {
 // ====== Pre-save: invoice number generation + business rules ======
 invoiceSchema.pre('save', async function(next) {
   try {
+    // Generate invoice number if new and doesn't have one
     if (this.isNew && (!this.invoiceNumber || this.invoiceNumber.trim() === '')) {
       const lastInvoice = await this.constructor.findOne({}, {}, { sort: { createdAt: -1 } });
       let nextNumber = 1;
@@ -214,6 +264,7 @@ invoiceSchema.pre('save', async function(next) {
       this.invoiceNumber = `INV-${nextNumber.toString().padStart(4, '0')}`;
     }
 
+    // Ensure items have proper amounts
     if (Array.isArray(this.items)) {
       this.items = this.items.map(item => {
         const qty = Number(item.quantity || 1);
@@ -223,25 +274,34 @@ invoiceSchema.pre('save', async function(next) {
       });
     }
 
+    // Calculate totals
     this.calculateTotals();
 
+    // Check for overdue invoices
     if ((this.status === 'pending' || this.status === 'partially_paid') && this.dueDate && this.dueDate < new Date()) {
       this.status = 'overdue';
     }
 
+    // Set paidAt when status changes to paid
     if (this.isModified('status') && this.status === 'paid' && !this.paidAt) {
       this.paidAt = new Date();
     }
 
+    // Calculate balance due
     this.balanceDue = Math.max(0, (Number(this.totalAmount) || 0) - (Number(this.amountPaid) || 0));
 
+    // Update status based on payments
     if ((Number(this.amountPaid) || 0) > 0) {
-      if (Number(this.amountPaid) >= Number(this.totalAmount)) this.status = 'paid';
-      else this.status = 'partially_paid';
+      if (Number(this.amountPaid) >= Number(this.totalAmount)) {
+        this.status = 'paid';
+      } else {
+        this.status = 'partially_paid';
+      }
     }
 
     next();
   } catch (error) {
+    // Fallback invoice number generation
     if (this.isNew && (!this.invoiceNumber || this.invoiceNumber.trim() === '')) {
       this.invoiceNumber = `INV-${Date.now().toString().slice(-6)}`;
     }
@@ -259,20 +319,29 @@ invoiceSchema.methods.calculateTotals = function() {
         }, 0)
       : 0;
 
+    // Use items subtotal if available, otherwise use plan price
     this.subtotal = itemsSubtotal > 0 ? itemsSubtotal : (Number(this.planPrice) || 0);
 
+    // Calculate tax
     const rate = Number(this.taxRate) || 0;
     this.taxAmount = (Number(this.subtotal) * rate) / 100;
 
+    // Calculate discount
     let discountAmount = 0;
-    if (this.discountType === 'percentage') discountAmount = (Number(this.subtotal) * (Number(this.discount) || 0)) / 100;
-    else if (this.discountType === 'fixed') discountAmount = Number(this.discount) || 0;
+    if (this.discountType === 'percentage') {
+      discountAmount = (Number(this.subtotal) * (Number(this.discount) || 0)) / 100;
+    } else if (this.discountType === 'fixed') {
+      discountAmount = Number(this.discount) || 0;
+    }
 
+    // Calculate total amount
     this.totalAmount = Number(this.subtotal) + Number(this.taxAmount) - Number(discountAmount || 0);
     if (isNaN(this.totalAmount) || this.totalAmount < 0) this.totalAmount = 0;
 
+    // Calculate balance due
     this.balanceDue = Math.max(0, Number(this.totalAmount) - (Number(this.amountPaid) || 0));
   } catch (err) {
+    // Fallback calculations
     this.subtotal = this.subtotal || 0;
     this.taxAmount = this.taxAmount || 0;
     this.totalAmount = this.totalAmount || 0;
@@ -281,8 +350,6 @@ invoiceSchema.methods.calculateTotals = function() {
 };
 
 // ====== Statics & Instance Methods ======
-// (unchanged from your previous version)
-
 invoiceSchema.statics.findByCustomerAndPlan = function(customerEmail, planName) {
   return this.findOne({
     customerEmail: (customerEmail || '').toLowerCase().trim(),
@@ -292,7 +359,9 @@ invoiceSchema.statics.findByCustomerAndPlan = function(customerEmail, planName) 
 };
 
 invoiceSchema.statics.findByCustomer = function(customerEmail) {
-  return this.find({ customerEmail: (customerEmail || '').toLowerCase().trim() }).sort({ createdAt: -1 });
+  return this.find({ 
+    customerEmail: (customerEmail || '').toLowerCase().trim() 
+  }).sort({ createdAt: -1 });
 };
 
 invoiceSchema.statics.getNextInvoiceNumber = async function() {
@@ -311,21 +380,29 @@ invoiceSchema.statics.getNextInvoiceNumber = async function() {
 
 invoiceSchema.statics.searchInvoices = function(searchTerm, filters = {}) {
   const searchQuery = {};
-  if (searchTerm) searchQuery.$or = [
-    { invoiceNumber: { $regex: searchTerm, $options: 'i' } },
-    { customerName: { $regex: searchTerm, $options: 'i' } },
-    { customerEmail: { $regex: searchTerm, $options: 'i' } },
-    { customerPhone: { $regex: searchTerm, $options: 'i' } },
-    { customerLocation: { $regex: searchTerm, $options: 'i' } }
-  ];
+  
+  if (searchTerm) {
+    searchQuery.$or = [
+      { invoiceNumber: { $regex: searchTerm, $options: 'i' } },
+      { customerName: { $regex: searchTerm, $options: 'i' } },
+      { customerEmail: { $regex: searchTerm, $options: 'i' } },
+      { customerPhone: { $regex: searchTerm, $options: 'i' } },
+      { customerLocation: { $regex: searchTerm, $options: 'i' } },
+      { planName: { $regex: searchTerm, $options: 'i' } }
+    ];
+  }
+  
   if (filters.status) searchQuery.status = filters.status;
   if (filters.paymentMethod) searchQuery.paymentMethod = filters.paymentMethod;
   if (filters.planName) searchQuery.planName = filters.planName;
+  if (filters.planType) searchQuery.planType = filters.planType;
+  
   if (filters.startDate || filters.endDate) {
     searchQuery.invoiceDate = {};
     if (filters.startDate) searchQuery.invoiceDate.$gte = new Date(filters.startDate);
     if (filters.endDate) searchQuery.invoiceDate.$lte = new Date(filters.endDate);
   }
+  
   return this.find(searchQuery).sort({ createdAt: -1 });
 };
 
@@ -341,24 +418,104 @@ invoiceSchema.statics.getStatistics = async function() {
         avgInvoiceValue: { $avg: '$totalAmount' }
       }
     },
-    { $project: { _id: 0, totalInvoices: 1, totalRevenue: 1, totalPaid: 1, totalBalance: 1, avgInvoiceValue: 1 } }
+    { 
+      $project: { 
+        _id: 0, 
+        totalInvoices: 1, 
+        totalRevenue: 1, 
+        totalPaid: 1, 
+        totalBalance: 1, 
+        avgInvoiceValue: 1 
+      } 
+    }
   ]);
-  const statusStats = await this.aggregate([{ $group: { _id: '$status', count: { $sum: 1 }, totalAmount: { $sum: '$totalAmount' } } }]);
+
+  const statusStats = await this.aggregate([
+    { 
+      $group: { 
+        _id: '$status', 
+        count: { $sum: 1 }, 
+        totalAmount: { $sum: '$totalAmount' } 
+      } 
+    }
+  ]);
+
+  const planTypeStats = await this.aggregate([
+    {
+      $group: {
+        _id: '$planType',
+        count: { $sum: 1 },
+        totalRevenue: { $sum: '$totalAmount' }
+      }
+    }
+  ]);
+
   const monthlyStats = await this.aggregate([
-    { $group: { _id: { year: { $year: '$invoiceDate' }, month: { $month: '$invoiceDate' } }, count: { $sum: 1 }, revenue: { $sum: '$totalAmount' } } },
+    { 
+      $group: { 
+        _id: { 
+          year: { $year: '$invoiceDate' }, 
+          month: { $month: '$invoiceDate' } 
+        }, 
+        count: { $sum: 1 }, 
+        revenue: { $sum: '$totalAmount' } 
+      } 
+    },
     { $sort: { '_id.year': -1, '_id.month': -1 } },
     { $limit: 12 }
   ]);
+
   return {
-    overview: stats[0] || { totalInvoices: 0, totalRevenue: 0, totalPaid: 0, totalBalance: 0, avgInvoiceValue: 0 },
+    overview: stats[0] || { 
+      totalInvoices: 0, 
+      totalRevenue: 0, 
+      totalPaid: 0, 
+      totalBalance: 0, 
+      avgInvoiceValue: 0 
+    },
     byStatus: statusStats,
+    byPlanType: planTypeStats,
     monthly: monthlyStats
   };
 };
 
-// Virtuals & serialization remain identical as before
-// Indexes remain identical
+// Virtual for isOverdue
+invoiceSchema.virtual('isOverdue').get(function() {
+  return this.status === 'pending' && this.dueDate < new Date();
+});
 
-console.log('✅ Invoice model compiled successfully - Hardened, pre-save-safe invoiceNumber');
+// Virtual for daysOverdue
+invoiceSchema.virtual('daysOverdue').get(function() {
+  if (this.status !== 'pending' || !this.dueDate || this.dueDate >= new Date()) {
+    return 0;
+  }
+  const today = new Date();
+  const due = new Date(this.dueDate);
+  const diffTime = today - due;
+  return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+});
+
+// To JSON transform
+invoiceSchema.set('toJSON', {
+  virtuals: true,
+  transform: function(doc, ret) {
+    ret.id = ret._id;
+    delete ret._id;
+    delete ret.__v;
+    return ret;
+  }
+});
+
+// Indexes for better performance
+invoiceSchema.index({ invoiceNumber: 1 });
+invoiceSchema.index({ customerEmail: 1 });
+invoiceSchema.index({ status: 1 });
+invoiceSchema.index({ planType: 1 });
+invoiceSchema.index({ invoiceDate: -1 });
+invoiceSchema.index({ customerEmail: 1, planName: 1 });
+invoiceSchema.index({ dueDate: 1 });
+invoiceSchema.index({ createdAt: -1 });
+
+console.log('✅ Invoice model compiled successfully - Updated to match WiFi plans');
 
 export default mongoose.model('Invoice', invoiceSchema);
