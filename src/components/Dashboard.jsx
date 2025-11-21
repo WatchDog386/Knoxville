@@ -1,4 +1,4 @@
-// Dashboard.jsx - FULLY UPDATED WITH RESPONSIVE DESIGN, MODERN ANALYTICS, AND CENTRALIZED NOTIFICATIONS
+// Dashboard.jsx - UPDATED WITH WHITE BACKGROUND AND REFINED DESIGN
 import React, { useState, useEffect, useRef } from 'react';
 import {
   BarChart3, FileText, Image, LogOut, Plus, Edit, Trash2, Upload, Save, X, Menu, User, Settings, Search, Moon, Sun, Link, Download, Eye, Globe, AlertCircle, CheckCircle, Info, RefreshCw, Database, Server, Shield, Activity, HardDrive, Clock, Zap, TrendingUp, Users, Mail, MessageCircle, DollarSign, Calendar, Filter, CreditCard, Receipt, FileSpreadsheet, Printer, Loader
@@ -86,8 +86,8 @@ const Dashboard = () => {
     imageUrl: ''
   });
   const [settingsData, setSettingsData] = useState({
-    siteTitle: 'Optimas Home Fiber',
-    adminEmail: 'admin@optimas.com',
+    siteTitle: 'Knoxville Home Fiber',
+    adminEmail: 'admin@knoxville.com',
     notifications: true,
     autoSave: false,
     language: 'en'
@@ -167,7 +167,7 @@ const Dashboard = () => {
   };
   const toggleDarkMode = () => setDarkMode(!darkMode);
   const themeClasses = {
-    background: darkMode ? 'bg-gray-900' : 'bg-gray-50',
+    background: darkMode ? 'bg-gray-900' : 'bg-white',
     text: darkMode ? 'text-gray-100' : 'text-gray-800',
     card: darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200',
     input: darkMode
@@ -944,7 +944,7 @@ const CalendarPlaceholder = ({ darkMode, themeClasses }) => {
                     <span className="font-bold mr-1">Nov 18:</span> Project Alpha Deadline
                 </p>
                 <p className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                    <span className="font-bold mr-1">Nov 25:</span> Client Meeting (Optimas)
+                    <span className="font-bold mr-1">Nov 25:</span> Client Meeting (Knoxville)
                 </p>
             </div>
         </div>
