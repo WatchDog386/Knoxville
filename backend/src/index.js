@@ -48,25 +48,44 @@ const app = express();
 const PORT = process.env.PORT || 1000;
 const NODE_ENV = process.env.NODE_ENV || 'development';
 
-// ⭐ FIXED CORS — Dynamic origin instead of "*"
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      callback(null, true); // allow ALL origins properly
-    },
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: [
-      'Origin',
-      'X-Requested-With',
-      'Content-Type',
-      'Accept',
-      'Authorization',
-      'X-API-Key'
-    ],
-    exposedHeaders: ['Content-Disposition']
-  })
-);
+// ⭐ FIXED CORS — Proper origin validation for your domain
+const corsOptions = {
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin && NODE_ENV === 'production') return callback(null, true);
+    
+    // In development, allow localhost
+    if (NODE_ENV !== 'production') {
+      return callback(null, true);
+    }
+    
+    // In production, only allow your specific frontend domain
+    const allowedOrigins = [
+      'https://knoxvilletechnologies.com',
+      FRONTEND_URL
+    ];
+    
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      console.log('❌ Blocked by CORS:', origin);
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: [
+    'Origin',
+    'X-Requested-With',
+    'Content-Type',
+    'Accept',
+    'Authorization',
+    'X-API-Key'
+  ],
+  exposedHeaders: ['Content-Disposition']
+};
+
+app.use(cors(corsOptions));
 
 // ⭐ Helmet Security
 app.use(
@@ -78,7 +97,7 @@ app.use(
         fontSrc: ["'self'", "https:", "data:"],
         imgSrc: ["'self'", "data:", "https:", "blob:", "https://res.cloudinary.com"],
         scriptSrc: ["'self'", "'unsafe-inline'", "https:"],
-        connectSrc: ["*"],
+        connectSrc: ["'self'", "https://knoxvilletechnologies.com", "https://knoxville-rp7g.onrender.com"],
       }
     },
     crossOriginEmbedderPolicy: false,
@@ -167,11 +186,20 @@ app.use((req, res) => {
 // Error handler
 app.use((err, req, res, next) => {
   console.error('❌ Global error:', err);
-  res.status(err.statusCode || 500).json({
-    success: false,
-    message: err.message || 'Internal Server Error',
-    ...(NODE_ENV === 'development' && { stack: err.stack })
-  });
+  // If it's a CORS error, send a more specific message
+  if (err.message.includes('CORS')) {
+    res.status(403).json({
+      success: false,
+      message: 'CORS error: Request origin not allowed',
+      error: err.message
+    });
+  } else {
+    res.status(err.statusCode || 500).json({
+      success: false,
+      message: err.message || 'Internal Server Error',
+      ...(NODE_ENV === 'development' && { stack: err.stack })
+    });
+  }
 });
 
 // Graceful shutdown
