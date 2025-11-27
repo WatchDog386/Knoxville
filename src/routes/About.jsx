@@ -10,7 +10,6 @@ import {
   Zap, 
   ChevronRight, 
   CheckCircle2,
-  TrendingUp,
   Globe
 } from "lucide-react";
 
@@ -23,7 +22,6 @@ const BRAND = {
   slate: "#f1f5f9"
 };
 
-// Font stack
 const FONT_FAMILY = `'Proxima Nova', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif`;
 
 const values = [
@@ -76,13 +74,21 @@ export default function AboutPage() {
 
       {/* ================= HERO SECTION ================= */}
       <section className="relative h-[60vh] min-h-[500px] flex items-center justify-center overflow-hidden">
-        {/* Background Image */}
+        
+        {/* VIDEO 1: Tech.mp4 (Background) */}
+        {/* Muted by default for autoplay */}
         <div className="absolute inset-0 z-0">
-          <img 
-            src="/about.jpg" 
-            alt="Knoxville Team Meeting" 
+          <video 
+            autoPlay 
+            muted 
+            loop 
+            playsInline
             className="w-full h-full object-cover"
-          />
+            poster="/images/about.jpg" 
+          >
+            <source src="/tech.mp4" type="video/mp4" />
+          </video>
+          
           {/* Gradient Overlay for text readability */}
           <div className="absolute inset-0 bg-gradient-to-r from-slate-900/95 via-slate-900/80 to-slate-900/60"></div>
         </div>
@@ -108,7 +114,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* ================= CORPORATE BIO (Redesigned for Readability) ================= */}
+      {/* ================= CORPORATE BIO ================= */}
       <section className="py-20 bg-slate-50 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
@@ -130,6 +136,12 @@ export default function AboutPage() {
                 <p>
                   Founded by a team of telecommunication experts, we deploy high-capacity fiber-optic infrastructure to bridge the digital divide. We believe that reliable internet is not a luxury—it is a fundamental utility that enables education, innovation, and economic growth.
                 </p>
+                
+                
+
+[Image of fiber optic network architecture diagram]
+
+
                 <p>
                   From the heart of Nairobi to peri-urban communities, we are committed to empowering homes and businesses with seamless access to information. We don't just provide a connection; we provide a partnership.
                 </p>
@@ -151,7 +163,7 @@ export default function AboutPage() {
               </div>
             </motion.div>
 
-            {/* Right: Visual/Image */}
+            {/* Right: Visual/Video */}
             <motion.div 
               initial={{ opacity: 0, x: 50 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -160,11 +172,19 @@ export default function AboutPage() {
               className="relative"
             >
               <div className="absolute top-0 right-0 w-2/3 h-full bg-[#015B97]/5 rounded-3xl -z-10 transform translate-x-8 -translate-y-8"></div>
-              <img 
-                src="/job.jpg"
-                alt="Knoxville Engineers"
-                className="rounded-2xl shadow-2xl w-full object-cover h-[500px]"
-              />
+              
+              {/* VIDEO 2: Tech2.mp4 (Explainer/Demo) */}
+              {/* Added 'muted' here as requested */}
+              <video 
+                controls
+                muted 
+                className="rounded-2xl shadow-2xl w-full object-cover h-[500px] bg-slate-900"
+                poster="/images/job.jpg" 
+              >
+                <source src="/tech2.mp4" type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+
               {/* Floating Card */}
               <div className="absolute bottom-8 left-[-20px] bg-white p-6 rounded-xl shadow-xl border-l-4 border-[#fb8c00] max-w-xs hidden md:block">
                 <p className="text-slate-900 font-bold text-lg">Community First</p>

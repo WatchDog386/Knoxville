@@ -1,17 +1,12 @@
-// backend/createAdmin.mjs - MANUAL HASHING VERSION
-
 import mongoose from "mongoose";
 import "dotenv/config";
-import User from "./src/models/User.js";
 import bcrypt from "bcryptjs";
+import User from "./src/models/User.js";
 
 const createAdmins = async () => {
   try {
     const uri = process.env.MONGODB_URI;
-
-    if (!uri) {
-      throw new Error("❌ MONGODB_URI missing in .env");
-    }
+    if (!uri) throw new Error("❌ MONGODB_URI missing in .env");
 
     console.log("⏳ Connecting to MongoDB...");
     await mongoose.connect(uri);
@@ -19,7 +14,7 @@ const createAdmins = async () => {
 
     const admins = [
       { email: "fanteskorri36@gmail.com", password: "fantes36" },
-      { email: "knoxvilletechnologyltd@gmail.com", password: "KnoxJanelleTemi001" },
+      { email: "knoxvilletechnologyltd@gmail.com", password: "KnoxJanelleTemi001" }
     ];
 
     for (const admin of admins) {
@@ -27,21 +22,33 @@ const createAdmins = async () => {
 
       let user = await User.findOne({ email: admin.email }).select("+password");
 
-      // MANUAL HASHING - Bypass the pre-save hook entirely
-      const hashedPassword = await bcrypt.hash(admin.password, 12);
-
       if (user) {
-        console.log("🔄 Existing user found. Updating...");
-        // Directly set the hashed password
-        user.password = hashedPassword;
-        user.role = "admin";
-        await user.save({ validateBeforeSave: false }); // Skip validation since we manually hashed
+        console.log("🔄 Existing user found.");
+
+        // Check if the password needs updating
+        const passwordMatches = await bcrypt.compare(admin.password, user.password);
+        if (!passwordMatches) {
+          const hashedPassword = await bcrypt.hash(admin.password, 12);
+          user.password = hashedPassword; // ✅ update only if changed
+          console.log("🔑 Password updated.");
+        } else {
+          console.log("✅ Password is already up to date.");
+        }
+
+        // Ensure role is admin
+        if (user.role !== "admin") {
+          user.role = "admin";
+          console.log("🎯 Role updated to admin.");
+        }
+
+        await user.save();
         console.log(`✅ Updated admin → ${admin.email}`);
       } else {
         console.log("🆕 Creating new admin...");
+        const hashedPassword = await bcrypt.hash(admin.password, 12);
         const newUser = new User({
           email: admin.email,
-          password: hashedPassword, // Already hashed
+          password: hashedPassword,
           role: "admin",
         });
         await newUser.save();
@@ -50,23 +57,12 @@ const createAdmins = async () => {
     }
 
     console.log("\n🎉 All admin tasks complete.");
-    
-    // Verify the updates
-    console.log("\n🔍 Verifying admin accounts:");
-    for (const admin of admins) {
-      const user = await User.findOne({ email: admin.email }).select("+password");
-      if (user) {
-        const isMatch = await user.comparePassword(admin.password);
-        console.log(`   ${admin.email}: ${isMatch ? '✅ Password works' : '❌ Password mismatch'}`);
-      }
-    }
-    
     await mongoose.connection.close();
     console.log("🔌 Connection closed.");
     process.exit(0);
 
   } catch (error) {
-    console.error("❌ ERROR:", error);
+    console.error("❌ ERROR:", error.message);
     process.exit(1);
   }
 };
