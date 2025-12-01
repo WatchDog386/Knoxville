@@ -10,7 +10,10 @@ import {
   Zap, 
   ChevronRight, 
   CheckCircle2,
-  Globe
+  Globe,
+  Play,
+  Wifi,
+  Server
 } from "lucide-react";
 
 // 🔥 Knoxville Brand Colors
@@ -76,7 +79,6 @@ export default function AboutPage() {
       <section className="relative h-[60vh] min-h-[500px] flex items-center justify-center overflow-hidden">
         
         {/* VIDEO 1: Tech.mp4 (Background) */}
-        {/* Muted by default for autoplay */}
         <div className="absolute inset-0 z-0">
           <video 
             autoPlay 
@@ -84,7 +86,7 @@ export default function AboutPage() {
             loop 
             playsInline
             className="w-full h-full object-cover"
-            poster="/images/about.jpg" 
+            poster="/about.jpg" 
           >
             <source src="/tech.mp4" type="video/mp4" />
           </video>
@@ -136,12 +138,6 @@ export default function AboutPage() {
                 <p>
                   Founded by a team of telecommunication experts, we deploy high-capacity fiber-optic infrastructure to bridge the digital divide. We believe that reliable internet is not a luxury—it is a fundamental utility that enables education, innovation, and economic growth.
                 </p>
-                
-                
-
-[Image of fiber optic network architecture diagram]
-
-
                 <p>
                   From the heart of Nairobi to peri-urban communities, we are committed to empowering homes and businesses with seamless access to information. We don't just provide a connection; we provide a partnership.
                 </p>
@@ -173,13 +169,11 @@ export default function AboutPage() {
             >
               <div className="absolute top-0 right-0 w-2/3 h-full bg-[#015B97]/5 rounded-3xl -z-10 transform translate-x-8 -translate-y-8"></div>
               
-              {/* VIDEO 2: Tech2.mp4 (Explainer/Demo) */}
-              {/* Added 'muted' here as requested */}
               <video 
                 controls
                 muted 
                 className="rounded-2xl shadow-2xl w-full object-cover h-[500px] bg-slate-900"
-                poster="/images/job.jpg" 
+                poster="/about.jpg" 
               >
                 <source src="/tech2.mp4" type="video/mp4" />
                 Your browser does not support the video tag.
@@ -241,6 +235,127 @@ export default function AboutPage() {
                    </li>
                 ))}
               </ul>
+            </motion.div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* ================= NEW PORTFOLIO / DISPLAY SECTION (UPDATED TO WHITE BG) ================= */}
+      <section className="py-24 bg-white text-slate-900 border-t border-slate-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          
+          <div className="flex flex-col md:flex-row justify-between items-end mb-12">
+            <div>
+              <span className="text-[#fb8c00] font-bold tracking-wider uppercase text-sm">Portfolio</span>
+              <h2 className="text-3xl md:text-5xl font-bold mt-2">Impact in <span className="text-[#fb8c00]">Action</span></h2>
+            </div>
+            <p className="text-slate-600 max-w-sm mt-4 md:mt-0">
+              See how our teams are transforming infrastructure and connecting communities across the region.
+            </p>
+          </div>
+
+          {/* BENTO GRID LAYOUT */}
+          <div className="grid grid-cols-1 md:grid-cols-4 grid-rows-2 gap-4 h-auto md:h-[600px]">
+            
+            {/* ITEM 1: MAIN VIDEO (knox.mp4) - Spans 2 cols, 2 rows (Large Box) */}
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              className="md:col-span-2 md:row-span-2 relative rounded-3xl overflow-hidden group bg-slate-800 border border-slate-700"
+            >
+              <div className="absolute top-4 left-4 z-20 bg-black/50 backdrop-blur-md px-3 py-1 rounded-full border border-white/20 flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></div>
+                <span className="text-xs font-semibold text-white">Live Network Ops</span>
+              </div>
+              
+              <video 
+                autoPlay 
+                muted 
+                loop 
+                playsInline
+                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                poster="/knox1.jpg" // Fallback if video loads slow
+              >
+                <source src="/knox.mp4" type="video/mp4" />
+              </video>
+              
+              {/* Overlay Gradient */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-100 transition-opacity duration-300"></div>
+              
+              <div className="absolute bottom-0 left-0 p-8 z-20">
+                <div className="w-12 h-12 rounded-full bg-[#fb8c00] flex items-center justify-center mb-4 text-white">
+                  <Play className="w-5 h-5 ml-1 fill-white" />
+                </div>
+                <h3 className="text-2xl font-bold text-white mb-2">Connecting the Last Mile</h3>
+                <p className="text-slate-300 text-sm max-w-md">
+                  Our field engineers deploying high-capacity fiber lines in challenging terrains to ensure no community is left behind.
+                </p>
+              </div>
+            </motion.div>
+
+            {/* ITEM 2: IMAGE TOP RIGHT (knox1.jpg) - Spans 2 cols, 1 row */}
+            <motion.div 
+              initial={{ opacity: 0, x: 20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+              className="md:col-span-2 relative rounded-3xl overflow-hidden group min-h-[250px] border border-slate-700"
+            >
+              <img 
+                src="/knox1.jpg" 
+                alt="Knoxville Engineering Team" 
+                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+              />
+              <div className="absolute inset-0 bg-[#015B97]/80 opacity-0 group-hover:opacity-90 transition-opacity duration-300 flex flex-col justify-center items-center text-center p-6">
+                 <Server className="w-10 h-10 text-white mb-3" />
+                 <h4 className="text-xl font-bold text-white">Infrastructure Excellence</h4>
+                 <p className="text-white/80 text-sm mt-2">State-of-the-art server maintenance</p>
+              </div>
+            </motion.div>
+
+            {/* ITEM 3: IMAGE BOTTOM RIGHT (knox2.jpg) - Spans 1 col, 1 row */}
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.3 }}
+              className="relative rounded-3xl overflow-hidden group min-h-[250px] border border-slate-700"
+            >
+              <img 
+                src="/knox2.jpg" 
+                alt="Community Connection" 
+                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-end p-6">
+                <div>
+                  <h4 className="font-bold text-white">Field Operations</h4>
+                  <p className="text-xs text-slate-300">Nairobi Region</p>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* ITEM 4: STAT CARD - Spans 1 col, 1 row */}
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.4 }}
+              className="bg-[#015B97] rounded-3xl p-6 flex flex-col justify-between border border-[#ffffff]/10 relative overflow-hidden"
+            >
+              {/* Decorative Circle */}
+              <div className="absolute -right-6 -top-6 w-24 h-24 rounded-full bg-white/10 blur-xl"></div>
+              
+              <div className="bg-white/20 w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-sm">
+                <Wifi className="w-5 h-5 text-white" />
+              </div>
+              
+              <div>
+                <p className="text-blue-200 text-sm font-medium uppercase tracking-wider mb-1">Network Uptime</p>
+                <h3 className="text-4xl font-extrabold text-white">99.9%</h3>
+                <p className="text-xs text-blue-100 mt-2 opacity-80">Consistent reliability for all our clients.</p>
+              </div>
             </motion.div>
 
           </div>
