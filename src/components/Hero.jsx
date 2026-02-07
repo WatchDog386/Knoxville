@@ -226,7 +226,7 @@ const Hero = () => {
     e.preventDefault();
     const whatsappNumber = "254726818938";
     // Format the message to match the expected structure for the invoice system
-    const message = `OPTIMAS FIBER - INTERNET CONNECTION REQUEST%0A%0ACUSTOMER DETAILS:%0AName: ${formData.name}%0APhone: ${formData.phone}%0ALocation: ${formData.location}%0AEmail: ${formData.email}%0A%0ASELECTED PLAN:%0APlan: ${formData.planName}%0ASpeed: ${formData.planSpeed}%0APrice: Ksh ${formData.planPrice}/month`;
+    const message = `KNOXVILLE TECHNOLOGIES LIMITED - INTERNET CONNECTION REQUEST%0A%0ACUSTOMER DETAILS:%0AName: ${formData.name}%0APhone: ${formData.phone}%0ALocation: ${formData.location}%0AEmail: ${formData.email}%0A%0ASELECTED PLAN:%0APlan: ${formData.planName}%0ASpeed: ${formData.planSpeed}%0APrice: Ksh ${formData.planPrice}/month`;
     window.open(`https://wa.me/${whatsappNumber}?text=${message}`, '_blank');
     setShowForm(false);
   };
@@ -298,7 +298,7 @@ const Hero = () => {
                 {heroSlides[currentSlide].tag}
               </span>
               <h1 
-                className="text-4xl md:text-6xl font-bold mb-6 leading-tight drop-shadow-2xl" 
+                className="text-3xl md:text-6xl font-bold mb-6 leading-tight drop-shadow-2xl" 
                 style={{ fontFamily: '"adobe-garamond-pro", "Poppins", sans-serif' }}
                 dangerouslySetInnerHTML={{ __html: heroSlides[currentSlide].title }}
               />
@@ -318,21 +318,21 @@ const Hero = () => {
       </section>
 
       {/* ================= PLANS SECTION ================= */}
-      <section id="plans-section" className="py-20 animate-gradient-bg relative overflow-hidden">
+      <section id="plans-section" className="py-10 md:py-20 animate-gradient-bg relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="text-center max-w-3xl mx-auto mb-12">
+          <div className="text-center max-w-3xl mx-auto mb-8 md:mb-12">
             <motion.h2
               initial={{ y: 20, opacity: 0 }}
               whileInView={{ y: 0, opacity: 1 }}
               viewport={{ once: true }}
-              className="text-4xl font-extrabold mb-4 text-slate-800"
+              className="text-3xl md:text-4xl font-extrabold mb-4 text-slate-800"
             >
               Packages Designed for <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500">You</span>
             </motion.h2>
           </div>
 
           {/* Tabs */}
-          <div className="flex justify-center mb-12">
+          <div className="flex justify-center mb-8 md:mb-12">
             <div className="inline-flex rounded-full bg-white/50 backdrop-blur-md border border-white/50 p-1.5 shadow-lg">
               {[
                 { id: "home", label: "Home Fiber" },
@@ -356,7 +356,7 @@ const Hero = () => {
 
           {/* Cards */}
           <motion.div 
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+            className="flex overflow-x-auto snap-x snap-mandatory pb-6 gap-4 -mx-4 px-4 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-8 md:pb-0 md:mx-0 md:px-0"
             variants={containerVariants}
             initial="hidden"
             whileInView="visible"
@@ -371,14 +371,15 @@ const Hero = () => {
                   key={plan.name}
                   variants={cardVariants}
                   className={`
-                    relative bg-white rounded-[2rem] overflow-hidden flex flex-col h-full group shadow-xl
+                    min-w-[85vw] sm:min-w-[45vw] md:min-w-0 snap-center
+                    relative bg-white rounded-[1.5rem] overflow-hidden flex flex-col h-full group shadow-xl
                     hover:shadow-2xl transition-all duration-500 border-2
                     ${plan.isPopular ? 'border-orange-400 ring-4 ring-orange-100/50' : 'border-white'}
                   `}
-                  whileHover={{ y: -10 }}
+                  whileHover={{ y: -5 }}
                 >
                   {/* IMAGE SECTION */}
-                  <div className="relative h-48 overflow-hidden">
+                  <div className="relative h-40 overflow-hidden">
                       <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10" />
                       <img 
                         src={plan.image} 
@@ -398,32 +399,32 @@ const Hero = () => {
                   </div>
 
                   {/* COLORED HEADER (TEXT CHANGED TO BLACK) */}
-                  <div className={`${theme.bg} p-6 relative overflow-hidden rounded-bl-[3rem] transition-colors duration-300`}>
+                  <div className={`${theme.bg} p-4 relative overflow-hidden rounded-bl-[2.5rem] transition-colors duration-300`}>
                       <div className="absolute -right-6 -top-6 w-24 h-24 bg-white/20 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-500"></div>
                       
                       {/* HEADER TEXT IS NOW BLACK */}
-                      <h3 className="text-sm font-bold uppercase tracking-wider text-black mb-1">{plan.name}</h3>
+                      <h3 className="text-xs font-bold uppercase tracking-wider text-black mb-1">{plan.name}</h3>
                       <div className="flex items-baseline gap-2">
-                          <h2 className="text-4xl font-extrabold tracking-tight text-black">{plan.speed}</h2>
-                          <span className="text-black/80 text-sm font-semibold">Speed</span>
+                          <h2 className="text-3xl font-extrabold tracking-tight text-black">{plan.speed}</h2>
+                          <span className="text-black/80 text-xs font-semibold">Speed</span>
                       </div>
                   </div>
 
                   {/* BODY SECTION */}
-                  <div className="p-6 pt-4 flex flex-col flex-grow bg-white relative">
-                      <div className="mb-6 flex items-end">
-                        <span className={`text-2xl font-bold ${theme.text} group-hover:scale-105 transition-transform origin-left`}>
+                  <div className="p-4 pt-3 flex flex-col flex-grow bg-white relative">
+                      <div className="mb-4 flex items-end">
+                        <span className={`text-xl font-bold ${theme.text} group-hover:scale-105 transition-transform origin-left`}>
                           {plan.price}
                         </span>
-                        <span className="text-slate-400 text-xs font-bold uppercase mb-1 ml-1">/month</span>
+                        <span className="text-slate-400 text-[10px] font-bold uppercase mb-1 ml-1">/month</span>
                       </div>
 
-                      <div className="w-full h-px bg-slate-100 mb-6" />
+                      <div className="w-full h-px bg-slate-100 mb-4" />
 
-                      <ul className="space-y-3 mb-8 flex-grow">
+                      <ul className="space-y-2 mb-4 flex-grow">
                         {plan.features.map((feature, i) => (
-                          <li key={i} className="flex items-start text-sm text-slate-600 font-medium group-hover:text-slate-800 transition-colors">
-                            <CheckCircle className={`w-4 h-4 mr-3 mt-0.5 ${theme.text}`} />
+                          <li key={i} className="flex items-start text-xs text-slate-600 font-medium group-hover:text-slate-800 transition-colors">
+                            <CheckCircle className={`w-3.5 h-3.5 mr-2 mt-0.5 ${theme.text}`} />
                             {/* Allow bolding in features via dangerouslySetInnerHTML if needed, or just text */}
                             <span dangerouslySetInnerHTML={{ __html: feature.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') }} />
                           </li>
@@ -435,11 +436,11 @@ const Hero = () => {
                         whileHover={{ scale: 1.03 }}
                         onClick={() => handlePlanSelect(plan)}
                         className={`
-                          w-full py-3.5 rounded-full font-bold text-sm flex items-center justify-center gap-2 transition-all duration-300 text-white shadow-md
+                          w-full py-2.5 rounded-full font-bold text-xs flex items-center justify-center gap-2 transition-all duration-300 text-white shadow-md
                           ${theme.bg} ${theme.shadow} hover:brightness-110 hover:shadow-lg
                         `}
                       >
-                        Get Connected <ChevronRight className="w-4 h-4" />
+                        Get Connected <ChevronRight className="w-3.5 h-3.5" />
                       </motion.button>
                   </div>
                 </motion.div>

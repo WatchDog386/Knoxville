@@ -1,11 +1,70 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
-import { FaFacebookF, FaTiktok, FaWhatsapp, FaPhoneAlt, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
+import { FaFacebookF, FaTiktok, FaWhatsapp, FaPhoneAlt, FaEnvelope, FaMapMarkerAlt, FaChevronDown } from "react-icons/fa";
 import { MdKeyboardArrowRight } from "react-icons/md";
+import { motion, AnimatePresence } from "framer-motion";
 
 // Brand Colors used:
 // Blue: #015B97
 // Orange: #FF8C00
+
+const AccordionSection = ({ title, children }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  if (!isMobile) {
+    return (
+      <div>
+        <h4 className="text-lg font-bold mb-6 text-white border-b border-blue-400/30 pb-2 inline-block">{title}</h4>
+        <div className="space-y-3">
+            {children}
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="border-b border-blue-400/20 last:border-0">
+      <button 
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-full py-4 flex justify-between items-center text-left focus:outline-none"
+      >
+        <h4 className="text-lg font-bold text-white relative">
+            {title}
+            {isOpen && <span className="absolute -bottom-1 left-0 w-8 h-0.5 bg-[#FF8C00]"></span>}
+        </h4>
+        <motion.span 
+          animate={{ rotate: isOpen ? 180 : 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          <FaChevronDown className={`text-sm ${isOpen ? 'text-[#FF8C00]' : 'text-blue-300'}`} />
+        </motion.span>
+      </button>
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="overflow-hidden"
+          >
+            <div className="pb-6 space-y-3">
+              {children}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+};
 
 export default function Footer() {
   return (
@@ -20,8 +79,8 @@ export default function Footer() {
         }}
       />
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 md:pt-16 pb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-10">
           
           {/* 1. BRAND COLUMN */}
           <div className="space-y-6">
@@ -42,52 +101,49 @@ export default function Footer() {
           </div>
 
           {/* 2. QUICK LINKS */}
-          <div>
-            <h4 className="text-lg font-bold mb-6 text-white border-b border-blue-400/30 pb-2 inline-block">Quick Links</h4>
-            <ul className="space-y-3">
-              <FooterLink to="/" label="Home" />
-              <FooterLink to="/about" label="About Us" />
-              <FooterLink to="/services" label="Services" />
-              <FooterLink to="/coverage" label="Coverage Map" />
-              <FooterLink to="/contact" label="Contact" />
-            </ul>
-          </div>
+          <AccordionSection title="Quick Links">
+              <ul className="space-y-3">
+                <FooterLink to="/" label="Home" />
+                <FooterLink to="/about" label="About Us" />
+                <FooterLink to="/services" label="Services" />
+                <FooterLink to="/coverage" label="Coverage Map" />
+                <FooterLink to="/contact" label="Contact" />
+              </ul>
+          </AccordionSection>
 
           {/* 3. SERVICES */}
-          <div>
-            <h4 className="text-lg font-bold mb-6 text-white border-b border-blue-400/30 pb-2 inline-block">Our Services</h4>
-            <ul className="space-y-3">
-              <ServiceItem label="Home Fiber" />
-              <ServiceItem label="Business Internet" />
-              <ServiceItem label="Enterprise Solutions" />
-              <ServiceItem label="CCTV Installation" />
-            </ul>
-          </div>
+          <AccordionSection title="Our Services">
+              <ul className="space-y-3">
+                <ServiceItem label="Home Fiber" />
+                <ServiceItem label="Business Internet" />
+                <ServiceItem label="Enterprise Solutions" />
+                <ServiceItem label="CCTV Installation" />
+              </ul>
+          </AccordionSection>
 
           {/* 4. CONTACT INFO */}
-          <div>
-            <h4 className="text-lg font-bold mb-6 text-white border-b border-blue-400/30 pb-2 inline-block">Get in Touch</h4>
-            <ul className="space-y-5">
-              <li className="flex items-start gap-3 text-blue-100 text-sm group">
-                 <div className="mt-1 p-2 bg-white/10 rounded-full group-hover:bg-[#FF8C00] transition-colors shrink-0">
-                   <FaMapMarkerAlt className="text-white text-xs" />
-                 </div>
-                 <span className="leading-relaxed">LuckySummer, Behind Naivas Supermarket, Nairobi, Kenya</span>
-              </li>
-              <li className="flex items-center gap-3 text-blue-100 text-sm group">
-                 <div className="p-2 bg-white/10 rounded-full group-hover:bg-[#FF8C00] transition-colors shrink-0">
-                   <FaPhoneAlt className="text-white text-xs" />
-                 </div>
-                 <a href="tel:+254726818938" className="hover:text-white transition">+254 726 818 938</a>
-              </li>
-              <li className="flex items-center gap-3 text-blue-100 text-sm group">
-                 <div className="p-2 bg-white/10 rounded-full group-hover:bg-[#FF8C00] transition-colors shrink-0">
-                   <FaEnvelope className="text-white text-xs" />
-                 </div>
-                 <a href="mailto:support@knoxville.co.ke" className="hover:text-white transition">support@knoxville.co.ke</a>
-              </li>
-            </ul>
-          </div>
+          <AccordionSection title="Get in Touch">
+              <ul className="space-y-5">
+                <li className="flex items-start gap-3 text-blue-100 text-sm group">
+                   <div className="mt-1 p-2 bg-white/10 rounded-full group-hover:bg-[#FF8C00] transition-colors shrink-0">
+                     <FaMapMarkerAlt className="text-white text-xs" />
+                   </div>
+                   <span className="leading-relaxed">LuckySummer, Behind Naivas Supermarket, Nairobi, Kenya</span>
+                </li>
+                <li className="flex items-center gap-3 text-blue-100 text-sm group">
+                   <div className="p-2 bg-white/10 rounded-full group-hover:bg-[#FF8C00] transition-colors shrink-0">
+                     <FaPhoneAlt className="text-white text-xs" />
+                   </div>
+                   <a href="tel:+254726818938" className="hover:text-white transition">+254 726 818 938</a>
+                </li>
+                <li className="flex items-center gap-3 text-blue-100 text-sm group">
+                   <div className="p-2 bg-white/10 rounded-full group-hover:bg-[#FF8C00] transition-colors shrink-0">
+                     <FaEnvelope className="text-white text-xs" />
+                   </div>
+                   <a href="mailto:support@knoxville.co.ke" className="hover:text-white transition">support@knoxville.co.ke</a>
+                </li>
+              </ul>
+          </AccordionSection>
         </div>
 
         {/* --- BOTTOM BAR --- */}

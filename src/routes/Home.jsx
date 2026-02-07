@@ -1,9 +1,7 @@
-import React from "react";
+﻿import React from "react";
 import { Helmet } from "react-helmet-async";
 
 import Hero from "../components/Hero";
-import Faqs from "./faqs";
-
 
 export default function Home() {
   return (
@@ -30,22 +28,6 @@ export default function Home() {
       <section id="hero">
         <Hero />
       </section>
-
-      
-        
-      
-
-      
-        
-    
-
-      <section id="faq">
-        <Faqs />
-      </section>
-
-      
-        
-      
     </>
   );
 }
