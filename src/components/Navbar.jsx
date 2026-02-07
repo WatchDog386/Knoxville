@@ -25,8 +25,6 @@ const BRAND = {
   slate: "#f8fafc"
 };
 
-const FONT_FAMILY = `'Proxima Nova', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif`;
-
 // -----------------------------------------------
 // UPDATED MENU: "Resources" removed → replaced with Blog
 // -----------------------------------------------
@@ -70,11 +68,10 @@ export default function Navbar() {
 
   return (
     <header 
-      className="fixed top-0 left-0 w-full z-[999]" 
-      style={{ fontFamily: FONT_FAMILY }}
+      className="fixed top-0 left-0 w-full z-[999]"
     >
       {/* ================= TOP UTILITY BAR ================= */}
-      <div className={`bg-[#004270] text-white transition-all duration-300 ${scrolled ? 'h-0 overflow-hidden opacity-0' : 'h-10 opacity-100'}`}>
+      <div className={`hidden md:block bg-[#004270] text-white transition-all duration-300 ${scrolled ? 'h-0 overflow-hidden opacity-0' : 'h-10 opacity-100'}`}>
         <div className="max-w-7xl mx-auto px-4 h-full flex justify-between items-center text-xs font-medium tracking-wide">
           
           {/* LEFT CONTACTS */}
@@ -104,20 +101,20 @@ export default function Navbar() {
       <div 
         className={`relative transition-all duration-300 border-b ${
           scrolled 
-            ? "bg-white/95 backdrop-blur-md shadow-md py-3 border-slate-200" 
-            : "bg-white py-4 border-transparent"
+            ? "bg-white/95 backdrop-blur-md shadow-md py-2 md:py-3 border-slate-200" 
+            : "bg-white py-2 md:py-4 border-transparent"
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 flex items-center justify-between">
           
           {/* LOGO */}
           <NavLink to="/" className="flex items-center gap-2 group">
-            <div className="w-10 h-10 bg-[#015B97] rounded-xl flex items-center justify-center text-white shadow-lg group-hover:scale-105 transition-transform">
-              <Zap size={24} fill="currentColor" />
+            <div className="w-8 h-8 md:w-10 md:h-10 bg-[#015B97] rounded-xl flex items-center justify-center text-white shadow-lg group-hover:scale-105 transition-transform">
+              <Zap size={20} className="md:w-6 md:h-6" fill="currentColor" />
             </div>
             <div className="flex flex-col">
-              <span className="text-xl font-bold text-slate-900 leading-none tracking-tight">Knoxville</span>
-              <span className="text-[10px] font-bold text-[#FF8C00] uppercase tracking-widest">Technologies</span>
+              <span className="text-lg md:text-xl font-bold text-slate-900 leading-none tracking-tight">Knoxville</span>
+              <span className="text-[9px] md:text-[10px] font-bold text-[#FF8C00] uppercase tracking-widest">Technologies</span>
             </div>
           </NavLink>
 

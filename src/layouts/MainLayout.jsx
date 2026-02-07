@@ -25,7 +25,8 @@ export default function MainLayout() {
           <div className="relative z-10 flex flex-col min-h-screen">
             <Navbar />
 
-            <main className="flex-1 px-0 sm:px-0 md:px-0 mt-4">
+            {/* Navbar is fixed, so we need padding-top on main to prevent overlap */}
+            <main className="flex-1 px-0 sm:px-0 md:px-0 pt-[52px] md:pt-[112px]">
               <Outlet />
             </main>
 

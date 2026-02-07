@@ -6,9 +6,6 @@ import { FaWhatsapp } from "react-icons/fa";
 import { Helmet } from "react-helmet";
 import { Wifi, Clock, HardHat, CheckCircle, Zap, X, Smartphone, ChevronRight, Star, Shield, Mail } from "lucide-react";
 
-// Font stack
-const FONT_FAMILY = `'Proxima Nova', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif`;
-
 // Hero Slides
 const heroSlides = [
   {
@@ -239,7 +236,7 @@ const Hero = () => {
   }, [showForm]);
 
   return (
-    <div className="min-h-screen bg-black" style={{ fontFamily: FONT_FAMILY }}>
+    <div className="min-h-screen bg-black">
       <Helmet>
         <title>Knoxville Internet | Unlimited Connectivity</title>
       </Helmet>
@@ -258,9 +255,9 @@ const Hero = () => {
       `}</style>
 
       {/* ================= HERO SECTION (RESPONSIVE HEIGHT) ================= */}
-      {/* Mobile: h_[60vh] (Smaller, shrinks like before) */}
+      {/* Mobile: h_[45vh] (Even smaller for compact app feel) */}
       {/* Laptop/Large: lg:h_[85vh] (Extended down) */}
-      <section className="relative w-full overflow-hidden bg-black h-[60vh] md:h-[75vh] lg:h-[85vh]">
+      <section className="relative w-full overflow-hidden bg-black h-[45vh] md:h-[75vh] lg:h-[85vh]">
         <div className="absolute inset-0">
           <AnimatePresence mode="wait">
             {heroSlides.map((slide, index) => (
@@ -294,20 +291,19 @@ const Hero = () => {
               transition={{ duration: 0.8, delay: 0.2 }}
               className="text-white"
             >
-              <span className="inline-block mb-4 px-4 py-1 text-xs font-bold uppercase tracking-widest rounded-full bg-gradient-to-r from-orange-500 to-red-600 text-white shadow-lg animate-pulse">
+              <span className="inline-block mb-2 sm:mb-4 px-3 sm:px-4 py-0.5 sm:py-1 text-[9px] sm:text-xs font-bold uppercase tracking-widest rounded-full bg-gradient-to-r from-orange-500 to-red-600 text-white shadow-lg animate-pulse">
                 {heroSlides[currentSlide].tag}
               </span>
               <h1 
-                className="text-3xl md:text-6xl font-bold mb-6 leading-tight drop-shadow-2xl" 
-                style={{ fontFamily: '"adobe-garamond-pro", "Poppins", sans-serif' }}
+                className="text-lg sm:text-2xl md:text-5xl lg:text-6xl font-bold mb-3 sm:mb-6 leading-snug sm:leading-tight drop-shadow-2xl" 
                 dangerouslySetInnerHTML={{ __html: heroSlides[currentSlide].title }}
               />
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 justify-center px-2 sm:px-0">
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => document.getElementById('plans-section').scrollIntoView({ behavior: 'smooth' })}
-                  className="font-bold py-3 px-8 rounded-full text-base transition-all bg-white text-black hover:bg-gray-100"
+                  className="font-bold py-1.5 sm:py-3 px-5 sm:px-8 rounded-full text-xs sm:text-base transition-all bg-white text-black hover:bg-gray-100"
                 >
                   {heroSlides[currentSlide].ctaText}
                 </motion.button>
@@ -318,22 +314,22 @@ const Hero = () => {
       </section>
 
       {/* ================= PLANS SECTION ================= */}
-      <section id="plans-section" className="py-10 md:py-20 animate-gradient-bg relative overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="text-center max-w-3xl mx-auto mb-8 md:mb-12">
+      <section id="plans-section" className="py-5 md:py-20 animate-gradient-bg relative overflow-hidden">
+        <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 relative z-10">
+          <div className="text-center max-w-3xl mx-auto mb-3 md:mb-12">
             <motion.h2
               initial={{ y: 20, opacity: 0 }}
               whileInView={{ y: 0, opacity: 1 }}
               viewport={{ once: true }}
-              className="text-3xl md:text-4xl font-extrabold mb-4 text-slate-800"
+              className="text-xl sm:text-3xl md:text-4xl font-extrabold mb-2 sm:mb-4 text-slate-800"
             >
               Packages Designed for <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500">You</span>
             </motion.h2>
           </div>
 
           {/* Tabs */}
-          <div className="flex justify-center mb-8 md:mb-12">
-            <div className="inline-flex rounded-full bg-white/50 backdrop-blur-md border border-white/50 p-1.5 shadow-lg">
+          <div className="flex justify-center mb-6 md:mb-12 overflow-x-auto px-2">
+            <div className="inline-flex rounded-full bg-white/50 backdrop-blur-md border border-white/50 p-1 sm:p-1.5 shadow-lg">
               {[
                 { id: "home", label: "Home Fiber" },
                 { id: "business", label: "Business" },
@@ -342,7 +338,7 @@ const Hero = () => {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`px-6 py-2.5 text-sm md:text-base rounded-full font-bold transition-all duration-300 ${
+                  className={`px-3 sm:px-6 py-2 sm:py-2.5 text-xs sm:text-sm md:text-base rounded-full font-bold transition-all duration-300 whitespace-nowrap ${
                     activeTab === tab.id 
                     ? "bg-slate-800 text-white shadow-md scale-105" 
                     : "text-slate-500 hover:text-slate-800 hover:bg-white/50"
@@ -371,15 +367,15 @@ const Hero = () => {
                   key={plan.name}
                   variants={cardVariants}
                   className={`
-                    min-w-[85vw] sm:min-w-[45vw] md:min-w-0 snap-center
-                    relative bg-white rounded-[1.5rem] overflow-hidden flex flex-col h-full group shadow-xl
-                    hover:shadow-2xl transition-all duration-500 border-2
-                    ${plan.isPopular ? 'border-orange-400 ring-4 ring-orange-100/50' : 'border-white'}
+                    min-w-[75vw] sm:min-w-[45vw] md:min-w-0 snap-center
+                    relative bg-white rounded-[1.2rem] overflow-hidden flex flex-col h-full group shadow-lg
+                    hover:shadow-2xl transition-all duration-500 border
+                    ${plan.isPopular ? 'border-orange-400 ring-2 ring-orange-100/50' : 'border-white'}
                   `}
                   whileHover={{ y: -5 }}
                 >
                   {/* IMAGE SECTION */}
-                  <div className="relative h-40 overflow-hidden">
+                  <div className="relative h-24 sm:h-40 overflow-hidden">
                       <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10" />
                       <img 
                         src={plan.image} 
@@ -389,42 +385,42 @@ const Hero = () => {
                       {plan.isPopular && (
                           <motion.div 
                             initial={{ scale: 0 }} animate={{ scale: 1 }} 
-                            className="absolute top-4 right-4 z-20"
+                            className="absolute top-3 right-3 z-20"
                           >
-                            <span className="bg-gradient-to-r from-orange-500 to-amber-500 text-white text-[10px] font-bold px-3 py-1.5 rounded-full flex items-center gap-1 shadow-lg animate-pulse">
-                                <Star className="w-3 h-3 fill-current" /> POPULAR
+                            <span className="bg-gradient-to-r from-orange-500 to-amber-500 text-white text-[9px] font-bold px-2 py-1 rounded-full flex items-center gap-1 shadow-lg animate-pulse">
+                                <Star className="w-2.5 h-2.5 fill-current" /> POPULAR
                             </span>
                           </motion.div>
                       )}
                   </div>
 
                   {/* COLORED HEADER (TEXT CHANGED TO BLACK) */}
-                  <div className={`${theme.bg} p-4 relative overflow-hidden rounded-bl-[2.5rem] transition-colors duration-300`}>
-                      <div className="absolute -right-6 -top-6 w-24 h-24 bg-white/20 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-500"></div>
+                  <div className={`${theme.bg} p-2.5 sm:p-4 relative overflow-hidden rounded-bl-[2rem] transition-colors duration-300`}>
+                      <div className="absolute -right-6 -top-6 w-20 h-20 bg-white/20 rounded-full blur-xl group-hover:scale-150 transition-transform duration-500"></div>
                       
                       {/* HEADER TEXT IS NOW BLACK */}
-                      <h3 className="text-xs font-bold uppercase tracking-wider text-black mb-1">{plan.name}</h3>
-                      <div className="flex items-baseline gap-2">
-                          <h2 className="text-3xl font-extrabold tracking-tight text-black">{plan.speed}</h2>
-                          <span className="text-black/80 text-xs font-semibold">Speed</span>
+                      <h3 className="text-[9px] sm:text-xs font-bold uppercase tracking-wider text-black mb-0.5">{plan.name}</h3>
+                      <div className="flex items-baseline gap-1.5">
+                          <h2 className="text-xl sm:text-3xl font-extrabold tracking-tight text-black">{plan.speed}</h2>
+                          <span className="text-black/80 text-[8px] sm:text-xs font-semibold">Speed</span>
                       </div>
                   </div>
 
                   {/* BODY SECTION */}
-                  <div className="p-4 pt-3 flex flex-col flex-grow bg-white relative">
-                      <div className="mb-4 flex items-end">
-                        <span className={`text-xl font-bold ${theme.text} group-hover:scale-105 transition-transform origin-left`}>
+                  <div className="p-2.5 sm:p-4 pt-2 sm:pt-3 flex flex-col flex-grow bg-white relative">
+                      <div className="mb-2 sm:mb-4 flex items-end">
+                        <span className={`text-base sm:text-xl font-bold ${theme.text} group-hover:scale-105 transition-transform origin-left`}>
                           {plan.price}
                         </span>
-                        <span className="text-slate-400 text-[10px] font-bold uppercase mb-1 ml-1">/month</span>
+                        <span className="text-slate-400 text-[8px] sm:text-[10px] font-bold uppercase mb-1 ml-1">/month</span>
                       </div>
 
-                      <div className="w-full h-px bg-slate-100 mb-4" />
+                      <div className="w-full h-px bg-slate-100 mb-2 sm:mb-4" />
 
-                      <ul className="space-y-2 mb-4 flex-grow">
+                      <ul className="space-y-1 sm:space-y-2 mb-2 sm:mb-4 flex-grow">
                         {plan.features.map((feature, i) => (
-                          <li key={i} className="flex items-start text-xs text-slate-600 font-medium group-hover:text-slate-800 transition-colors">
-                            <CheckCircle className={`w-3.5 h-3.5 mr-2 mt-0.5 ${theme.text}`} />
+                          <li key={i} className="flex items-start text-[10px] sm:text-xs text-slate-600 font-medium group-hover:text-slate-800 transition-colors">
+                            <CheckCircle className={`w-2.5 sm:w-3.5 h-2.5 sm:h-3.5 mr-1.5 sm:mr-2 mt-0.5 flex-shrink-0 ${theme.text}`} />
                             {/* Allow bolding in features via dangerouslySetInnerHTML if needed, or just text */}
                             <span dangerouslySetInnerHTML={{ __html: feature.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') }} />
                           </li>
@@ -436,11 +432,11 @@ const Hero = () => {
                         whileHover={{ scale: 1.03 }}
                         onClick={() => handlePlanSelect(plan)}
                         className={`
-                          w-full py-2.5 rounded-full font-bold text-xs flex items-center justify-center gap-2 transition-all duration-300 text-white shadow-md
+                          w-full py-2 sm:py-2.5 rounded-full font-bold text-[10px] sm:text-xs flex items-center justify-center gap-2 transition-all duration-300 text-white shadow-md
                           ${theme.bg} ${theme.shadow} hover:brightness-110 hover:shadow-lg
                         `}
                       >
-                        Get Connected <ChevronRight className="w-3.5 h-3.5" />
+                        Get Connected <ChevronRight className="w-3 sm:w-3.5 h-3 sm:h-3.5" />
                       </motion.button>
                   </div>
                 </motion.div>
@@ -451,79 +447,60 @@ const Hero = () => {
         </div>
       </section>
 
-      {/* ================= FEATURES ================= */}
-      <section className="py-16 bg-white relative z-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {[
-              { icon: <Clock />, title: "24/7 Support", desc: "Always online for you" },
-              { icon: <HardHat />, title: "Expert Install", desc: "Professional setup" },
-              { icon: <Zap />, title: "Low Latency", desc: "Gaming optimized" },
-              { icon: <Shield />, title: "Secure Net", desc: "DDOS Protected" }
-            ].map((item, i) => (
-              <motion.div 
-                key={i} 
-                whileHover={{ y: -8, backgroundColor: "#f8fafc" }}
-                className="flex flex-col items-center text-center p-6 rounded-3xl bg-white border border-slate-100 transition-all duration-300 cursor-default"
-              >
-                <motion.div 
-                  whileHover={{ rotate: 15, scale: 1.1 }}
-                  className="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 bg-slate-50 text-blue-600 shadow-sm"
-                >
-                    {React.cloneElement(item.icon, { size: 26 })}
-                </motion.div>
-                <h4 className="font-bold text-slate-800 text-lg">{item.title}</h4>
-                <p className="text-sm text-slate-500 mt-1">{item.desc}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* ================= HOTSPOT SECTION (CLEAN BACKGROUND) ================= */}
-      <section id="hotspot-section" className="py-20 bg-slate-50 relative overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="text-center max-w-3xl mx-auto mb-12">
-            <span className="text-orange-500 font-bold tracking-wider text-xs uppercase">On The Go?</span>
-            <h2 className="text-3xl md:text-4xl font-bold mt-2 mb-4 text-slate-900">
+      <section id="hotspot-section" className="py-12 sm:py-20 bg-slate-50 relative overflow-hidden">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 relative z-10">
+          <div className="text-center max-w-3xl mx-auto mb-8 sm:mb-12">
+            <span className="text-orange-500 font-bold tracking-wider text-[10px] sm:text-xs uppercase">On The Go?</span>
+            <h2 className="text-xl sm:text-3xl md:text-4xl font-bold mt-2 mb-3 sm:mb-4 text-slate-900">
               Mobile <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-amber-500">Hotspot</span> Zones
             </h2>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-3 max-w-6xl mx-auto">
+          {/* Updated Grid for Mobile/Desktop */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-3 sm:gap-4 max-w-6xl mx-auto px-1">
             {hotspotPlans.map((plan, index) => {
               const color = HOTSPOT_COLORS[index % HOTSPOT_COLORS.length];
-              const isLastTwo = index >= hotspotPlans.length - 2;
+              // Make the last item span full width on small screens if it's the odd one out (7th item)
+              const isLastItem = index === hotspotPlans.length - 1;
+              
               return (
                 <motion.div
                   key={index}
-                  initial={{ opacity: 0, scale: 0.8 }}
+                  initial={{ opacity: 0, scale: 0.9 }}
                   whileInView={{ opacity: 1, scale: 1 }}
                   viewport={{ once: true }}
-                  whileHover={{ scale: 1.05, zIndex: 10, boxShadow: "0px 15px 30px rgba(0,0,0,0.15)" }}
+                  whileHover={{ scale: 1.02, translateY: -5 }}
                   transition={{ duration: 0.3, delay: index * 0.05 }}
                   className={`
-                    rounded-xl overflow-hidden flex flex-col cursor-pointer shadow-lg
-                    ${isLastTwo ? 'col-span-2 sm:col-span-1 md:col-span-1 lg:col-span-1 sm:col-start-2 md:col-start-auto' : ''}
+                    relative overflow-hidden rounded-2xl flex flex-col cursor-pointer shadow-md hover:shadow-xl
+                    ${isLastItem ? 'col-span-2 sm:col-span-1 md:col-span-1 lg:col-span-1 mx-auto w-full sm:w-auto' : ''}
                   `}
                   style={{ 
                     background: color.bg,
-                    maxWidth: '140px',
-                    margin: isLastTwo ? '0 auto' : '0',
-                    height: '100%'
+                    minHeight: '100px'
                   }}
                   onClick={handleHotspotSelect}
                 >
-                  <div className="p-3 flex flex-col flex-grow text-white">
-                    <div className="flex justify-between items-start mb-2">
-                      <h3 className="text-xs font-bold">{plan.name}</h3>
-                      <span className="text-[9px] bg-black/20 px-1.5 py-0.5 rounded">{plan.duration}</span>
+                  <div className="absolute top-0 right-0 p-3 opacity-10">
+                    <Wifi size={40} className="text-white rotate-12" />
+                  </div>
+
+                  <div className="p-3 flex flex-col h-full justify-between relative z-10">
+                    <div>
+                      <div className="flex justify-between items-start mb-1">
+                         <h3 className="text-xs font-bold text-white drop-shadow-md">{plan.name}</h3>
+                         <span className="text-[9px] font-bold bg-white/20 text-white px-1.5 py-0.5 rounded backdrop-blur-sm">
+                           {plan.duration}
+                         </span>
+                      </div>
+                      <p className="text-lg font-bold text-white drop-shadow-md tracking-tight">Ksh {plan.price}</p>
                     </div>
-                    <p className="text-lg font-extrabold mb-2">Ksh {plan.price}</p>
-                    <div className="mt-auto">
-                        <motion.button whileHover={{ backgroundColor: "rgba(255,255,255,0.3)" }} className="w-full bg-white/20 text-[10px] font-bold py-1.5 rounded-lg transition-colors">
+
+                    <div className="mt-2">
+                        <button className="w-full bg-white text-black/80 text-[10px] uppercase font-bold py-1.5 rounded-lg hover:bg-white/90 transition-colors shadow-sm">
                             Select
-                        </motion.button>
+                        </button>
                     </div>
                   </div>
                 </motion.div>
