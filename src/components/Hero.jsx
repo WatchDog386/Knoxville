@@ -519,7 +519,6 @@ const Hero = () => {
                   <div className="flex items-start justify-between p-5">
                     <div>
                       <p className="text-sm font-bold leading-tight">{plan.name}</p>
-                      <div style={{ fontFamily: NAV_FONT_FAMILY }} className="text-xs font-semibold mt-1 uppercase opacity-90">Knoxville Technologies</div>
                     </div>
                     <span className="bg-white/30 backdrop-blur px-2 py-1 rounded text-[0.65rem] font-bold text-white">
                       {plan.duration}
