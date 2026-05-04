@@ -1,0 +1,522 @@
+@import url("https://use.typekit.net/hus3mie.css");
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* === RISA Design System === */
+
+/* Base Theme with RISA Fonts */
+.font-sans {
+  font-family: Roboto, -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+}
+
+body {
+  @apply font-sans antialiased bg-[#F8FAFC] text-gray-900;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* RISA Color Palette */
+:root {
+  --risa-blue: #015B97;
+  --risa-light-blue: #3288e6;
+  --risa-text: #565A5C;
+  --risa-white: #ffffff;
+  --risa-light-bg: #f8f9fa;
+  --risa-border: #e9ecef;
+  /* Vuma Specific Colors */
+  --vuma-primary: #015B97; /* RISA Blue */
+  --vuma-secondary: #334155; /* Slate 700 (Text) */
+  --vuma-background: #F8FAFC; /* Slate 50 (Page Background - Not bright white) */
+  --vuma-card-bg: #ffffff; /* White (Cards only) */
+  --vuma-border: #E2E8F0; /* Slate 200 (Subtle borders) */
+  --vuma-accent: #0ea5e9; /* Light Blue accent */
+  --vuma-dark-bg: #004a7c; /* Darker blue for headers */
+}
+
+/* === RISA Professional Animations === */
+
+/* Subtle Fade In Animation (RISA Style) */
+@keyframes risa-fade-in {
+  0% { 
+    opacity: 0; 
+    transform: translateY(20px); 
+  }
+  100% { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
+}
+
+.risa-fade-in {
+  animation: risa-fade-in 0.6s ease-out;
+}
+
+/* Smooth Slide In */
+@keyframes risa-slide-in {
+  0% { 
+    opacity: 0; 
+    transform: translateX(-30px); 
+  }
+  100% { 
+    opacity: 1; 
+    transform: translateX(0); 
+  }
+}
+
+.risa-slide-in {
+  animation: risa-slide-in 0.5s ease-out;
+}
+
+/* Card Hover Effects (RISA Style) */
+.risa-card {
+  overflow: hidden;
+  min-height: 300px;
+  box-shadow: 1.39px 1.39px 4.96px rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--risa-border);
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.risa-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* Button Animations (RISA Style) */
+@keyframes risa-button-hover {
+  0% { 
+    transform: translateY(0); 
+    box-shadow: 0 2px 8px rgba(1, 91, 151, 0.2);
+  }
+  100% { 
+    transform: translateY(-2px); 
+    box-shadow: 0 4px 15px rgba(1, 91, 151, 0.3);
+  }
+}
+
+.risa-button {
+  background-color: var(--risa-blue);
+  color: var(--risa-white);
+  border-radius: 50px;
+  padding: 1rem 2rem;
+  font-weight: bold;
+  transition: all 0.15s ease-in-out;
+  border: 2px solid var(--risa-blue);
+}
+
+.risa-button:hover {
+  animation: risa-button-hover 0.3s ease-out forwards;
+  background-color: #014a7a;
+  border-color: #014a7a;
+}
+
+.risa-button-outline {
+  background-color: transparent;
+  color: var(--risa-blue);
+  border: 2px solid var(--risa-blue);
+  border-radius: 50px;
+  padding: 1rem 2rem;
+  font-weight: bold;
+  transition: all 0.15s ease-in-out;
+}
+
+.risa-button-outline:hover {
+  background-color: var(--risa-blue);
+  color: var(--risa-white);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(1, 91, 151, 0.3);
+}
+
+/* === RISA Typography System === */
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: "proxima-nova", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--risa-blue);
+}
+
+h1 {
+  font-size: 2.5rem;
+  line-height: 1.1;
+}
+
+h2 {
+  font-size: 2rem;
+  line-height: 1.2;
+}
+
+h3 {
+  font-size: 1.5rem;
+  line-height: 1.3;
+}
+
+p, li {
+  line-height: 1.6;
+  margin-top: 0;
+  margin-bottom: 1rem;
+  color: var(--risa-text);
+}
+
+/* === RISA Component Styles === */
+
+/* Navigation Styles */
+.risa-nav {
+  background-color: var(--vuma-card-bg); /* Changed to card bg for consistency */
+  border-bottom: 1px solid var(--vuma-border);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Added subtle shadow */
+}
+
+.risa-nav-link {
+  color: var(--vuma-secondary);
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.risa-nav-link:hover {
+  color: var(--vuma-primary);
+}
+
+/* Card Styles */
+.risa-feature-card {
+  background: var(--vuma-card-bg);
+  border: 1px solid var(--vuma-border);
+  border-radius: 8px;
+  padding: 2rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Added subtle shadow */
+}
+
+.risa-feature-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Enhanced shadow on hover */
+  transform: translateY(-5px);
+}
+
+/* Badge Styles */
+.risa-badge {
+  background-color: rgba(1, 91, 151, 0.1);
+  color: var(--vuma-primary);
+  padding: 0.25rem 0.75rem;
+  border-radius: 50px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+/* Section Backgrounds */
+.risa-section-light {
+  background-color: var(--vuma-background); /* Changed to Vuma light bg */
+}
+
+.risa-section-blue {
+  background: linear-gradient(180deg, var(--vuma-primary) 0%, var(--vuma-dark-bg) 100%); /* Changed to Vuma gradient */
+  color: var(--risa-white);
+  position: relative; /* For potential pattern overlay */
+}
+
+/* Pattern overlay for hero section */
+.risa-section-blue::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url('https://www.transparenttextures.com/patterns/cubes.png'); /* Example pattern */
+  opacity: 0.1;
+  pointer-events: none;
+}
+
+/* === RISA Form Styles === */
+.risa-input {
+  border: 1px solid var(--vuma-border);
+  border-radius: 4px;
+  padding: 0.75rem;
+  font-size: 0.875rem;
+  transition: border-color 0.2s ease;
+  background-color: #f8fafc; /* Added subtle bg */
+}
+
+.risa-input:focus {
+  outline: none;
+  border-color: var(--vuma-primary);
+  box-shadow: 0 0 0 3px rgba(1, 91, 151, 0.1);
+}
+
+/* === RISA Table Styles === */
+.risa-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.risa-table th,
+.risa-table td {
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid var(--vuma-border);
+}
+
+.risa-table th {
+  background-color: var(--vuma-background); /* Changed to Vuma light bg */
+  color: var(--vuma-primary);
+  font-weight: 600;
+}
+
+/* === RISA Loading Animation === */
+@keyframes risa-loading {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.risa-loading {
+  border: 2px solid var(--vuma-background);
+  border-top: 2px solid var(--vuma-primary);
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  animation: risa-loading 1s linear infinite;
+}
+
+/* === RISA Progress Bar === */
+.risa-progress {
+  background-color: var(--vuma-background);
+  border-radius: 50px;
+  overflow: hidden;
+}
+
+.risa-progress-bar {
+  background-color: var(--vuma-primary);
+  height: 4px;
+  border-radius: 50px;
+  transition: width 0.3s ease;
+}
+
+/* === RISA Alert Styles === */
+.risa-alert {
+  padding: 1rem;
+  border-radius: 4px;
+  border-left: 4px solid;
+  margin-bottom: 1rem;
+}
+
+.risa-alert-info {
+  background-color: rgba(1, 91, 151, 0.1);
+  border-left-color: var(--vuma-primary);
+  color: var(--vuma-primary);
+}
+
+.risa-alert-success {
+  background-color: rgba(34, 197, 94, 0.1);
+  border-left-color: #22c55e;
+  color: #166534;
+}
+
+/* === RISA Modal Styles === */
+.risa-modal-overlay {
+  background-color: rgba(0, 0, 0, 0.5);
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+}
+
+.risa-modal {
+  background-color: var(--vuma-card-bg);
+  border-radius: 12px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  max-width: 500px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+/* === RISA Responsive Design === */
+@media (max-width: 768px) {
+  h1 {
+    font-size: 2rem;
+  }
+  
+  h2 {
+    font-size: 1.75rem;
+  }
+  
+  h2.elementor-size-default { /* Specificity for Elementor headings */
+    font-size: 1.75rem;
+  }
+  
+  h3 {
+    font-size: 1.25rem;
+  }
+
+  h3.elementor-size-default { /* Specificity for Elementor headings */
+    font-size: 1.25rem;
+  }
+
+  .risa-button,
+  .risa-button-outline {
+    padding: 0.75rem 1.5rem;
+    width: 100%;
+    text-align: center;
+  }
+}
+
+/* === RISA Utility Classes === */
+.text-risa-blue { color: var(--vuma-primary); } /* Changed to Vuma primary */
+.text-risa-light-blue { color: var(--risa-light-blue); }
+.text-risa-text { color: var(--vuma-secondary); } /* Changed to Vuma secondary */
+
+.bg-risa-blue { background-color: var(--vuma-primary); }
+.bg-risa-light-bg { background-color: var(--vuma-background); } /* Changed to Vuma background */
+
+.border-risa-blue { border-color: var(--vuma-primary); }
+.border-risa-border { border-color: var(--vuma-border); }
+
+/* === RISA Grid System === */
+.risa-grid {
+  display: grid;
+  gap: 2rem;
+}
+
+.risa-grid-cols-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.risa-grid-cols-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.risa-grid-cols-4 {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+@media (max-width: 768px) {
+  .risa-grid-cols-2,
+  .risa-grid-cols-3,
+  .risa-grid-cols-4 {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* === RISA Image Styles === */
+.risa-image {
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+.risa-image-hover {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.risa-image-hover:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* === RISA Footer Styles === */
+.risa-footer {
+  background-color: var(--vuma-background); /* Changed to Vuma background */
+  border-top: 1px solid var(--vuma-border);
+  padding: 3rem 0;
+}
+
+.risa-footer-link {
+  color: var(--vuma-secondary); /* Changed to Vuma secondary */
+  transition: color 0.2s ease;
+}
+
+.risa-footer-link:hover {
+  color: var(--vuma-primary); /* Changed to Vuma primary */
+}
+
+/* === Vuma Specific Overrides === */
+/* Pricing Cards */
+.pricing-card {
+  background-color: var(--vuma-card-bg);
+  border: 1px solid var(--vuma-border);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-radius: 8px; /* Added border radius */
+  overflow: hidden; /* Ensure content respects border radius */
+}
+
+.pricing-card:hover {
+  transform: scale(1.03); /* Slightly less dramatic than original */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Elementor Button Styling */
+.elementor-button {
+  background-color: var(--vuma-primary);
+  border-color: var(--vuma-primary);
+  color: var(--vuma-white);
+  border-radius: 50px;
+  padding: 0.75rem 1.5rem; /* Adjusted padding */
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.elementor-button:hover {
+  background-color: #014a7a; /* Darker shade on hover */
+  border-color: #014a7a;
+  color: var(--vuma-white);
+  transform: translateY(-2px); /* Added subtle lift */
+  box-shadow: 0 4px 15px rgba(1, 91, 151, 0.3); /* Added shadow on hover */
+}
+
+/* Elementor Heading Styling */
+.elementor-heading-title {
+  color: var(--vuma-secondary); /* Use Vuma secondary color */
+}
+
+/* Elementor Icon Styling */
+.elementor-icon {
+  color: var(--vuma-primary); /* Use Vuma primary color */
+}
+
+/* Elementor Icon Box Styling */
+.elementor-widget-icon-box .elementor-icon-box-content .elementor-icon-box-description {
+  color: var(--vuma-secondary); /* Use Vuma secondary color */
+}
+
+/* Elementor Icon List Styling */
+.elementor-widget-icon-list .elementor-icon-list-item .elementor-icon-list-text {
+  color: var(--vuma-secondary); /* Use Vuma secondary color */
+}
+
+/* Elementor Section Background Overlay */
+.elementor-background-overlay {
+  background-color: rgba(248, 250, 252, 0.8); /* Light overlay matching background */
+}
+
+/* Vuma CTA Section Specific */
+.vuma-cta {
+  background: linear-gradient(-45deg, var(--vuma-primary), var(--vuma-dark-bg), #ff7300, #00c3ff); /* Updated gradient to use Vuma colors */
+  background-size: 400% 400%;
+  animation: gradientAnimation 6s ease infinite;
+  color: white;
+  text-align: center;
+  padding: 40px 20px;
+  border-radius: 10px;
+  margin: 30px 0;
+}
+
+/* Footer Menu */
+.wpr-nav-menu-container ul li a,
+.wpr-mobile-nav-menu li a {
+  color: var(--vuma-secondary); /* Use Vuma secondary color */
+  transition: color 0.2s ease;
+}
+
+.wpr-nav-menu-container ul li a:hover,
+.wpr-mobile-nav-menu li a:hover {
+  color: var(--vuma-primary); /* Use Vuma primary color */
+}
+
+/* Footer Copyright */
+.hfe-copyright-wrapper span {
+  color: var(--vuma-secondary); /* Use Vuma secondary color */
+}
