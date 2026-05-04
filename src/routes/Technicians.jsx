@@ -40,7 +40,6 @@ const technicians = [
     rating: 4.9,
     reviews: 42,
     skills: ["Circuit Repair", "Data Recovery", "Diagnostics"],
-    image: "https://images.unsplash.com/photo-1581092921461-eab62e97a782?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80", // Placeholder
     bio: "Certified hardware specialist with extensive experience in component-level repairs. Passionate about restoring devices to their optimal performance.",
     stats: [{ value: "98%", label: "Success" }, { value: "500+", label: "Fixed" }]
   },
@@ -54,7 +53,6 @@ const technicians = [
     rating: 4.8,
     reviews: 36,
     skills: ["Network Setup", "Router Config", "Security"],
-    image: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
     bio: "Network infrastructure expert focused on creating secure, high-performance solutions for businesses of all sizes.",
     stats: [{ value: "95%", label: "Uptime" }, { value: "300+", label: "Setups" }]
   },
@@ -68,7 +66,6 @@ const technicians = [
     rating: 4.9,
     reviews: 51,
     skills: ["Installation", "Optimization", "Migration"],
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
     bio: "Software troubleshooter dedicated to solving complex system issues and optimizing performance.",
     stats: [{ value: "99%", label: "Speed" }, { value: "700+", label: "Optimized" }]
   },
@@ -82,7 +79,6 @@ const technicians = [
     rating: 4.7,
     reviews: 39,
     skills: ["Audits", "Firewalls", "Encryption"],
-    image: "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
     bio: "Cybersecurity professional committed to protecting your digital assets with cutting-edge solutions.",
     stats: [{ value: "97%", label: "Secure" }, { value: "200+", label: "Audits" }]
   }
@@ -170,12 +166,7 @@ const TechnicianCard = ({ tech, index, onClick }) => {
          </div>
       </div>
 
-      {/* 2. Floating Avatar */}
-      <div className="absolute top-16 left-6 z-10">
-         <div className="w-20 h-20 rounded-full border-4 border-white shadow-lg overflow-hidden bg-slate-100">
-            <img src={tech.image} alt={tech.name} className="w-full h-full object-cover" />
-         </div>
-      </div>
+
 
       {/* 3. Action Button (Floating on Right) */}
       <div className="absolute top-24 right-6 z-20">
@@ -236,9 +227,6 @@ const TechnicianModal = ({ tech, onClose }) => (
        <div className="flex flex-col md:flex-row">
           {/* Left Sidebar */}
           <div className="w-full md:w-1/3 bg-slate-50 p-8 flex flex-col items-center text-center border-r border-slate-100">
-             <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-white shadow-lg mb-4">
-                <img src={tech.image} alt={tech.name} className="w-full h-full object-cover" />
-             </div>
              <h2 className="text-xl font-bold text-slate-800">{tech.name}</h2>
              <p className="text-[#015B97] text-xs font-bold uppercase mb-4">{tech.role}</p>
              <a 
