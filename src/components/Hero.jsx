@@ -346,7 +346,7 @@ const Hero = () => {
 
           {/* Cards */}
           <motion.div 
-            className="flex overflow-x-auto snap-x snap-mandatory pb-6 gap-4 -mx-4 px-4 md:grid md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 md:gap-6 md:pb-0 md:mx-0 md:px-0"
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6 w-full"
             variants={containerVariants}
             initial="hidden"
             whileInView="visible"
@@ -361,7 +361,6 @@ const Hero = () => {
                   key={plan.name}
                   variants={cardVariants}
                   className={`
-                    min-w-[85vw] sm:min-w-[58vw] md:min-w-0 snap-center
                     relative bg-white rounded-[1.2rem] overflow-hidden flex flex-col h-full group
                     border border-slate-200 shadow-[0_18px_40px_rgba(15,23,42,0.08)] ring-1 ring-slate-100/70
                     hover:shadow-[0_24px_60px_rgba(15,23,42,0.14)] transition-all duration-500
@@ -498,7 +497,7 @@ const Hero = () => {
             </h2>
           </div>
 
-          <div className="flex gap-6 items-stretch justify-center px-2 py-2 overflow-x-auto lg:overflow-visible lg:flex-nowrap">
+          <div className="flex gap-6 items-stretch justify-center flex-wrap">
             {hotspotPlans.map((plan, index) => {
               const colorIndex = index % HOTSPOT_COLORS.length;
               const color = HOTSPOT_COLORS[colorIndex];
@@ -513,7 +512,7 @@ const Hero = () => {
                   transition={{ duration: 0.45, delay: index * 0.04 }}
                   whileHover={{ y: -4 }}
                   onClick={handleHotspotSelect}
-                  className="group relative flex-shrink-0 w-40 sm:w-48 h-56 rounded-3xl flex flex-col text-white transition-transform duration-300 hover:shadow-xl overflow-hidden"
+                  className="group relative flex-shrink-0 w-40 sm:w-48 h-56 rounded-3xl flex flex-col text-white transition-transform duration-300 overflow-hidden"
                   style={{ backgroundColor: color.bg }}
                 >
                   {/* Header */}

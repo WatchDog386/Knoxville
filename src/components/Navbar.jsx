@@ -17,7 +17,6 @@ const MENU_ITEMS = [
       { label: "Coverage Map", route: "/coverage" },
     ],
   },
-  { label: "Blog", route: "/blogs", icon: <Globe size={16} /> },
 ];
 
 export default function Navbar() {

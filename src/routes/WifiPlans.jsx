@@ -106,7 +106,7 @@ export default function WifiPlans() {
   const filteredPlans = plans.filter(plan => plan.type === activeTab);
 
   return (
-    <div className="min-h-screen font-sans bg-gray-50" style={{ color: THEME.secondary }}>
+    <div className="min-h-screen font-sans bg-white" style={{ color: THEME.secondary }}>
       <Helmet>
         <title>Enterprise Fiber Solutions | Premium Connectivity</title>
       </Helmet>
@@ -171,11 +171,12 @@ export default function WifiPlans() {
       </div>
 
       {/* Main Content - Premium Cards */}
-      <section className="py-24 px-4 max-w-7xl mx-auto">
-        <motion.div 
-          layout 
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-        >
+      <section className="w-full bg-white py-24 px-4">
+        <div className="max-w-7xl mx-auto">
+          <motion.div 
+            layout 
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full"
+          >
           <AnimatePresence mode="popLayout">
             {filteredPlans.map((plan, index) => (
               <motion.div
@@ -251,6 +252,7 @@ export default function WifiPlans() {
             ))}
           </AnimatePresence>
         </motion.div>
+        </div>
       </section>
 
       {/* Corporate Features Section */}
