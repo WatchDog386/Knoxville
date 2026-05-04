@@ -54,7 +54,7 @@ const galleryImages = [
   "WhatsApp Image 2026-05-04 at 3.56.54 PM.jpeg",
   "WhatsApp Image 2026-05-04 at 3.56.55 PM.jpeg",
   "WhatsApp Image 2026-05-04 at 4.04.42 PM.jpeg",
-  "WhatsApp Image 2026-05-04 at 4.04.45 PM.jpeg",
+  "WhatsApp Image 2026-05-04 at 4.04.56 PM (2).jpeg",
   "WhatsApp Image 2026-05-04 at 4.04.54 PM.jpeg",
   "WhatsApp Image 2026-05-04 at 4.04.55 PM.jpeg",
   "WhatsApp Image 2026-05-04 at 4.04.56 PM.jpeg",
