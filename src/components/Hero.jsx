@@ -46,7 +46,7 @@ const PACKAGE_THEMES = [
 
 // Hotspot Colors - single cyan theme matching 60Mbps card
 const HOTSPOT_COLORS = [
-  { name: 'cyan', bg: '#00bcd4', text: '#ffffff', btn: '#008b9a' }
+  { name: 'cyan', bg: '#00bcd4', text: '#ffffff', btn: '#ff6b35' }
 ];
 
 // Navbar / Brand font (used across header/nav)
@@ -528,7 +528,7 @@ const Hero = () => {
 
                   {/* Price - Center */}
                   <div className="flex-1 flex items-center justify-center">
-                    <p className="text-4xl font-bold text-white">
+                    <p className="text-4xl font-bold text-black">
                       Ksh {plan.price}
                     </p>
                   </div>
