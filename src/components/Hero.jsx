@@ -512,35 +512,35 @@ const Hero = () => {
                   viewport={{ once: true, amount: 0.2 }}
                   transition={{ duration: 0.45, delay: index * 0.04 }}
                   whileHover={{ y: -5 }}
-                  className="relative bg-white rounded-[1rem] overflow-hidden flex flex-col h-full group border border-slate-200 shadow-[0_14px_28px_rgba(15,23,42,0.08)] ring-1 ring-slate-100/70 hover:shadow-[0_20px_40px_rgba(15,23,42,0.14)] transition-all duration-500 max-w-[220px] mx-auto"
+                  className="relative bg-white rounded-[1.2rem] overflow-hidden flex flex-col h-full group border border-slate-200 shadow-[0_18px_40px_rgba(15,23,42,0.08)] ring-1 ring-slate-100/70 hover:shadow-[0_24px_60px_rgba(15,23,42,0.14)] transition-all duration-500"
                 >
                   {/* COLORED HEADER */}
-                  <div className={`${theme.bg} p-2 sm:p-2.5 relative overflow-hidden rounded-bl-[1.4rem] transition-colors duration-300`}>
-                    <div className="absolute -right-6 -top-6 w-16 h-16 bg-white/20 rounded-full blur-xl group-hover:scale-150 transition-transform duration-500" />
+                  <div className={`${theme.bg} p-2.5 sm:p-3 relative overflow-hidden rounded-bl-[2rem] transition-colors duration-300`}>
+                    <div className="absolute -right-6 -top-6 w-20 h-20 bg-white/20 rounded-full blur-xl group-hover:scale-150 transition-transform duration-500" />
                     <div className="flex items-center justify-between">
-                      <h4 className="text-[8px] sm:text-[10px] font-bold uppercase tracking-wider text-black mb-0.5">{plan.name}</h4>
-                      <span className="bg-white/30 backdrop-blur px-1.5 py-0.5 rounded text-[9px] font-bold text-white uppercase">{plan.duration}</span>
+                      <h4 className="text-[9px] sm:text-xs font-bold uppercase tracking-wider text-black mb-0.5">{plan.name}</h4>
+                      <span className="bg-white/30 backdrop-blur px-2 py-1 rounded text-[0.65rem] font-bold text-white uppercase">{plan.duration}</span>
                     </div>
                     <div className="flex items-baseline gap-1.5">
-                      <h3 className="text-xs sm:text-sm font-extrabold tracking-tight text-black">{plan.devices}</h3>
+                      <h3 className="text-lg sm:text-2xl font-extrabold tracking-tight text-black">{plan.devices}</h3>
                     </div>
                   </div>
 
                   {/* BODY SECTION */}
-                  <div className="p-2 sm:p-2.5 pt-2 sm:pt-2 flex flex-col flex-grow bg-gradient-to-b from-white to-slate-50 relative">
-                    <div className="mb-1.5 sm:mb-2 flex items-end">
-                      <span className={`text-sm sm:text-base font-bold ${theme.text} group-hover:scale-105 transition-transform origin-left`}>
+                  <div className="p-2.5 sm:p-3 pt-2 sm:pt-2.5 flex flex-col flex-grow bg-gradient-to-b from-white to-slate-50 relative">
+                    <div className="mb-2 sm:mb-3 flex items-end">
+                      <span className={`text-base sm:text-lg font-bold ${theme.text} group-hover:scale-105 transition-transform origin-left`}>
                         Ksh {plan.price}
                       </span>
-                      <span className="text-slate-400 text-[8px] sm:text-[9px] font-bold uppercase mb-0.5 ml-1">/bundle</span>
+                      <span className="text-slate-400 text-[8px] sm:text-[10px] font-bold uppercase mb-1 ml-1">/bundle</span>
                     </div>
 
-                    <div className="w-full h-px bg-slate-100 mb-1.5 sm:mb-2" />
+                    <div className="w-full h-px bg-slate-100 mb-2 sm:mb-3" />
 
-                    <ul className="space-y-1 mb-2 sm:mb-2.5 flex-grow">
+                    <ul className="space-y-1 sm:space-y-1.5 mb-2 sm:mb-3 flex-grow">
                       {plan.features.map((feature, i) => (
-                        <li key={i} className="flex items-start text-[9px] sm:text-[10px] text-slate-600 font-medium group-hover:text-slate-800 transition-colors">
-                          <CheckCircle className={`w-2.5 h-2.5 mr-1.5 mt-0.5 flex-shrink-0 ${theme.text}`} />
+                        <li key={i} className="flex items-start text-[10px] sm:text-xs text-slate-600 font-medium group-hover:text-slate-800 transition-colors">
+                          <CheckCircle className={`w-2.5 sm:w-3.5 h-2.5 sm:h-3.5 mr-1.5 sm:mr-2 mt-0.5 flex-shrink-0 ${theme.text}`} />
                           <span>{feature}</span>
                         </li>
                       ))}
@@ -550,10 +550,10 @@ const Hero = () => {
                       whileTap={{ scale: 0.95 }}
                       whileHover={{ scale: 1.03 }}
                       onClick={handleHotspotSelect}
-                      className="w-full py-1.5 sm:py-2 rounded-full font-bold text-[9px] sm:text-[10px] flex items-center justify-center gap-1.5 transition-all duration-300 text-white shadow-md hover:brightness-110 hover:shadow-lg"
+                      className="w-full py-2 sm:py-2 rounded-full font-bold text-[10px] sm:text-xs flex items-center justify-center gap-2 transition-all duration-300 text-white shadow-md hover:brightness-110 hover:shadow-lg"
                       style={{ background: '#ff6b35', border: '2px solid rgba(0,0,0,0.08)' }}
                     >
-                      Select <ChevronRight className="w-3 h-3" />
+                      Select <ChevronRight className="w-3 sm:w-3.5 h-3 sm:h-3.5" />
                     </motion.button>
                   </div>
                 </motion.div>
