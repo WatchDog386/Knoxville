@@ -46,9 +46,9 @@ export default function Navbar() {
               <span className="text-[#ff8a00]">•</span>
               <span>Nairobi, KE</span>
             </div>
-            <a href="tel:+254711493222" className="hidden sm:flex items-center gap-2 text-white/95 transition-colors hover:text-[#ff8a00]">
+            <a href="tel:+254726818938" className="hidden sm:flex items-center gap-2 text-white/95 transition-colors hover:text-[#ff8a00]">
               <Phone size={14} />
-              <span>+254 711 493 222</span>
+              <span>0726818938</span>
             </a>
           </div>
 
