@@ -499,47 +499,45 @@ const Hero = () => {
 
           <div className="flex gap-6 items-stretch justify-center flex-wrap">
             {hotspotPlans.map((plan, index) => {
-              const colorIndex = index % HOTSPOT_COLORS.length;
-              const color = HOTSPOT_COLORS[colorIndex];
+              // use the cyan theme from PACKAGE_THEMES so styles match WiFi cards
+              const theme = PACKAGE_THEMES.find(t => t.name === 'cyan') || PACKAGE_THEMES[0];
 
               return (
-                <motion.button
+                <motion.div
                   key={plan.name}
-                  type="button"
+                  variants={cardVariants}
                   initial={{ opacity: 0, y: 18 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, amount: 0.2 }}
                   transition={{ duration: 0.45, delay: index * 0.04 }}
                   whileHover={{ y: -4 }}
-                  onClick={handleHotspotSelect}
-                  className="group relative flex-shrink-0 w-40 sm:w-48 h-56 rounded-3xl flex flex-col text-white transition-transform duration-300 overflow-hidden"
-                  style={{ backgroundColor: color.bg }}
+                  className={`relative bg-white rounded-[1.2rem] overflow-hidden flex flex-col h-full group border border-slate-200 shadow-[0_18px_40px_rgba(15,23,42,0.06)] transition-all duration-300 w-40 sm:w-48 h-56`}
                 >
-                  {/* Header */}
-                  <div className="flex items-start justify-between p-5">
-                    <div>
-                      <p className="text-sm font-bold leading-tight">{plan.name}</p>
+                  {/* COLORED HEADER - matches WiFi package header styles */}
+                  <div className={`${theme.bg} p-2.5 relative overflow-hidden`}>
+                    <div className="absolute -right-6 -top-6 w-20 h-20 bg-white/20 rounded-full blur-xl transition-transform" />
+                    <div className="flex items-center justify-between">
+                      <h4 className="text-[9px] sm:text-xs font-bold uppercase tracking-wider text-black mb-0.5">{plan.name}</h4>
+                      <span className="bg-white/30 backdrop-blur px-2 py-1 rounded text-[0.65rem] font-bold text-white">{plan.duration}</span>
                     </div>
-                    <span className="bg-white/30 backdrop-blur px-2 py-1 rounded text-[0.65rem] font-bold text-white">
-                      {plan.duration}
-                    </span>
                   </div>
 
-                  {/* Price - Center */}
-                  <div className="flex-1 flex items-center justify-center">
-                    <p className="text-4xl font-bold text-black">
-                      Ksh {plan.price}
-                    </p>
+                  {/* PRICE CENTER - typography aligned with WiFi cards */}
+                  <div className="flex-1 flex items-center justify-center bg-gradient-to-b from-white to-slate-50 p-4">
+                    <p className="text-base sm:text-lg font-bold" style={{ color: theme.text }}>Ksh {plan.price}</p>
                   </div>
 
-                  {/* Button - Bottom */}
-                  <div className="p-5">
-                    <button className="w-full py-2.5 rounded-lg font-bold text-sm uppercase tracking-widest transition-transform hover:scale-105"
-                      style={{ background: color.btn, color: color.text, border: '2px solid rgba(0,0,0,0.08)' }}>
+                  {/* CTA - keep orange Select button */}
+                  <div className="p-3 bg-white">
+                    <button
+                      onClick={handleHotspotSelect}
+                      className="w-full py-2 rounded-full font-bold text-sm uppercase tracking-widest text-white shadow-md"
+                      style={{ background: '#ff6b35', border: '2px solid rgba(0,0,0,0.08)' }}
+                    >
                       Select
                     </button>
                   </div>
-                </motion.button>
+                </motion.div>
               );
             })}
           </div>
