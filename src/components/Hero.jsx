@@ -493,7 +493,7 @@ const Hero = () => {
           </div>
 
           <motion.div
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 w-full"
+            className="flex flex-wrap justify-center gap-4 md:gap-6 w-full"
             variants={containerVariants}
             initial="hidden"
             whileInView="visible"
@@ -512,7 +512,7 @@ const Hero = () => {
                   viewport={{ once: true, amount: 0.2 }}
                   transition={{ duration: 0.45, delay: index * 0.04 }}
                   whileHover={{ y: -5 }}
-                  className="relative bg-white rounded-[1.2rem] overflow-hidden flex flex-col h-full group border border-slate-200 shadow-[0_18px_40px_rgba(15,23,42,0.08)] ring-1 ring-slate-100/70 hover:shadow-[0_24px_60px_rgba(15,23,42,0.14)] transition-all duration-500"
+                  className="relative bg-white rounded-[1.2rem] overflow-hidden flex flex-col h-full group border border-slate-200 shadow-[0_18px_40px_rgba(15,23,42,0.08)] ring-1 ring-slate-100/70 hover:shadow-[0_24px_60px_rgba(15,23,42,0.14)] transition-all duration-500 w-full max-w-[320px] sm:w-[calc(50%-0.75rem)] lg:w-[calc(33.333%-1rem)] xl:w-[calc(25%-1.125rem)]"
                 >
                   {/* COLORED HEADER */}
                   <div className={`${theme.bg} p-2.5 sm:p-3 relative overflow-hidden rounded-bl-[2rem] transition-colors duration-300`}>
