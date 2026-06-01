@@ -44,11 +44,6 @@ const PACKAGE_THEMES = [
   { name: 'cyan', bg: 'bg-[#00aeef]', text: 'text-[#00aeef]', shadow: 'shadow-cyan-500/40' },
 ];
 
-// Hotspot Colors - single cyan theme matching 60Mbps card
-const HOTSPOT_COLORS = [
-  { name: 'cyan', bg: '#00bcd4', text: '#ffffff', btn: '#ff6b35' }
-];
-
 // Navbar / Brand font (used across header/nav)
 const NAV_FONT_FAMILY = `'Proxima Nova', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif`;
 
@@ -497,10 +492,16 @@ const Hero = () => {
             </h2>
           </div>
 
-          <div className="flex gap-6 items-stretch justify-center flex-wrap">
+          <motion.div
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 w-full"
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.1 }}
+          >
             {hotspotPlans.map((plan, index) => {
-              // use the cyan theme from PACKAGE_THEMES so styles match WiFi cards
-              const theme = PACKAGE_THEMES.find(t => t.name === 'cyan') || PACKAGE_THEMES[0];
+              // cycle through WiFi package themes for different color coding
+              const theme = PACKAGE_THEMES[index % PACKAGE_THEMES.length];
 
               return (
                 <motion.div
@@ -510,37 +511,55 @@ const Hero = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, amount: 0.2 }}
                   transition={{ duration: 0.45, delay: index * 0.04 }}
-                  whileHover={{ y: -4 }}
-                  className={`relative bg-white rounded-[1.2rem] overflow-hidden flex flex-col h-full group border border-slate-200 shadow-[0_18px_40px_rgba(15,23,42,0.06)] transition-all duration-300 w-40 sm:w-48 h-56`}
+                  whileHover={{ y: -5 }}
+                  className="relative bg-white rounded-[1rem] overflow-hidden flex flex-col h-full group border border-slate-200 shadow-[0_14px_28px_rgba(15,23,42,0.08)] ring-1 ring-slate-100/70 hover:shadow-[0_20px_40px_rgba(15,23,42,0.14)] transition-all duration-500 max-w-[220px] mx-auto"
                 >
-                  {/* COLORED HEADER - matches WiFi package header styles */}
-                  <div className={`${theme.bg} p-2.5 relative overflow-hidden`}>
-                    <div className="absolute -right-6 -top-6 w-20 h-20 bg-white/20 rounded-full blur-xl transition-transform" />
+                  {/* COLORED HEADER */}
+                  <div className={`${theme.bg} p-2 sm:p-2.5 relative overflow-hidden rounded-bl-[1.4rem] transition-colors duration-300`}>
+                    <div className="absolute -right-6 -top-6 w-16 h-16 bg-white/20 rounded-full blur-xl group-hover:scale-150 transition-transform duration-500" />
                     <div className="flex items-center justify-between">
-                      <h4 className="text-[9px] sm:text-xs font-bold uppercase tracking-wider text-black mb-0.5">{plan.name}</h4>
-                      <span className="bg-white/30 backdrop-blur px-2 py-1 rounded text-[0.65rem] font-bold text-white">{plan.duration}</span>
+                      <h4 className="text-[8px] sm:text-[10px] font-bold uppercase tracking-wider text-black mb-0.5">{plan.name}</h4>
+                      <span className="bg-white/30 backdrop-blur px-1.5 py-0.5 rounded text-[9px] font-bold text-white uppercase">{plan.duration}</span>
+                    </div>
+                    <div className="flex items-baseline gap-1.5">
+                      <h3 className="text-xs sm:text-sm font-extrabold tracking-tight text-black">{plan.devices}</h3>
                     </div>
                   </div>
 
-                  {/* PRICE CENTER - typography aligned with WiFi cards */}
-                  <div className="flex-1 flex items-center justify-center bg-gradient-to-b from-white to-slate-50 p-4">
-                    <p className="text-base sm:text-lg font-bold" style={{ color: theme.text }}>Ksh {plan.price}</p>
-                  </div>
+                  {/* BODY SECTION */}
+                  <div className="p-2 sm:p-2.5 pt-2 sm:pt-2 flex flex-col flex-grow bg-gradient-to-b from-white to-slate-50 relative">
+                    <div className="mb-1.5 sm:mb-2 flex items-end">
+                      <span className={`text-sm sm:text-base font-bold ${theme.text} group-hover:scale-105 transition-transform origin-left`}>
+                        Ksh {plan.price}
+                      </span>
+                      <span className="text-slate-400 text-[8px] sm:text-[9px] font-bold uppercase mb-0.5 ml-1">/bundle</span>
+                    </div>
 
-                  {/* CTA - keep orange Select button */}
-                  <div className="p-3 bg-white">
-                    <button
+                    <div className="w-full h-px bg-slate-100 mb-1.5 sm:mb-2" />
+
+                    <ul className="space-y-1 mb-2 sm:mb-2.5 flex-grow">
+                      {plan.features.map((feature, i) => (
+                        <li key={i} className="flex items-start text-[9px] sm:text-[10px] text-slate-600 font-medium group-hover:text-slate-800 transition-colors">
+                          <CheckCircle className={`w-2.5 h-2.5 mr-1.5 mt-0.5 flex-shrink-0 ${theme.text}`} />
+                          <span>{feature}</span>
+                        </li>
+                      ))}
+                    </ul>
+
+                    <motion.button
+                      whileTap={{ scale: 0.95 }}
+                      whileHover={{ scale: 1.03 }}
                       onClick={handleHotspotSelect}
-                      className="w-full py-2 rounded-full font-bold text-sm uppercase tracking-widest text-white shadow-md"
+                      className="w-full py-1.5 sm:py-2 rounded-full font-bold text-[9px] sm:text-[10px] flex items-center justify-center gap-1.5 transition-all duration-300 text-white shadow-md hover:brightness-110 hover:shadow-lg"
                       style={{ background: '#ff6b35', border: '2px solid rgba(0,0,0,0.08)' }}
                     >
-                      Select
-                    </button>
+                      Select <ChevronRight className="w-3 h-3" />
+                    </motion.button>
                   </div>
                 </motion.div>
               );
             })}
-          </div>
+          </motion.div>
         </div>
       </section>
 
