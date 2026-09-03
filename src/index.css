@@ -372,6 +372,12 @@ p, li {
     width: 100%;
     text-align: center;
   }
+
+  /* Remove visual separation between home page sections on mobile */
+  .home-page-section {
+    background-color: var(--vuma-background) !important;
+    background-image: none !important;
+  }
 }
 
 /* === RISA Utility Classes === */

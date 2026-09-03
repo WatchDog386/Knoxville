@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Helmet } from "react-helmet";
 import { useNavigate } from "react-router-dom";
@@ -91,6 +91,23 @@ const cardVariants = {
   }
 };
 
+const fadeUp = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { 
+    opacity: 1, 
+    y: 0,
+    transition: { duration: 0.6, ease: "easeOut" }
+  }
+};
+
+const staggerContainer = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.1 }
+  }
+};
+
 export default function ServicesPage() {
   const navigate = useNavigate();
 
@@ -115,7 +132,7 @@ export default function ServicesPage() {
       `}</style>
 
 {/* ================= HERO SECTION ================= */}
-      <section className="relative py-24 md:py-32 flex items-center justify-center overflow-hidden bg-slate-900">
+      <section className="relative w-full overflow-hidden h-[30vh] sm:h-[38vh] md:h-[65vh] lg:h-[75vh] flex items-center justify-center bg-slate-900">
         {/* Background Image */}
         <div className="absolute inset-0 z-0">
           <img 
@@ -132,10 +149,10 @@ export default function ServicesPage() {
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.8 }}
           >
-            <span className="inline-block px-4 py-1 mb-4 rounded-full bg-blue-500/20 border border-blue-500 text-blue-400 text-xs font-bold uppercase tracking-widest backdrop-blur-sm">
+            <span className="inline-block px-4 py-1 mb-4 rounded-full bg-blue-500/20 border border-blue-500 text-blue-400 text-xs font-semibold uppercase tracking-widest backdrop-blur-sm">
               Our Expertise
             </span>
-            <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight">
+            <h1 className="text-4xl md:text-6xl font-light text-white mb-6 leading-tight" style={{ fontFamily: FONT_FAMILY }}>
               Solutions Built for <br /> <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">The Future</span>
             </h1>
             <p className="text-lg md:text-xl text-slate-300 max-w-2xl mx-auto font-light leading-relaxed">
@@ -154,7 +171,7 @@ export default function ServicesPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-800">What We Offer</h2>
+            <h2 className="text-3xl md:text-4xl font-light text-slate-800">What We Offer</h2>
             <p className="text-slate-600 mt-3 max-w-2xl mx-auto">End-to-end technology solutions designed for reliability and performance.</p>
           </div>
 
@@ -173,63 +190,53 @@ export default function ServicesPage() {
                 <motion.div
                   key={service.id}
                   variants={cardVariants}
-                  whileHover={{ y: -10 }}
-                  className="bg-white rounded-[2rem] shadow-xl border border-white hover:border-blue-100 hover:shadow-2xl transition-all duration-500 flex flex-col overflow-visible relative group"
+                  whileHover={{ y: -5 }}
+                  className={`relative bg-white rounded-[1.2rem] overflow-hidden flex flex-col h-full group border border-slate-200 shadow-[0_18px_40px_rgba(15,23,42,0.08)] ring-1 ring-slate-100/70 hover:shadow-[0_24px_60px_rgba(15,23,42,0.14)] transition-all duration-500 ${theme.bg}`}
                 >
-                  {/* 1. COLORED HEADER (Curved) */}
-                  <div className={`${theme.bg} h-40 rounded-t-[2rem] rounded-bl-[4rem] relative flex items-center justify-center overflow-hidden transition-transform duration-500`}>
-                    {/* Decorative background circle */}
-                    <div className="absolute -top-10 -right-10 w-32 h-32 bg-white/10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700"></div>
-                    
-                    {/* Icon with gentle float animation */}
+                  {/* 1. IMAGE/ICON SECTION */}
+                  <div className="relative h-32 overflow-hidden border-b border-slate-100">
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10" />
                     <motion.div 
                       animate={{ y: [0, -5, 0] }}
                       transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                      className="text-white z-10"
+                      className="absolute inset-0 flex items-center justify-center z-10 text-white"
                     >
                       {service.icon}
                     </motion.div>
+                    <div className="absolute top-3 right-3 z-20">
+                      <span className={`${theme.bg} text-white text-[9px] font-bold px-2 py-1 rounded-full flex items-center gap-1 shadow-lg`}>
+                        Service
+                      </span>
+                    </div>
                   </div>
 
-                  {/* 2. FLOATING BUTTON (Sits on curve) */}
-                  <div className="absolute top-32 right-8 z-20">
-                    <motion.button
-                      whileHover={{ scale: 1.1, rotate: 90 }}
-                      whileTap={{ scale: 0.9 }}
-                      className={`w-14 h-14 rounded-full bg-white border-4 border-slate-50 flex items-center justify-center shadow-lg ${theme.text}`}
-                    >
-                      <ArrowRight className="w-6 h-6" />
-                    </motion.button>
-                  </div>
-
-                  {/* 3. BODY CONTENT */}
-                  <div className="p-8 pt-6 flex flex-col flex-grow">
-                    <h3 className={`text-xl font-bold mb-3 ${theme.text}`}>
-                      {service.title}
-                    </h3>
+                  {/* 2. COLORED HEADER */}
+                  <div className={`${theme.bg} p-4 relative overflow-hidden rounded-bl-[2rem] transition-colors duration-300`}>
+                    <div className="absolute -right-6 -top-6 w-20 h-20 bg-white/20 rounded-full blur-xl group-hover:scale-150 transition-transform duration-500"></div>
                     
-                    <p className="text-slate-600 text-sm mb-6 leading-relaxed">
-                      {service.description}
-                    </p>
+                    <h3 className="text-sm font-bold uppercase tracking-wider text-white mb-1">{service.title}</h3>
+                    <p className="text-white/90 text-xs leading-relaxed max-w-xs">{service.description}</p>
+                  </div>
 
-                    <div className="w-full h-px bg-slate-100 mb-6" />
+                  {/* 3. BODY SECTION */}
+                  <div className="p-4 pt-3 flex flex-col flex-grow bg-gradient-to-b from-white to-slate-50 relative">
+                    <div className="w-full h-px bg-slate-100 mb-4" />
 
-                    <ul className="space-y-3 mb-6 flex-grow">
+                    <ul className="space-y-2 mb-4 flex-grow">
                       {service.features.map((feature, i) => (
-                        <li key={i} className="flex items-start text-sm text-slate-500 font-medium group-hover:text-slate-700 transition-colors">
-                          <div className={`mt-0.5 mr-3 p-1 rounded-full bg-slate-100 group-hover:bg-white group-hover:shadow-sm transition-all`}>
-                             <Check className={`w-3 h-3 ${theme.text}`} />
-                          </div>
-                          {feature}
+                        <li key={i} className="flex items-start text-xs text-slate-600 font-medium group-hover:text-slate-800 transition-colors">
+                          <Check className={`w-3.5 h-3.5 mr-2 mt-0.5 flex-shrink-0 ${theme.text}`} />
+                          <span>{feature}</span>
                         </li>
                       ))}
                     </ul>
 
                     <motion.button
-                      whileTap={{ scale: 0.98 }}
-                      className={`w-full py-3 rounded-xl text-sm font-bold border-2 border-slate-100 text-slate-600 hover:text-white hover:border-transparent transition-all duration-300 group-hover:${theme.bg} group-hover:shadow-lg`}
+                      whileTap={{ scale: 0.95 }}
+                      whileHover={{ scale: 1.03 }}
+                      className={`w-full py-2 rounded-full font-bold text-xs flex items-center justify-center gap-2 transition-all duration-300 text-white shadow-md ${theme.bg} ${theme.shadow} hover:brightness-110 hover:shadow-lg`}
                     >
-                      Learn More
+                      Learn More <ChevronRight className="w-3.5 h-3.5" />
                     </motion.button>
                   </div>
                 </motion.div>
@@ -239,33 +246,32 @@ export default function ServicesPage() {
         </div>
       </section>
 
-      {/* ================= CTA SECTION ================= */}
-      <section className="py-20 bg-slate-900 relative overflow-hidden">
-         <div className="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
-         <div className="max-w-4xl mx-auto px-4 text-center relative z-10">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">Need a Custom Solution?</h2>
-            <p className="text-slate-300 text-lg mb-8">
-              We understand that every business is unique. Contact our expert consultants for a tailored infrastructure assessment.
-            </p>
-            <div className="flex flex-col sm:flex-row justify-center gap-4">
-<motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => navigate('/contact')}
-              className="px-8 py-4 bg-gradient-to-r from-blue-600 to-blue-500 text-white rounded-full font-bold shadow-lg hover:shadow-blue-500/40 transition-all"
-            >
-              Get a Quote
-            </motion.button>
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => navigate('/contact')}
-              className="px-8 py-4 bg-transparent border-2 border-white text-white rounded-full font-bold hover:bg-white hover:text-slate-900 transition-all"
-            >
-              Contact Sales
-              </motion.button>
-            </div>
-         </div>
+{/* ================= CTA SECTION ================= */}
+      <section className="home-page-section py-12 md:py-16">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+           <h2 className="text-2xl md:text-3xl font-light text-white mb-5">Need a Custom Solution?</h2>
+           <p className="text-slate-300 text-lg mb-8">
+             We understand that every business is unique. Contact our expert consultants for a tailored infrastructure assessment.
+           </p>
+           <div className="flex flex-col sm:flex-row gap-3 justify-center mt-6">
+             <motion.button
+               whileHover={{ scale: 1.05 }}
+               whileTap={{ scale: 0.95 }}
+               onClick={() => navigate('/contact')}
+               className="px-8 py-3.5 bg-[#015B97] hover:bg-blue-700 text-white rounded-full font-bold shadow-lg hover:shadow-xl transition-all duration-300"
+             >
+               Get a Quote
+             </motion.button>
+             <motion.button
+               whileHover={{ scale: 1.05 }}
+               whileTap={{ scale: 0.95 }}
+               onClick={() => navigate('/contact')}
+               className="px-8 py-3.5 bg-white hover:bg-slate-50 text-[#015B97] border-2 border-[#015B97] rounded-full font-bold hover:bg-[#015B97] hover:text-white transition-all duration-300"
+             >
+               Contact Sales
+             </motion.button>
+           </div>
+        </div>
       </section>
 
     </div>

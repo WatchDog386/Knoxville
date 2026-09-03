@@ -68,8 +68,7 @@ export default function Home() {
       </section>
 
         {/* Testimonials */}
-        <div className="w-full bg-white">
-        <section className="py-12 sm:py-24 w-full max-w-5xl mx-auto px-4 sm:px-8 text-center">
+        <section className="home-page-section sm:bg-white py-12 sm:py-24 w-full max-w-5xl mx-auto px-4 sm:px-8 text-center">
           <h2 className="text-xl sm:text-3xl font-bold text-gray-900 mb-2 sm:mb-4 tracking-tight">
             What our clients are saying
           </h2>
@@ -123,9 +122,8 @@ export default function Home() {
                 </span>
               </button>
             </div>
-          </div>
-        </section>
-        </div>
 </div>
+        </section>
+      </div>
 );
 }

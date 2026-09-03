@@ -167,12 +167,40 @@ const Hero = () => {
   const [showForm, setShowForm] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState(null);
   const [expandedCards, setExpandedCards] = useState({});
+  const [hotspotSlide, setHotspotSlide] = useState(0);
+  const [packageSlide, setPackageSlide] = useState(0);
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
     }, 5000);
     return () => clearInterval(timer);
   }, []);
+
+  useEffect(() => {
+    if (window.innerWidth >= 768) return undefined;
+    const timer = setInterval(() => {
+      setHotspotSlide((prev) => (prev + 1) % 3);
+    }, 3000);
+    return () => clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setPackageSlide((prev) => (prev + 1) % Math.ceil(hotspotPlans.length / 2));
+    }, 3500);
+    return () => clearInterval(timer);
+  }, []);
+
+  const carouselCards = [
+    { ...hotspotHighlights[0], solidBg: "bg-[#00a651]", iconCardBg: "bg-green-100", iconColor: "text-[#00a651]", titleColor: "text-[#00a651]", accentBar: "bg-[#00a651]" },
+    { ...hotspotHighlights[1], solidBg: "bg-[#ed1c24]", iconCardBg: "bg-red-100", iconColor: "text-[#ed1c24]", titleColor: "text-[#ed1c24]", accentBar: "bg-[#ed1c24]" },
+    { ...hotspotHighlights[2], solidBg: "bg-[#662d91]", iconCardBg: "bg-purple-100", iconColor: "text-[#662d91]", titleColor: "text-[#662d91]", accentBar: "bg-[#662d91]" },
+  ];
+
+  const hotspotPairs = [];
+  for (let i = 0; i < hotspotPlans.length; i += 2) {
+    hotspotPairs.push(hotspotPlans.slice(i, i + 2));
+  }
 
   const [formData, setFormData] = useState({ 
     name: '', 
@@ -301,7 +329,7 @@ const Hero = () => {
       </section>
 
       {/* ================= OUR COVERAGE ================= */}
-      <section className="relative w-full py-16 sm:py-32 overflow-hidden bg-gradient-to-b from-slate-50 to-white">
+      <section className="home-page-section relative w-full py-16 sm:py-32 overflow-hidden bg-gradient-to-b from-slate-50 to-white">
         <div className="absolute left-[-10%] top-[20%] w-[60%] h-[80%] bg-red-100/50 rounded-r-[100px] border-r-8 border-slate-200/80 -z-10 transform -rotate-6"></div>
         <div className="absolute right-0 bottom-0 w-[40%] h-[60%] bg-red-100/60 rounded-tl-full blur-3xl -z-10 opacity-70"></div>
 
@@ -354,7 +382,7 @@ const Hero = () => {
       </section>
 
       {/* ================= PLANS SECTION ================= */}
-      <section id="plans-section" className="py-5 md:py-20 bg-white relative overflow-hidden">
+      <section id="plans-section" className="home-page-section py-5 md:py-20 bg-white relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-8 relative z-10">
           <div className="text-center max-w-3xl mx-auto mb-3 md:mb-12">
             <motion.h2
@@ -498,24 +526,7 @@ const Hero = () => {
       </section>
 
       {/* ================= HOTSPOT SECTION (CARDS WITH CAROUSEL ON MOBILE) ================= */}
-      {(() => {
-        const [currentSlide, setCurrentSlide] = React.useState(0);
-        React.useEffect(() => {
-          if (window.innerWidth < 768) {
-            const timer = setInterval(() => {
-              setCurrentSlide((prev) => (prev + 1) % 3);
-            }, 3000);
-            return () => clearInterval(timer);
-          }
-        }, []);
-        const carouselCards = [
-          { ...hotspotHighlights[0], solidBg: "bg-[#00a651]", iconCardBg: "bg-green-100", iconColor: "text-[#00a651]", titleColor: "text-[#00a651]", accentBar: "bg-[#00a651]" },
-          { ...hotspotHighlights[1], solidBg: "bg-[#ed1c24]", iconCardBg: "bg-red-100", iconColor: "text-[#ed1c24]", titleColor: "text-[#ed1c24]", accentBar: "bg-[#ed1c24]" },
-          { ...hotspotHighlights[2], solidBg: "bg-[#662d91]", iconCardBg: "bg-purple-100", iconColor: "text-[#662d91]", titleColor: "text-[#662d91]", accentBar: "bg-[#662d91]" },
-        ];
-
-        return (
-          <section className="relative overflow-hidden py-16 sm:py-24 bg-white">
+      <section className="home-page-section relative overflow-hidden py-16 sm:py-24 bg-white">
             <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-8">
               {/* Desktop: 3-column grid */}
               <div className="hidden md:grid md:grid-cols-3 gap-6">
@@ -587,12 +598,10 @@ const Hero = () => {
                 </div>
               </div>
             </div>
-          </section>
-        );
-      })()}
+      </section>
 
       {/* ================= WHY CHOOSE KNOXVILLE ================= */}
-      <section className="relative w-full py-16 sm:py-32 overflow-hidden bg-gradient-to-b from-slate-50 to-white">
+      <section className="home-page-section relative w-full py-16 sm:py-32 overflow-hidden bg-gradient-to-b from-slate-50 to-white">
         <div className="absolute left-[-10%] top-[20%] w-[60%] h-[80%] bg-red-100/50 rounded-r-[100px] border-r-8 border-slate-200/80 -z-10 transform -rotate-6"></div>
         <div className="absolute right-0 bottom-0 w-[40%] h-[60%] bg-red-100/60 rounded-tl-full blur-3xl -z-10 opacity-70"></div>
 
@@ -660,7 +669,7 @@ const Hero = () => {
         }
 
         return (
-          <section className="relative overflow-hidden py-10 sm:py-24 bg-gradient-to-b from-slate-50 to-white">
+          <section className="home-page-section relative overflow-hidden py-10 sm:py-24 bg-gradient-to-b from-slate-50 to-white">
             <div className="max-w-7xl mx-auto px-4 sm:px-8 relative z-10">
               <div className="text-center max-w-3xl mx-auto mb-6 sm:mb-12">
                 <h2 className="text-2xl sm:text-4xl md:text-5xl font-bold text-slate-900">

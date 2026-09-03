@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Helmet } from "react-helmet";
 import { 
@@ -6,17 +6,62 @@ import {
   CheckCircle2, Globe, X,
   MapPin, Activity, ArrowUpRight, Play, Maximize2, ExternalLink, ArrowLeft
 } from "lucide-react";
+import { CheckCircle } from "lucide-react";
 
-// 🔥 Knoxville Brand Colors
+// 🔥 Knoxville Brand Colors - matching home page
+const PACKAGE_THEMES = [
+  { name: 'blue', bg: 'bg-[#0061a8]', text: 'text-[#0061a8]', shadow: 'shadow-blue-500/40' },
+  { name: 'green', bg: 'bg-[#00a651]', text: 'text-[#00a651]', shadow: 'shadow-green-500/40' },
+  { name: 'orange', bg: 'bg-[#f7941d]', text: 'text-[#f7941d]', shadow: 'shadow-orange-500/40' },
+  { name: 'purple', bg: 'bg-[#662d91]', text: 'text-[#662d91]', shadow: 'shadow-purple-500/40' },
+  { name: 'red', bg: 'bg-[#ed1c24]', text: 'text-[#ed1c24]', shadow: 'shadow-red-500/40' },
+  { name: 'cyan', bg: 'bg-[#00aeef]', text: 'text-[#00aeef]', shadow: 'shadow-cyan-500/40' },
+];
+
 const BRAND = {
   black: "#121212",
-  blue: "#015B97",      // Primary Blue
-  orange: "#fb8c00",    // Primary Orange
+  blue: "#015B97",
+  orange: "#fb8c00",
   white: "#ffffff",
   slate: "#f1f5f9"
 };
 
 const FONT_FAMILY = `'Proxima Nova', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif`;
+
+// Animation Variants - matching home page
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.15 }
+  }
+};
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 50 },
+  visible: { 
+    opacity: 1, 
+    y: 0,
+    transition: { type: "spring", stiffness: 100, damping: 12 }
+  }
+};
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { 
+    opacity: 1, 
+    y: 0,
+    transition: { duration: 0.6, ease: "easeOut" }
+  }
+};
+
+const staggerContainer = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.1 }
+  }
+};
 
 const values = [
   { 
@@ -73,21 +118,20 @@ const galleryImages = [
   "WhatsApp Image 2026-05-04 at 4.04.57 PM.jpeg"
 ];
 
-// Animation Variants
-const fadeUp = {
-  hidden: { opacity: 0, y: 30 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6 } }
-};
-
-const staggerContainer = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
-};
-
 export default function AboutPage() {
   // --- STATE FOR LIGHTBOX ---
   const [selectedMedia, setSelectedMedia] = useState(null);
   const [showMoreGallery, setShowMoreGallery] = useState(false);
+  const [coreValueSlide, setCoreValueSlide] = useState(0);
+
+  // Auto-advance core values carousel on mobile
+  useEffect(() => {
+    if (window.innerWidth >= 768) return;
+    const timer = setInterval(() => {
+      setCoreValueSlide((prev) => (prev + 1) % values.length);
+    }, 4000);
+    return () => clearInterval(timer);
+  }, []);
 
   // Helper function to open the lightbox
   const openLightbox = (type, src) => {
@@ -161,7 +205,7 @@ export default function AboutPage() {
       </AnimatePresence>
 
       {/* ================= HERO SECTION ================= */}
-      <section className="relative h-[60vh] min-h-[500px] flex items-center justify-center overflow-hidden">
+      <section className="relative w-full overflow-hidden h-[30vh] sm:h-[38vh] md:h-[65vh] lg:h-[75vh] flex items-center justify-center">
         <div className="absolute inset-0 z-0">
           <video 
             autoPlay muted loop playsInline
@@ -178,45 +222,55 @@ export default function AboutPage() {
             initial="hidden" animate="visible" variants={fadeUp}
             className="max-w-3xl"
           >
-            <div className="flex items-center gap-2 mb-6">
+            <div className="flex items-center gap-2 mb-4">
               <div className="h-1 w-12 bg-[#fb8c00]"></div>
-              <span className="text-[#fb8c00] font-bold tracking-widest uppercase text-sm">Who We Are</span>
+              <span className="text-[#fb8c00] font-semibold tracking-widest uppercase text-sm">Who We Are</span>
             </div>
-            <h1 className="text-4xl md:text-6xl font-extrabold text-white mb-6 leading-tight" style={{ fontFamily: FONT_FAMILY, fontWeight: 950, letterSpacing: '-0.02em' }}>
+            <h1 className="text-3xl md:text-5xl font-light text-white mb-4 leading-tight" style={{ fontFamily: FONT_FAMILY }}>
               Empowering Kenya <br /> Through <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#fb8c00] to-orange-400">Connectivity</span>
             </h1>
-            <p className="text-xl text-slate-300 font-light leading-relaxed max-w-2xl">
-              We are more than an ISP. We are the bridge to the digital future.
+            <p className="text-base md:text-lg text-slate-300 font-light leading-relaxed max-w-xl">
+              Reliable fibre that keeps homes, businesses, and communities connected.
             </p>
           </motion.div>
         </div>
       </section>
 
       {/* ================= CORPORATE BIO ================= */}
-      <section className="py-20 bg-slate-50 relative">
+      <section className="home-page-section py-12 md:py-16 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
+          <div className="grid lg:grid-cols-2 gap-10 items-center">
             <motion.div 
               initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}
             >
-              <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-6">The Knoxville Story</h2>
-              <div className="space-y-6 text-lg text-slate-600 leading-relaxed">
+              <h2 className="text-2xl md:text-3xl font-light text-slate-900 mb-4">The Knoxville Story</h2>
+              <div className="space-y-4 text-base text-slate-600 leading-relaxed max-w-xl">
                 <p>
-                  <strong className="text-[#015B97]">Knoxville Technologies</strong> is a premier Kenyan Internet Service Provider focused on delivering ultra-fast, reliable, and affordable internet.
+                  <strong className="text-[#015B97]">Knoxville Technologies</strong> delivers fast, reliable, and affordable internet across Kenya.
                 </p>
                 <p>
-                  From the heart of Nairobi to peri-urban communities, we are committed to empowering homes and businesses with seamless access to information.
+                  We connect homes and businesses with dependable service and local support.
                 </p>
               </div>
-              <div className="mt-8 grid grid-cols-2 gap-4">
-                <div className="flex items-center gap-3">
-                  <div className="bg-blue-100 p-2 rounded-none"><CheckCircle2 className="w-5 h-5 text-[#015B97]" /></div>
-                  <span className="font-semibold text-slate-800">Licensed ISP</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <div className="bg-orange-100 p-2 rounded-none"><CheckCircle2 className="w-5 h-5 text-[#fb8c00]" /></div>
-                  <span className="font-semibold text-slate-800">24/7 Local Support</span>
-                </div>
+              <div className="mt-6 grid grid-cols-2 gap-3">
+                <motion.div
+                  whileHover={{ y: -5 }}
+                  className="bg-white rounded-[1.2rem] overflow-hidden flex flex-col h-full group border border-slate-200 shadow-[0_18px_40px_rgba(15,23,42,0.08)] ring-1 ring-slate-100/70 hover:shadow-[0_24px_60px_rgba(15,23,42,0.14)] transition-all duration-500 p-4"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="bg-blue-100 p-2 rounded-[1.2rem]"><CheckCircle2 className="w-5 h-5 text-[#015B97]" /></div>
+                    <span className="font-semibold text-slate-800">Licensed ISP</span>
+                  </div>
+                </motion.div>
+                <motion.div
+                  whileHover={{ y: -5 }}
+                  className="bg-white rounded-[1.2rem] overflow-hidden flex flex-col h-full group border border-slate-200 shadow-[0_18px_40px_rgba(15,23,42,0.08)] ring-1 ring-slate-100/70 hover:shadow-[0_24px_60px_rgba(15,23,42,0.14)] transition-all duration-500 p-4"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="bg-orange-100 p-2 rounded-[1.2rem]"><CheckCircle2 className="w-5 h-5 text-[#fb8c00]" /></div>
+                    <span className="font-semibold text-slate-800">24/7 Local Support</span>
+                  </div>
+                </motion.div>
               </div>
             </motion.div>
 
@@ -224,8 +278,8 @@ export default function AboutPage() {
               initial={{ opacity: 0, x: 50 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }}
               className="relative"
             >
-              <div className="absolute top-0 right-0 w-2/3 h-full bg-[#015B97]/5 rounded-none -z-10 transform translate-x-8 -translate-y-8"></div>
-              <video controls muted className="rounded-none shadow-2xl w-full object-cover h-[500px] bg-slate-900" poster="/about.jpg">
+              <div className="absolute top-0 right-0 w-2/3 h-full bg-[#015B97]/5 rounded-[1.2rem] -z-10 transform translate-x-8 -translate-y-8"></div>
+              <video controls muted className="rounded-[1.2rem] shadow-[0_18px_40px_rgba(15,23,42,0.08)] ring-1 ring-slate-100/70 w-full object-cover h-[320px] md:h-[380px] bg-slate-900" poster="/about.jpg">
                 <source src="/tech2.mp4" type="video/mp4" />
               </video>
             </motion.div>
@@ -234,13 +288,13 @@ export default function AboutPage() {
       </section>
 
       {/* ================= PORTFOLIO / IMPACT SECTION (SHARP EDGES + NEW IMAGES) ================= */}
-      <section className="py-16 bg-white border-t border-slate-100">
+      <section className="home-page-section py-12 md:py-16 border-t border-slate-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
-          <div className="flex flex-col md:flex-row justify-between items-end mb-8">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-6">
             <div>
-              <span className="text-[#015B97] font-bold tracking-widest uppercase text-xs">Our Work</span>
-              <h2 className="text-2xl md:text-4xl font-bold text-slate-900 mt-2">
+              <span className="text-[#015B97] font-semibold tracking-widest uppercase text-xs">Our Work</span>
+              <h2 className="text-2xl md:text-3xl font-light text-slate-900 mt-2">
                 Impact in <span className="text-[#fb8c00]">Action</span>
               </h2>
             </div>
@@ -249,14 +303,14 @@ export default function AboutPage() {
             </p>
           </div>
 
-          {/* GRID LAYOUT - Staggered masonry-like layout */}
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 auto-rows-[160px] md:auto-rows-[180px]">
+          <div className="grid grid-cols-2 md:grid-cols-2 gap-2 md:gap-5">
 
             {/* 1. HERO VIDEO - Large left feature (spans majority of width) */}
             <motion.div 
               initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}
               onClick={() => openLightbox('video', '/VID-20251201-WA0004.mp4')}
-              className="md:col-span-7 md:row-span-2 relative group rounded-none overflow-hidden bg-slate-900 cursor-pointer border border-slate-200"
+              className="col-span-2 md:col-span-2 relative group rounded-[1.2rem] overflow-hidden bg-slate-900 cursor-pointer border border-slate-200 shadow-[0_18px_40px_rgba(15,23,42,0.08)] ring-1 ring-slate-100/70 hover:shadow-[0_24px_60px_rgba(15,23,42,0.14)] transition-all duration-500 aspect-[16/7]"
+              whileHover={{ y: -5 }}
             >
               <div className="absolute top-0 left-0 w-full p-4 z-20 flex justify-between items-start">
                  <div className="bg-red-600 px-2 py-1 text-white text-[10px] font-bold uppercase tracking-wider rounded-none">
@@ -283,7 +337,8 @@ export default function AboutPage() {
 
             {/* 2. STAT CARD - Top-right accent */}
             <motion.div 
-              className="md:col-span-3 bg-[#015B97] rounded-none p-6 flex flex-col justify-between group hover:bg-[#014a7a] transition-colors text-white"
+              className="col-span-2 md:col-span-2 bg-[#015B97] rounded-[1.2rem] p-5 flex flex-col justify-between group hover:bg-[#014a7a] transition-colors text-white min-h-[130px] shadow-[0_18px_40px_rgba(15,23,42,0.08)] ring-1 ring-slate-100/70 hover:shadow-[0_24px_60px_rgba(15,23,42,0.14)] transition-all duration-500"
+              whileHover={{ y: -5 }}
             >
                <Activity className="w-8 h-8 opacity-50 mb-4" />
                <div>
@@ -294,16 +349,10 @@ export default function AboutPage() {
 
             {/* 3. LATEST IMAGE GALLERY */}
             {latestGalleryImages.map((img, index) => {
-              // Map indices to span sizes to create the staggered layout similar to the reference
-              let spanClass = "md:col-span-2 md:row-span-1";
-              if (index === 0) spanClass = "md:col-span-5 md:row-span-1"; // wide card on top-right
-              else if (index === 1) spanClass = "md:col-span-4 md:row-span-2"; // tall card below the wide one
-              else if (index === 2) spanClass = "md:col-span-3 md:row-span-1";
-              else if (index === 3) spanClass = "md:col-span-3 md:row-span-1";
-              else if (index === 4) spanClass = "md:col-span-4 md:row-span-1";
-
               // Encode spaces in filename
               const encodedImg = encodeURIComponent(img);
+
+              const theme = PACKAGE_THEMES[index % PACKAGE_THEMES.length];
 
               return (
                 <motion.div
@@ -313,10 +362,16 @@ export default function AboutPage() {
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.04 }}
                   onClick={() => openLightbox('image', `/${encodedImg}`)}
-                  className={`relative group rounded-none overflow-hidden bg-slate-200 cursor-pointer border border-slate-200 ${spanClass}`}
+                  className="relative group rounded-[1.2rem] overflow-hidden bg-slate-200 cursor-pointer border border-slate-200 shadow-[0_18px_40px_rgba(15,23,42,0.08)] ring-1 ring-slate-100/70 hover:shadow-[0_24px_60px_rgba(15,23,42,0.14)] transition-all duration-500 aspect-[4/3]"
+                  whileHover={{ y: -5 }}
                 >
                   <div className="absolute inset-0 z-10 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                      <Maximize2 className="w-6 h-6 text-white" />
+                  </div>
+                  <div className="absolute top-3 right-3 z-20">
+                    <span className={`${theme.bg} text-white text-[9px] font-bold px-2 py-1 rounded-full flex items-center gap-1 shadow-lg`}>
+                      Latest
+                    </span>
                   </div>
                   <img 
                     src={`/${encodedImg}`} 
@@ -330,6 +385,7 @@ export default function AboutPage() {
 
             {showMoreGallery && galleryImages.map((img, index) => {
               const encodedImg = encodeURIComponent(img);
+              const theme = PACKAGE_THEMES[index % PACKAGE_THEMES.length];
 
               return (
                 <motion.div
@@ -338,10 +394,16 @@ export default function AboutPage() {
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: index * 0.04 }}
                   onClick={() => openLightbox('image', `/${encodedImg}`)}
-                  className="relative group rounded-none overflow-hidden bg-slate-200 cursor-pointer border border-slate-200 md:col-span-2 md:row-span-1"
+                  className="relative group rounded-[1.2rem] overflow-hidden bg-slate-200 cursor-pointer border border-slate-200 shadow-[0_18px_40px_rgba(15,23,42,0.08)] ring-1 ring-slate-100/70 hover:shadow-[0_24px_60px_rgba(15,23,42,0.14)] transition-all duration-500 aspect-[4/3]"
+                  whileHover={{ y: -5 }}
                 >
                   <div className="absolute inset-0 z-10 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                     <Maximize2 className="w-6 h-6 text-white" />
+                  </div>
+                  <div className="absolute top-3 right-3 z-20">
+                    <span className={`${theme.bg} text-white text-[9px] font-bold px-2 py-1 rounded-full flex items-center gap-1 shadow-lg`}>
+                      Gallery
+                    </span>
                   </div>
                   <img
                     src={`/${encodedImg}`}
@@ -359,7 +421,7 @@ export default function AboutPage() {
             <button
               type="button"
               onClick={() => setShowMoreGallery((visible) => !visible)}
-              className="inline-flex items-center gap-2 border-2 border-[#015B97] px-6 py-3 font-bold text-[#015B97] hover:bg-[#015B97] hover:text-white transition-colors"
+              className="w-full sm:w-auto px-6 py-2 sm:py-3 rounded-full font-bold text-sm sm:text-base text-white shadow-md bg-[#015B97] hover:brightness-110 hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2"
             >
               {showMoreGallery ? "Show Less" : "View More"}
               <ChevronRight className={`w-5 h-5 transition-transform ${showMoreGallery ? "rotate-90" : ""}`} />
@@ -369,28 +431,28 @@ export default function AboutPage() {
       </section>
 
       {/* ================= MISSION & VISION ================= */}
-      <section className="py-20 bg-white">
+      <section className="home-page-section py-12 md:py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-2 gap-8">
+          <div className="grid md:grid-cols-2 gap-4 md:gap-6">
             <motion.div 
-              whileHover={{ y: -5 }} className="bg-slate-50 p-10 rounded-none border border-slate-100 shadow-sm"
+              whileHover={{ y: -5 }} className="bg-white rounded-[1.2rem] overflow-hidden flex flex-col h-full group border border-slate-200 shadow-[0_18px_40px_rgba(15,23,42,0.08)] ring-1 ring-slate-100/70 hover:shadow-[0_24px_60px_rgba(15,23,42,0.14)] transition-all duration-500 p-6 md:p-8"
             >
-              <div className="w-14 h-14 bg-[#015B97] rounded-none flex items-center justify-center mb-6">
+              <div className="w-12 h-12 bg-[#015B97] rounded-[1.2rem] flex items-center justify-center mb-4 shadow-lg">
                 <Target className="w-7 h-7 text-white" />
               </div>
-              <h3 className="text-2xl font-bold text-slate-900 mb-4">Our Mission</h3>
+              <h3 className="text-xl font-bold text-slate-900 mb-3">Our Mission</h3>
               <p className="text-slate-600 leading-relaxed">
                 To empower businesses and communities through reliable, innovative digital infrastructure.
               </p>
             </motion.div>
 
             <motion.div 
-              whileHover={{ y: -5 }} className="bg-slate-50 p-10 rounded-none border border-slate-100 shadow-sm"
+              whileHover={{ y: -5 }} className="bg-white rounded-[1.2rem] overflow-hidden flex flex-col h-full group border border-slate-200 shadow-[0_18px_40px_rgba(15,23,42,0.08)] ring-1 ring-slate-100/70 hover:shadow-[0_24px_60px_rgba(15,23,42,0.14)] transition-all duration-500 p-6 md:p-8"
             >
-              <div className="w-14 h-14 bg-[#fb8c00] rounded-none flex items-center justify-center mb-6">
+              <div className="w-12 h-12 bg-[#fb8c00] rounded-[1.2rem] flex items-center justify-center mb-4 shadow-lg">
                 <Globe className="w-7 h-7 text-white" />
               </div>
-              <h3 className="text-2xl font-bold text-slate-900 mb-4">Our Vision</h3>
+              <h3 className="text-xl font-bold text-slate-900 mb-3">Our Vision</h3>
               <p className="text-slate-600 leading-relaxed">
                 To be the catalyst for Kenya's digital revolution, connecting people, businesses, and ideas.
               </p>
@@ -400,34 +462,84 @@ export default function AboutPage() {
       </section>
 
       {/* ================= CORE VALUES ================= */}
-      <section className="py-24 bg-[#0f172a] text-white relative overflow-hidden">
+      <section className="home-page-section py-14 md:py-18 bg-[#0f172a] text-white relative overflow-hidden">
         <div className="absolute inset-0 opacity-5 bg-[url('https://www.transparenttextures.com/patterns/diamond-upholstery.png')]"></div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="text-center mb-16">
-            <span className="text-[#fb8c00] font-bold tracking-wider uppercase text-sm">Our Culture</span>
-            <h2 className="text-3xl md:text-4xl font-bold mt-3">Core Values</h2>
-            <div className="w-20 h-1 bg-[#fb8c00] mx-auto mt-6 rounded-none"></div>
+          <div className="text-center mb-10">
+            <span className="text-[#fb8c00] font-semibold tracking-wider uppercase text-sm">Our Culture</span>
+            <h2 className="text-2xl md:text-3xl font-light mt-3">Core Values</h2>
+            <div className="w-20 h-1 bg-[#fb8c00] mx-auto mt-6 rounded-[1.2rem]"></div>
           </div>
-          <motion.div variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true }} className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {values.map((value, index) => (
-              <motion.div key={index} variants={fadeUp} className="bg-white/5 backdrop-blur-sm p-8 rounded-none border border-white/10 hover:bg-white/10 transition-all duration-300">
-                <div className={`${value.color} w-12 h-12 rounded-none flex items-center justify-center mb-6 shadow-lg`}>{value.icon}</div>
-                <h3 className="text-xl font-bold mb-3 text-white">{value.title}</h3>
-                <p className="text-slate-300 text-sm leading-relaxed">{value.description}</p>
+
+          {/* Desktop: Grid layout */}
+          <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {values.map((value, index) => {
+              const theme = PACKAGE_THEMES[index % PACKAGE_THEMES.length];
+              return (
+                <motion.div key={index} variants={fadeUp} className={`p-6 rounded-[1.2rem] border border-white/10 hover:bg-white/10 transition-all duration-300 group ${theme.bg}`} whileHover={{ y: -5 }}>
+                  <div className="w-10 h-10 bg-white/20 rounded-[1.2rem] flex items-center justify-center mb-4 shadow-lg">{value.icon}</div>
+                  <h3 className="text-lg font-bold mb-2 text-white">{value.title}</h3>
+                  <p className="text-slate-300 text-sm leading-relaxed">{value.description}</p>
+                </motion.div>
+              );
+            })}
+          </div>
+
+          {/* Mobile: Carousel/Slideshow */}
+          <div className="md:hidden">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={coreValueSlide}
+                initial={{ opacity: 0, x: 50 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -50 }}
+                transition={{ duration: 0.4, ease: "easeInOut" }}
+                className="relative"
+              >
+                {(() => {
+                  const value = values[coreValueSlide];
+                  const theme = PACKAGE_THEMES[coreValueSlide % PACKAGE_THEMES.length];
+                  return (
+                    <motion.div
+                      className={`p-6 rounded-[1.2rem] border border-white/10 ${theme.bg}`}
+                      whileHover={{ y: -5 }}
+                      initial={{ opacity: 0, scale: 0.96 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ duration: 0.5 }}
+                    >
+                      <div className="w-10 h-10 bg-white/20 rounded-[1.2rem] flex items-center justify-center mb-4 shadow-lg">{value.icon}</div>
+                      <h3 className="text-lg font-bold mb-2 text-white">{value.title}</h3>
+                      <p className="text-slate-300 text-sm leading-relaxed">{value.description}</p>
+                    </motion.div>
+                  );
+                })()}
               </motion.div>
-            ))}
-          </motion.div>
+            </AnimatePresence>
+
+            {/* Dot navigation */}
+            <div className="flex justify-center gap-2 mt-6">
+              {values.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setCoreValueSlide(i)}
+                  className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
+                    i === coreValueSlide ? 'bg-[#fb8c00] w-6' : 'bg-white/30'
+                  }`}
+                />
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 
       {/* ================= CTA SECTION ================= */}
-      <section className="py-20 bg-white">
+      <section className="home-page-section py-12 md:py-16">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-           <h2 className="text-3xl font-bold text-slate-900 mb-6">Ready to experience the difference?</h2>
-           <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
-             <a href="/contact" className="px-8 py-3.5 bg-[#015B97] hover:bg-blue-700 text-white rounded-none font-bold shadow-lg">Get Connected</a>
-             <a href="/coverage" className="px-8 py-3.5 bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 rounded-none font-bold">Check Coverage</a>
-           </div>
+           <h2 className="text-2xl md:text-3xl font-light text-slate-900 mb-5">Ready to experience the difference?</h2>
+<div className="flex flex-col sm:flex-row gap-3 justify-center mt-6">
+              <a href="/contact" className="px-8 py-3.5 bg-[#015B97] hover:bg-blue-700 text-white rounded-full font-bold shadow-lg hover:shadow-xl transition-all duration-300">Get Connected</a>
+              <a href="/coverage" className="px-8 py-3.5 bg-white hover:bg-slate-50 text-[#015B97] border-2 border-[#015B97] rounded-full font-bold hover:bg-[#015B97] hover:text-white transition-all duration-300">Check Coverage</a>
+            </div>
         </div>
       </section>
     </div>
