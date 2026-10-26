@@ -101,7 +101,7 @@ const plans = [
   },
   {
     name: "Fibre Plus Plan",
-    price: "Ksh 45,000",
+    price: "Ksh 4,500",
     period: "3 months",
     speed: "15Mbps",
     image: "https://c8.alamy.com/comp/2KFB1JH/an-early-old-vintage-internet-cybercafe-cyber-cafe-in-xian-china-prc-there-are-dozens-of-screens-in-the-room-with-many-people-browsing-the-net-and-operating-them-prc-china-125-2KFB1JH.jpg",
