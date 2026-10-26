@@ -100,11 +100,12 @@ const plans = [
     isPopular: false
   },
   {
-    name: "Ultra Plan",
-    price: "Ksh 4,999",
-    speed: "70Mbps",
+    name: "Fibre Plus Plan",
+    price: "Ksh 45,000",
+    period: "3 months",
+    speed: "15Mbps",
     image: "https://c8.alamy.com/comp/2KFB1JH/an-early-old-vintage-internet-cybercafe-cyber-cafe-in-xian-china-prc-there-are-dozens-of-screens-in-the-room-with-many-people-browsing-the-net-and-operating-them-prc-china-125-2KFB1JH.jpg",
-    features: ["High-Speed Everything", "Gaming & 4K", "24/7 Support", "Free Installation"],
+    features: ["Pay for 3 months, get 1 month free", "24/7 Support", "Free Installation"],
     type: "home",
     isPopular: false
   },
@@ -210,6 +211,7 @@ const Hero = () => {
     connectionType: '',
     planName: '',
     planSpeed: '',
+    planPeriod: 'month',
     planPrice: 0
   });
   const handlePlanSelect = (plan) => {
@@ -222,6 +224,7 @@ const Hero = () => {
       connectionType: plan.name,
       planName: plan.name,
       planSpeed: plan.speed,
+      planPeriod: plan.period || 'month',
       planPrice: numericPrice
     }));
     setShowForm(true);
@@ -240,7 +243,7 @@ const Hero = () => {
     e.preventDefault();
     const whatsappNumber = "254726818938";
     // Format the message to match the expected structure for the invoice system
-    const message = `KNOXVILLE TECHNOLOGIES LIMITED - INTERNET CONNECTION REQUEST%0A%0ACUSTOMER DETAILS:%0AName: ${formData.name}%0APhone: ${formData.phone}%0ALocation: ${formData.location}%0AEmail: ${formData.email}%0A%0ASELECTED PLAN:%0APlan: ${formData.planName}%0ASpeed: ${formData.planSpeed}%0APrice: Ksh ${formData.planPrice}/month`;
+    const message = `KNOXVILLE TECHNOLOGIES LIMITED - INTERNET CONNECTION REQUEST%0A%0ACUSTOMER DETAILS:%0AName: ${formData.name}%0APhone: ${formData.phone}%0ALocation: ${formData.location}%0AEmail: ${formData.email}%0A%0ASELECTED PLAN:%0APlan: ${formData.planName}%0ASpeed: ${formData.planSpeed}%0APrice: Ksh ${formData.planPrice}/${formData.planPeriod || 'month'}`;
     window.open(`https://wa.me/${whatsappNumber}?text=${message}`, '_blank');
     setShowForm(false);
   };
@@ -480,7 +483,7 @@ const Hero = () => {
                         <span className={`text-sm sm:text-lg font-bold ${theme.text} group-hover:scale-105 transition-transform origin-left`}>
                           {plan.price}
                         </span>
-                        <span className="text-slate-400 text-[8px] sm:text-[10px] font-bold uppercase mb-1 ml-1">/month</span>
+                        <span className="text-slate-400 text-[8px] sm:text-[10px] font-bold uppercase mb-1 ml-1">/{plan.period || 'month'}</span>
                       </div>
 
                       <div className="w-full h-px bg-slate-100 mb-1 sm:mb-3" />
